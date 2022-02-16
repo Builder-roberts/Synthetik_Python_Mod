@@ -14,4 +14,6 @@ Open the save file directly
 
 # Future Updates:
 ## -Loadout editng - most proabably in the next update! wooo!
--GUI! actual images! not using the terminal! woooo! - far flung future with Tkinter.
+## -GUI! actual images! not using the terminal! woooo! - far flung future with Tkinter.
+
+### Gui update: the screenshot shows my current progress on making a GUI!
