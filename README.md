@@ -9,12 +9,11 @@ A save editor tool for the game Synthetik written in python.
 ### NEW - LoadoutGUI.exe! actual gui for editing your loadout! + LoadoutGUI.py
 ![LoadoutGUI](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(1).png?raw=true)
 
-## WIP
 
 ## -now, i gotta tell you, this is some thrown together, dumb as frick code written in python. there's probably bugs, and I suggest using "opensave" as soon as possible.
 ## -However, the largest bug probable is the deletion of your current day's save file. there is a backup in the same folder already in the game, you can just copy and paste.
 ## -The help command does not mention all commands. specifically, OPauto, and Spawnauto. will be fixed as soon as I get around to updating the help command.
-## -DO tell me in a comment if the exe file works? I used (https://towardsdatascience.com/how-to-easily-convert-a-python-script-to-an-executable-file-exe-4966e253c7e9) to generate the exe file from my code and I have no idea if it works without downloading python?
+## I used (https://towardsdatascience.com/how-to-easily-convert-a-python-script-to-an-executable-file-exe-4966e253c7e9) to generate the exe file from my code. thank you to Caesar_Salad on discord for showing me that it worked without downloading python!
 
 # Future Updates:
 ## Transfering all of version 2.1 to GUI, rather than the current terminal
