@@ -107,7 +107,7 @@ def Safetywindow():
     SafetyWindow = tk.Toplevel(root)
     SafetyWindow.title("ALERT!")
     tk.Label(SafetyWindow, text ="Do you want to overwrite your Save File?").pack()
-    tk.Button(SafetyWindow, text = "Yes", command=lambda: [CopytoSave,SafetyWindow.destroy()]).pack()
+    tk.Button(SafetyWindow, text = "Yes", command=lambda: [CopytoSave(),SafetyWindow.destroy()]).pack()
 
 
 def CopytoSave():
