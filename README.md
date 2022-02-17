@@ -7,7 +7,7 @@ A save editor tool for the game Synthetik written in python.
 ### Manual Module power editing.
 ### Open the save file directly
 ### NEW - LoadoutGUI.exe! actual gui for editing your loadout! + LoadoutGUI.py
-![LoadoutGUI](https://github.com/Builder-Roberts/Synthetik_Python_Mod/Screenshot (1).png?raw=true)
+![LoadoutGUI](https://github.com/Builder-Roberts/Synthetik_Python_Mod/Screenshot_(1).png?raw=true)
 
 ## -now, i gotta tell you, this is some thrown together, dumb as frick code written in python. there's probably bugs, and I suggest using "opensave" as soon as possible.
 ## -However, the largest bug probable is the deletion of your current day's save file. there is a backup in the same folder already in the game, you can just copy and paste.
