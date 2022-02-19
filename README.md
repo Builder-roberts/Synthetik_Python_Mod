@@ -1,13 +1,13 @@
 # Synthetik_Python_Mod
 A save editor tool for the game Synthetik written in python.
 
-# Version 2.2:
-### Automatic Module Power editing
-### Automatic Spawn chance editing
-### Manual Module power editing.
-### Open the save file directly
-### NEW - LoadoutGUI.exe! actual gui for editing your loadout! + LoadoutGUI.py
-![LoadoutGUI](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(1).png?raw=true)
+# Version 2.3:
+### LoadoutGUI.exe. actual gui for editing your loadout. + LoadoutGUI.py
+### NEW! OPauto - changes the power level of each module to over powered levels!(YMMV) - Now in LoadoutGUI.exe!
+### NEW! Auto Module Edit - changes the power level of every module to a user-specified level!
+### ALERT: changing the values next to the items in your loadout will do nothing. only Auto Module Edit and OPauto do anything to change power levels.
+### ALERT: If, for some reason, nothing is working, reopen Synthetik & LoadoutGUI and close it. Synthetik's Save file is very robust.
+![LoadoutGUI](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(4).png?raw=true)
 
 
 ## -now, i gotta tell you, this is some thrown together, dumb as frick code written in python. there's probably bugs, and I suggest using "opensave" as soon as possible.
