@@ -1,12 +1,19 @@
 #gui with tkinter
-from cgitb import text
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog
 import getpass
 import re
 
-username = getpass.getuser()
-
+filename = ""
+tfilename = ""
+def browsefiles():
+    global filename
+    global tfilename
+    filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("Save files","*.sav*"),("All files","*.*")))
+    filepath = filename.rsplit("/",1)
+    tfilename = filepath +"/TEMPORARYSAVE.txt"
+    print(filepath[0])
 
 root = tk.Tk()
 root.title("Synthetik Loadout Editor")
@@ -31,7 +38,17 @@ PowerMod5 = tk.StringVar(root)
 PowerMod6 = tk.StringVar(root)
 
 
-with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "r") as Save:
+try :
+    username = getpass.getuser()
+    filepath = "C:/Users/"+username+"/AppData/Local/Synthetik/"
+    filename = filepath + "save.sav"
+    tfilename = filepath +"TEMPORARYSAVE.txt"
+    Test = open(filename, "r")
+    Test.close()
+except:
+    browsefiles()
+
+with open(filename, "r") as Save:
     for line in Save:
         if line.startswith("tpoints_obj_perk") or line.startswith("tpoints_obj_artefact") or line.startswith("tpoints_obj_item"):
             P = re.search("obj_\w+(\d+)?_\w+",line).group()
@@ -100,7 +117,7 @@ def Testfunc(subclass):
     Currentclass = subclass
     CurrentModPowers.clear()
     items.clear()
-    with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "r") as Save:
+    with open(filename, "r") as Save:
         for line in Save:
             if line.startswith("perkslot"):
                 for num in Loadout:
@@ -111,7 +128,7 @@ def Testfunc(subclass):
                         continue
             else:
                 continue
-    with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "r") as Save:
+    with open(filename, "r") as Save:
         for line in Save:
             if line.startswith("tpoints_obj_perk") or line.startswith("tpoints_obj_artefact"):
                 for U in items:
@@ -138,7 +155,7 @@ def Testfunc(subclass):
 
 def SubmitLoadout():
     print("now applying changes to Tsave")
-    with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "r") as Save, open("C:/Users/"+username+"/Downloads/Tsave.txt", "w") as Tsave:
+    with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
         for line in Save:
             if line.startswith("perkslot"+Loadout[0]+"class"+Currentclass):
                 Tsave.write(re.sub("obj_\w+(\d+)?_\w+",PistolMod.get(),line))
@@ -168,7 +185,7 @@ def Safetywindow():
 
 def CopytoSave():
     print("this is working")
-    with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "w") as Save, open("C:/Users/"+username+"/Downloads/Tsave.txt", "r") as Tsave:
+    with open(filename, "w") as Save, open(tfilename, "r") as Tsave:
         for line in Tsave:
             Save.write(line)
 
@@ -176,7 +193,7 @@ def GetPower():
     global DoubleModules
     DoubleModules.clear()
     print("getpower called")
-    with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "r") as Save:
+    with open(filename, "r") as Save:
         for line in Save:
             if line.startswith("tpoints_obj_perk") or line.startswith("tpoints_obj_artefact") or line.startswith("tpoints_obj_item"):
                 P = re.search('"-?\d+(\.\d+)?"',line).group()
@@ -184,7 +201,7 @@ def GetPower():
                 DoubleModules.append(P)
 
 def AutoModuleEdit(power):
-    with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "r") as Save, open("C:/Users/"+username+"/Downloads/Tsave.txt", "w") as Tsave:
+    with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
         TruePower = '"' + power + '"'
         for line in Save:
             #write content to new file
@@ -200,7 +217,7 @@ def OPModuleEdit():
     
     OPpower=["10.000000","2.500000","2.000000","3.000000","-7.000000","7.000000","30.000000","50.000000","10.000000","15.000000","6.000000","4.000000","4.000000","5.000000","10.000000","3.000000","1.000000","1.000000","8.000000","7.000000","5.000000","10.000000","7.000000","2.500000","40.000000","7.000000","5.000000","20.000000","-0.000100","10.000000","7.000000","7.000000","3.000000","1","1","1","1","15.000000","10.000000","8.000000","4.000000","5.500000","2.900000","1.600000","10.000000","7.000000","5.000000","6.000000","20.000000","20.000000","2.500000","10.000000","1","1","10.000000","20.000000","20.000000","30.000000","20.00000","20.000000","4.000000","5.000000","10.000000","2.500000","10.000000","2.00000","7.000000","7.000000","-34.000000","12.000000","1","1","1"]
     print("Overpowered module power editing (your mileage may vary)")
-    with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "r") as Save, open("C:/Users/"+username+"/Downloads/Tsave.txt", "w") as Tsave:
+    with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
         j = 0
         for line in Save:
             #write content to new file
