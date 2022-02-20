@@ -11,7 +11,7 @@ def browsefiles():
     global filename
     global tfilename
     filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("Save files","*.sav*"),("All files","*.*")))
-    filepath = filename.rsplit("/",1)
+    filepath = filename.rsplit("/",1)[0]
     tfilename = filepath +"/TEMPORARYSAVE.txt"
     print(filepath[0])
 
