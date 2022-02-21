@@ -1,6 +1,6 @@
 #gui with tkinter
 import tkinter as tk
-from tkinter import ttk
+from tkinter import Menu, ttk
 from tkinter import filedialog
 import getpass
 import re
@@ -46,18 +46,25 @@ PowerMod5 = tk.StringVar(root)
 PowerMod6 = tk.StringVar(root)
 
 
-with open(filename, "r") as Save:
-    for line in Save:
-        if line.startswith("tpoints_obj_perk") or line.startswith("tpoints_obj_artefact") or line.startswith("tpoints_obj_item"):
-            P = re.search("obj_\w+(\d+)?_\w+",line).group()
-            VarSmodules.append(P)
-            P = re.search('"-?\d+(\.\d+)?"',line).group()
-            P = re.search('-?\d+(\.\d+)?',P).group()
-            DoubleModules.append(P)
-        elif line.startswith("tpoints_obj_weapon"):
-            P = re.search("obj_\w+(\d+)?_\w+",line).group()
-            VarPistols.append(P)
-
+def setsave():
+    global VarSmodules
+    VarSmodules.clear()
+    global DoubleModules
+    DoubleModules.clear()
+    global VarPistols
+    VarPistols.clear()
+    with open(filename, "r") as Save:
+        for line in Save:
+            if line.startswith("tpoints_obj_perk") or line.startswith("tpoints_obj_artefact") or line.startswith("tpoints_obj_item"):
+                P = re.search("obj_\w+(\d+)?_\w+",line).group()
+                VarSmodules.append(P)
+                P = re.search('"-?\d+(\.\d+)?"',line).group()
+                P = re.search('-?\d+(\.\d+)?',P).group()
+                DoubleModules.append(P)
+            elif line.startswith("tpoints_obj_weapon"):
+                P = re.search("obj_\w+(\d+)?_\w+",line).group()
+                VarPistols.append(P)
+setsave()
 
 
 Gun = ttk.Combobox(root, textvariable = PistolMod)
@@ -106,7 +113,7 @@ M2Power = tk.Entry(root,textvariable=PowerMod6)
 M2Power.grid(row=6,column=2)
 
 Loadout = ["9","7","6","5","4","3","0"]
-Currentclass = ""
+Currentclass = "10"
 
 
 
@@ -152,6 +159,7 @@ def Testfunc(subclass):
     PowerMod6.set(DoubleModules[VarSmodules.index(items[1])])
 
 def SubmitLoadout():
+
     print("now applying changes to Tsave")
     with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
         for line in Save:
@@ -169,6 +177,21 @@ def SubmitLoadout():
                 Tsave.write(re.sub("obj_\w+(\d+)?_\w+",OptionMod5.get(),line))
             elif line.startswith("perkslot"+Loadout[1]+"class"+Currentclass):
                 Tsave.write(re.sub("obj_\w+(\d+)?_\w+",OptionMod6.get(),line))
+            elif line.startswith("tpoints_"):
+                if line.startswith("tpoints_"+OptionMod1.get()):
+                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod1.get()+'"',line))
+                elif line.startswith("tpoints_"+OptionMod2.get()):
+                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod2.get()+'"',line))
+                elif line.startswith("tpoints_"+OptionMod3.get()):
+                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod3.get()+'"',line))
+                elif line.startswith("tpoints_"+OptionMod4.get()):
+                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod4.get()+'"',line))
+                elif line.startswith("tpoints_"+OptionMod5.get()):
+                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod5.get()+'"',line))
+                elif line.startswith("tpoints_"+OptionMod6.get()):
+                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod6.get()+'"',line))
+                else:
+                    Tsave.write(line)
             else:
                 Tsave.write(line)
     Safetywindow()
@@ -186,17 +209,8 @@ def CopytoSave():
     with open(filename, "w") as Save, open(tfilename, "r") as Tsave:
         for line in Tsave:
             Save.write(line)
+    setsave()
 
-def GetPower():
-    global DoubleModules
-    DoubleModules.clear()
-    print("getpower called")
-    with open(filename, "r") as Save:
-        for line in Save:
-            if line.startswith("tpoints_obj_perk") or line.startswith("tpoints_obj_artefact") or line.startswith("tpoints_obj_item"):
-                P = re.search('"-?\d+(\.\d+)?"',line).group()
-                P = re.search('-?\d+(\.\d+)?',P).group()
-                DoubleModules.append(P)
 
 def AutoModuleEdit(power):
     if re.search("(-?(0|[1-9]\d*)?(\.\d+)?(?<=\d)(e-?(0|[1-9]\d*))?|0x[0-9a-f]+)",power) == None:
@@ -212,7 +226,6 @@ def AutoModuleEdit(power):
                 continue
             Tsave.write(line)
     Safetywindow()
-    GetPower()
 
 def OPModuleEdit():
     OPpower=["10.000000","2.500000","2.000000","3.000000","-7.000000","7.000000","30.000000","50.000000","10.000000","15.000000","6.000000","4.000000","4.000000","5.000000","10.000000","3.000000","1.000000","1.000000","8.000000","7.000000","5.000000","10.000000","7.000000","2.500000","40.000000","7.000000","5.000000","20.000000","-0.000100","10.000000","7.000000","7.000000","3.000000","1","1","1","1","15.000000","10.000000","8.000000","4.000000","5.500000","2.900000","1.600000","10.000000","7.000000","5.000000","6.000000","20.000000","20.000000","2.500000","10.000000","1","1","10.000000","20.000000","20.000000","30.000000","20.00000","20.000000","4.000000","5.000000","10.000000","2.500000","10.000000","2.00000","7.000000","7.000000","-34.000000","12.000000","1","1","1"]
@@ -230,8 +243,24 @@ def OPModuleEdit():
                 continue
             Tsave.write(line)
     Safetywindow()
-    GetPower()
 
+def NewDailyRun():
+    with open(filename,"r") as Save, open(tfilename,"w") as Tsave:
+        for line in Save:
+            if line.startswith("drun"):
+                Tsave.write(re.sub('"-?\d+(\.\d+)?"','"1.000000"',line))
+            else:
+                Tsave.write(line)
+    Safetywindow()
+
+def MaxData():
+    with open(filename,"r") as Save, open(tfilename,"w") as Tsave:
+        for line in Save:
+            if line.startswith("currency"):
+                Tsave.write(re.sub('"-?\d+(\.\d+)?"','"1000.000000"',line))
+            else:
+                Tsave.write(line)
+    Safetywindow()
 
 
 Class10 = tk.Button(root, text="Riot Guard",fg="white", bg="blue",command=lambda: Testfunc("10"))
@@ -252,12 +281,39 @@ Class41 = tk.Button(root, text="Demolisher",fg="white", bg="red",command=lambda:
 Class41.grid(row=7,column=0)
 Submit = tk.Button(root,text="submit",command=SubmitLoadout)
 Submit.grid(row=7,column=1,columnspan=2)
-OPauto = tk.Button(root,text="OP Auto",command=OPModuleEdit)
-OPauto.grid(row = 8, column= 0)
 Auto = tk.Button(root,text="Auto Module Edit", command=lambda: AutoModuleEdit(Autopower.get()))
 Auto.grid(row=8,column=1)
 Autopower = tk.Entry(root)
 Autopower.grid(row=8,column=2)
 
-Testfunc("10")
+def about():
+    messagebox.showinfo('Synthetik Python Mod','By: Builder_Roberts\nMade for Synthetik 1!')
+
+def notworking():
+    messagebox.showinfo('Actual help','first: try opening and closing synthetik. Make sure Synthetik is closed. That will reset the save file to what Synthetik Needs.\nSecond: message @Mason on the discord. He is the creator of this after all.')
+
+
+MenuBar = Menu(root)
+file = Menu(MenuBar,tearoff=0)
+file.add_command(label="Open",command=browsefiles)
+file.add_command(label="Exit",command=root.quit)
+MenuBar.add_cascade(label="File",menu=file)
+power = Menu(MenuBar,tearoff=0)
+power.add_command(label="OPauto",command=OPModuleEdit)
+power.add_command(label="Quick 1.6x",command=lambda: AutoModuleEdit("1.60000"))
+MenuBar.add_cascade(label="Power",menu=power)
+
+misc = Menu(MenuBar,tearoff=0)
+misc.add_command(label="Daily Run Reset",command=NewDailyRun)
+misc.add_command(label="Max Data",command=MaxData)
+MenuBar.add_cascade(label="Misc",menu=misc)
+
+Helpbar = Menu(MenuBar,tearoff=0)
+Helpbar.add_command(label="About",command=about)
+Helpbar.add_command(label="Not working?",command=notworking)
+MenuBar.add_cascade(label="Help",menu=Helpbar)
+
+
+Testfunc(Currentclass)
+root.configure(menu = MenuBar)
 root.mainloop()
