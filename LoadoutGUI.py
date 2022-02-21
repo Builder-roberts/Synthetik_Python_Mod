@@ -4,9 +4,13 @@ from tkinter import ttk
 from tkinter import filedialog
 import getpass
 import re
+import os.path
+from tkinter import messagebox
 
-filename = ""
-tfilename = ""
+username = getpass.getuser()
+filename = "C:/Users/"+username+"/AppData/Local/Synthetik/Save.sav"
+tfilename = "C:/Users/"+username+"/AppData/Local/Synthetik/TEMPORARYSAVE.txt"
+
 def browsefiles():
     global filename
     global tfilename
@@ -14,6 +18,10 @@ def browsefiles():
     filepath = filename.rsplit("/",1)[0]
     tfilename = filepath +"/TEMPORARYSAVE.txt"
     print(filepath[0])
+
+if not os.path.exists(filename):
+    messagebox.showinfo('Synfwetik','Sowwy UwU, yowr swave fiwe is nwot whewe I toht it wood bwe! OwO! could you pwease fwind it fwwor me UwU?')
+    browsefiles()
 
 root = tk.Tk()
 root.title("Synthetik Loadout Editor")
@@ -37,16 +45,6 @@ PowerMod4 = tk.StringVar(root)
 PowerMod5 = tk.StringVar(root)
 PowerMod6 = tk.StringVar(root)
 
-
-try :
-    username = getpass.getuser()
-    filepath = "C:/Users/"+username+"/AppData/Local/Synthetik/"
-    filename = filepath + "save.sav"
-    tfilename = filepath +"TEMPORARYSAVE.txt"
-    Test = open(filename, "r")
-    Test.close()
-except:
-    browsefiles()
 
 with open(filename, "r") as Save:
     for line in Save:
@@ -201,6 +199,9 @@ def GetPower():
                 DoubleModules.append(P)
 
 def AutoModuleEdit(power):
+    if re.search("(-?(0|[1-9]\d*)?(\.\d+)?(?<=\d)(e-?(0|[1-9]\d*))?|0x[0-9a-f]+)",power) == None:
+        messagebox.showinfo('UwO','Sowwy UwU, yow pwessed the AutoModule buttwon wifouf pwutwing a gwood input in! Try uswing only numbwars dis twime, :3 ohkway?')
+        return
     with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
         TruePower = '"' + power + '"'
         for line in Save:
@@ -214,7 +215,6 @@ def AutoModuleEdit(power):
     GetPower()
 
 def OPModuleEdit():
-    
     OPpower=["10.000000","2.500000","2.000000","3.000000","-7.000000","7.000000","30.000000","50.000000","10.000000","15.000000","6.000000","4.000000","4.000000","5.000000","10.000000","3.000000","1.000000","1.000000","8.000000","7.000000","5.000000","10.000000","7.000000","2.500000","40.000000","7.000000","5.000000","20.000000","-0.000100","10.000000","7.000000","7.000000","3.000000","1","1","1","1","15.000000","10.000000","8.000000","4.000000","5.500000","2.900000","1.600000","10.000000","7.000000","5.000000","6.000000","20.000000","20.000000","2.500000","10.000000","1","1","10.000000","20.000000","20.000000","30.000000","20.00000","20.000000","4.000000","5.000000","10.000000","2.500000","10.000000","2.00000","7.000000","7.000000","-34.000000","12.000000","1","1","1"]
     print("Overpowered module power editing (your mileage may vary)")
     with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
@@ -258,5 +258,6 @@ Auto = tk.Button(root,text="Auto Module Edit", command=lambda: AutoModuleEdit(Au
 Auto.grid(row=8,column=1)
 Autopower = tk.Entry(root)
 Autopower.grid(row=8,column=2)
+
 Testfunc("10")
 root.mainloop()
