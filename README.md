@@ -10,8 +10,8 @@ A save editor tool for the game Synthetik written in python.
 ![LoadoutGUI](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(4).png?raw=true)
 
 
-## -now, i gotta tell you, this is some thrown together, dumb as frick code written in python. there's probably bugs, and I suggest using "opensave" as soon as possible.
-## -However, the largest bug probable is the deletion of your current day's save file. there is a backup in the same folder already in the game, you can just copy and paste.
+## -Now, i gotta tell you, this is some thrown together, dumb as frick code written in python. there's probably bugs.
+## -However, the largest bug probable is the deletion of your current day's save file. There are two backups in the same folder already in the game, you can just copy and paste.
 ## -The help command does not mention all commands. specifically, OPauto, and Spawnauto. will be fixed as soon as I get around to updating the help command.
 ## I used (https://towardsdatascience.com/how-to-easily-convert-a-python-script-to-an-executable-file-exe-4966e253c7e9) to generate the exe file from my code. thank you to Caesar_Salad on discord for showing me that it worked without downloading python!
 ## Thank you to Tactu on discord for general coding advice! (if you're reading this, maybe do something to help, like you said you wanted to, tactu)
