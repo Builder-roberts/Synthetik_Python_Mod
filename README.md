@@ -22,3 +22,4 @@ A save editor tool for the game Synthetik written in python.
 ## Transfering all of version 2.1 (Editfunc.exe) to GUI, rather than the current terminal
 - in progress, currently have Auto, OPauto, Item/Weaponspawn, and Manual. Next is other misc items, and then we're probably done till someone gives me something more to do with it.
 ### Gui update: the screenshot shows my current progress on making a GUI!
+## Also, I've got the code written for automatically regressing research upgrades, i'm just not ready to release the next version. Give me more ideas so i actually feel comfortable putting it out as an update!
