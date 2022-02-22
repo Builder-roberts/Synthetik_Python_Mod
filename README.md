@@ -5,6 +5,7 @@ A save editor tool for the game Synthetik written in python.
 ### Changing the values next to the items/modules/whatever in your loadout will now change their power! - Manual editing, essentially.
 ### Menubar! specifically File, Power, Misc, and Help.
 ### File: If you want to edit some other Synthetik (S1) Save file, simply open it!
+### Misc: Max Data and Daily Run reset: what they say they do.
 ### Power: OPauto is now here! additionally, Quick 1.6x makes everything 1.6, the normal daily max, no need to use Auto Module Edit!
 ### Help: About page, will mention people who helped make this project work in the future! Not Working: Gives some general advice and asks you to @ me on discord.
 ### New! Spawn: Item and Weapon Spawn make spawn rates for token weapons higher, and everything else lower. The resets set the spawn possibility of every item/weapon back to 0.
