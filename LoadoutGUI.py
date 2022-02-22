@@ -262,6 +262,90 @@ def MaxData():
                 Tsave.write(line)
     Safetywindow()
 
+def spliting(Class):
+    return [char for char in Class]
+
+def AutoWeaponSpawnEdit():
+    Subclass = spliting(Currentclass)
+    realclass = Subclass[0] + "_" + Subclass[1]
+    weplist = list()
+    with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "r") as Save:
+        for line in Save:
+            if line.startswith("wbonus_"+realclass):
+                wepID = re.search('"\d+\.', line)
+                wepID = wepID.group()
+                weplist.append(wepID[1:-1])
+        if len(weplist) == 0:
+            #put an info here
+            messagebox.showinfo("Towken Ewwow","Sowwy UwU, wwould you gow awdd a powwa towken two the weapon you want?")
+            return
+    with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
+        if len(weplist) != 0:
+            #convert this to an info
+            messagebox.showinfo("Just so you know","Setting Drop chances for tokened weapons to 10000, and all others to -100.\n This only works for one run, one time per weapon pickup.\n(this does not stop weapon shops from spawning with 4 other weapons)")
+            for line in Save:
+                if line.startswith("wdropchange"):
+                    for weapon in weplist:
+                        if line.startswith("wdropchange"+weapon):
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"10000.000000"',line))
+                            break
+                        else:
+                            continue
+                    if not(line.startswith("wdropchange"+weapon)):
+                        Tsave.write(re.sub('"-?\d+\.\d+"','"-100.000000"',line))
+                else:
+                    Tsave.write(line)
+    Safetywindow()
+
+
+def AutoItemSpawnEdit():
+    realclass = spliting(Currentclass)
+    subclass = realclass[0] + "_" + realclass[1]
+    itemlist = list()
+    with open(filename, "r") as Save:
+        for line in Save:
+            if line.startswith("ibonus_"+subclass):
+                itemID = re.search('"\d+\.', line)
+                itemID = itemID.group()
+                itemlist.append(itemID[1:-1])
+        if len(itemlist) == 0:
+            messagebox.showinfo("Towken Ewwow","Sowwy UwU, wwould you gow awdd a powwa towken two te itwem you want?")
+            return
+    with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
+        if len(itemlist) != 0:
+            messagebox.showinfo("Just so you know","Setting Drop chances for tokened items to 100. Setting drop chances for all other items to -100.\nThis only works for one run, one time per item. OTHER ITEMS WILL NOT SPAWN\nThis might also be a bit off kilter- perhaps the tokened item ids do not corellate 1-1 with thier spawn ids")
+            for line in Save:
+                if line.startswith("idropchange"):
+                    for item in itemlist:
+                        if line.startswith("idropchange "+item):
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"10000.000000"',line))
+                            break
+                        else:
+                            continue                        
+                    if not(line.startswith("idropchange "+item)):
+                        Tsave.write(re.sub('"-?\d+\.\d+"','"-100.000000"',line))
+                else:
+                    Tsave.write(line)
+    Safetywindow()
+
+def weaponspawnreset():
+    with open(filename,"r") as Save, open(tfilename,"w") as Tsave:
+        for line in Save:
+            if line.startswith("wdropchange"):
+                Tsave.write(re.sub('"-?\d+\.\d+"','"0.000000"',line))
+            else:
+                Tsave.write(line)
+    Safetywindow()
+    
+
+def itemspawnreset():
+    with open(filename,"r") as Save, open(tfilename,"w") as Tsave:
+        for line in Save:
+            if line.startswith("idropchange"):
+                Tsave.write(re.sub('"-?\d+\.\d+"','"0.000000"',line))
+            else:
+                Tsave.write(line)
+    Safetywindow()
 
 Class10 = tk.Button(root, text="Riot Guard",fg="white", bg="blue",command=lambda: Testfunc("10"))
 Class10.grid(row=0,column=0)
@@ -307,6 +391,13 @@ misc = Menu(MenuBar,tearoff=0)
 misc.add_command(label="Daily Run Reset",command=NewDailyRun)
 misc.add_command(label="Max Data",command=MaxData)
 MenuBar.add_cascade(label="Misc",menu=misc)
+
+spawn = Menu(MenuBar,tearoff=0)
+spawn.add_command(label="Item Spawn",command=AutoItemSpawnEdit)
+spawn.add_command(label="Reset Item Spawn",command=itemspawnreset)
+spawn.add_command(label="Weapon Spawn", command=AutoWeaponSpawnEdit)
+spawn.add_command(label="Reset Weapon Spawn",command=weaponspawnreset)
+MenuBar.add_cascade(label="Spawn",menu=spawn)
 
 Helpbar = Menu(MenuBar,tearoff=0)
 Helpbar.add_command(label="About",command=about)
