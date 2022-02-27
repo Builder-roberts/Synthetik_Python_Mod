@@ -279,7 +279,7 @@ def AutoWeaponSpawnEdit():
     Subclass = spliting(Currentclass)
     realclass = Subclass[0] + "_" + Subclass[1]
     weplist = list()
-    with open("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav", "r") as Save:
+    with open(filename, "r") as Save:
         for line in Save:
             if line.startswith("wbonus_"+realclass):
                 wepID = re.search('"\d+\.', line)
@@ -377,7 +377,7 @@ def undoresearch():
     Safetywindow()
 
 def openSave():
-    os.startfile("C:/Users/"+username+"/AppData/Local/Synthetik/save.sav")
+    os.startfile(filename)
 
 def UwU():
     global uwu
