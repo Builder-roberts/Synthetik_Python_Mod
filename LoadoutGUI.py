@@ -28,27 +28,33 @@ if not os.path.exists(filename):
         messagebox.showinfo('Synfwetik','Sowwy UwU, yowr swave fiwe is nwot whewe I toht it wood bwe! OwO! could you pwease fwind it fwwor me UwU?')
     browsefiles()
 
+# setup main tkinter window name and frame. Configure frame to fill white space and for widgets to expand to fill space
 root = tk.Tk()
 root.title("Synthetik Loadout Editor")
+main_frame = ttk.Frame(root, padding=(20))
+main_frame.grid(column=0, row=0) #, sticky=('N', 'W', 'E', 'S'))
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
 items = []
 VarSmodules = []
 VarPistols =[]
 DoubleModules = []
 CurrentModPowers = []
-OptionMod1 = tk.StringVar(root)
-OptionMod2 = tk.StringVar(root)
-OptionMod3 = tk.StringVar(root)
-OptionMod4 = tk.StringVar(root)
-OptionMod5 = tk.StringVar(root)
-OptionMod6 = tk.StringVar(root)
-PistolMod = tk.StringVar(root)
+OptionMod1 = tk.StringVar(main_frame)
+OptionMod2 = tk.StringVar(main_frame)
+OptionMod3 = tk.StringVar(main_frame)
+OptionMod4 = tk.StringVar(main_frame)
+OptionMod5 = tk.StringVar(main_frame)
+OptionMod6 = tk.StringVar(main_frame)
+PistolMod = tk.StringVar(main_frame)
 
-PowerMod1 = tk.StringVar(root)
-PowerMod2 = tk.StringVar(root)
-PowerMod3 = tk.StringVar(root)
-PowerMod4 = tk.StringVar(root)
-PowerMod5 = tk.StringVar(root)
-PowerMod6 = tk.StringVar(root)
+PowerMod1 = tk.StringVar(main_frame)
+PowerMod2 = tk.StringVar(main_frame)
+PowerMod3 = tk.StringVar(main_frame)
+PowerMod4 = tk.StringVar(main_frame)
+PowerMod5 = tk.StringVar(main_frame)
+PowerMod6 = tk.StringVar(main_frame)
 
 
 def setsave():
@@ -72,49 +78,49 @@ def setsave():
 setsave()
 
 
-Gun = ttk.Combobox(root, textvariable = PistolMod)
+Gun = ttk.Combobox(main_frame, textvariable = PistolMod)
 Gun['values'] = VarPistols
 Gun.grid(row=0,column=1,columnspan=2)
-Core = ttk.Combobox(root, textvariable = OptionMod1)
+Core = ttk.Combobox(main_frame, textvariable = OptionMod1)
 Core['values'] = VarSmodules
 Core.grid(row=1,column=1)
 
-CorePower = tk.Entry(root, textvariable = PowerMod1)
+CorePower = tk.Entry(main_frame, textvariable = PowerMod1)
 CorePower.grid(row=1,column=2)
 
-StartItem = ttk.Combobox(root, textvariable = OptionMod2)
+StartItem = ttk.Combobox(main_frame, textvariable = OptionMod2)
 StartItem['values'] = VarSmodules
 StartItem.grid(row=2,column=1)
 
-SIPower = tk.Entry(root, textvariable = PowerMod2)
+SIPower = tk.Entry(main_frame, textvariable = PowerMod2)
 SIPower.grid(row=2,column=2)
 
-Item1 = ttk.Combobox(root, textvariable = OptionMod3)
+Item1 = ttk.Combobox(main_frame, textvariable = OptionMod3)
 Item1['values'] = VarSmodules
 Item1.grid(row=3,column=1)
 
-I1Power = tk.Entry(root,textvariable= PowerMod3)
+I1Power = tk.Entry(main_frame,textvariable= PowerMod3)
 I1Power.grid(row=3,column=2)
 
-Item2 = ttk.Combobox(root,textvariable = OptionMod4)
+Item2 = ttk.Combobox(main_frame,textvariable = OptionMod4)
 Item2['values'] = VarSmodules
 Item2.grid(row=4,column=1)
 
-I2Power = tk.Entry(root,textvariable= PowerMod4)
+I2Power = tk.Entry(main_frame,textvariable= PowerMod4)
 I2Power.grid(row=4,column=2)
 
-Mod1 = ttk.Combobox(root, textvariable =OptionMod5)
+Mod1 = ttk.Combobox(main_frame, textvariable =OptionMod5)
 Mod1['values'] = VarSmodules
 Mod1.grid(row=5,column=1)
 
-M1Power = tk.Entry(root,textvariable=PowerMod5)
+M1Power = tk.Entry(main_frame,textvariable=PowerMod5)
 M1Power.grid(row=5,column=2)
 
-Mod2 = ttk.Combobox(root,textvariable = OptionMod6)
+Mod2 = ttk.Combobox(main_frame,textvariable = OptionMod6)
 Mod2['values'] = VarSmodules
 Mod2.grid(row=6,column=1)
 
-M2Power = tk.Entry(root,textvariable=PowerMod6)
+M2Power = tk.Entry(main_frame,textvariable=PowerMod6)
 M2Power.grid(row=6,column=2)
 
 Loadout = ["9","7","6","5","4","3","0"]
@@ -401,27 +407,27 @@ def UwU():
         uwu = 0
         
 
-Class10 = tk.Button(root, text="Riot Guard",fg="white", bg="blue",command=lambda: Testfunc("10"))
+Class10 = tk.Button(main_frame, text="Riot Guard",fg="white", bg="blue",command=lambda: Testfunc("10"))
 Class10.grid(row=0,column=0)
-Class11 = tk.Button(root, text="Breacher",fg="white", bg="blue",command=lambda: Testfunc("11"))
+Class11 = tk.Button(main_frame, text="Breacher",fg="white", bg="blue",command=lambda: Testfunc("11"))
 Class11.grid(row=1,column=0)
-Class20 = tk.Button(root, text="Sniper",fg="white", bg="darkblue",command=lambda: Testfunc("20"))
+Class20 = tk.Button(main_frame, text="Sniper",fg="white", bg="darkblue",command=lambda: Testfunc("20"))
 Class20.grid(row=2,column=0)
-Class21 = tk.Button(root, text="Assassin",fg="white", bg="darkblue",command=lambda: Testfunc("21"))
+Class21 = tk.Button(main_frame, text="Assassin",fg="white", bg="darkblue",command=lambda: Testfunc("21"))
 Class21.grid(row=3,column=0)
-Class30 = tk.Button(root, text="Raider",fg="white", bg="darkgreen",command=lambda: Testfunc("30"))
+Class30 = tk.Button(main_frame, text="Raider",fg="white", bg="darkgreen",command=lambda: Testfunc("30"))
 Class30.grid(row=4,column=0)
-Class31 = tk.Button(root, text="Heavy Gunner",fg="white", bg="darkgreen",command=lambda: Testfunc("31"))
+Class31 = tk.Button(main_frame, text="Heavy Gunner",fg="white", bg="darkgreen",command=lambda: Testfunc("31"))
 Class31.grid(row=5,column=0)
-Class40 = tk.Button(root, text="Engineer",fg="white", bg="red",command=lambda: Testfunc("40"))
+Class40 = tk.Button(main_frame, text="Engineer",fg="white", bg="red",command=lambda: Testfunc("40"))
 Class40.grid(row=6,column=0)
-Class41 = tk.Button(root, text="Demolisher",fg="white", bg="red",command=lambda: Testfunc("41"))
+Class41 = tk.Button(main_frame, text="Demolisher",fg="white", bg="red",command=lambda: Testfunc("41"))
 Class41.grid(row=7,column=0)
-Submit = tk.Button(root,text="submit",command=SubmitLoadout)
+Submit = tk.Button(main_frame,text="submit",command=SubmitLoadout)
 Submit.grid(row=7,column=1,columnspan=2)
-Auto = tk.Button(root,text="Auto Module Edit", command=lambda: AutoModuleEdit(Autopower.get()))
+Auto = tk.Button(main_frame,text="Auto Module Edit", command=lambda: AutoModuleEdit(Autopower.get()))
 Auto.grid(row=8,column=1)
-Autopower = tk.Entry(root)
+Autopower = tk.Entry(main_frame)
 Autopower.grid(row=8,column=2)
 
 def about():
@@ -436,7 +442,7 @@ def notworking():
     elif uwu == 1:
         messagebox.showinfo('actuaw hewp','fiwst: twy opening awnd cwosing synthetik. Make suwe synthetik iws cwosed. Thawt wiww weset the save fiwe tuwu whawt synthetik needs.\nsecond: message @mason own the discowd. He iws the cweatow of thiws aftew aww.')
 
-MenuBar = Menu(root)
+MenuBar = Menu(main_frame)
 file = Menu(MenuBar,tearoff=0)
 file.add_command(label="Open",command=browsefiles)
 file.add_command(label="Show",command=openSave)
