@@ -307,6 +307,13 @@ def AutoWeaponSpawnEdit():
                             continue
                     if not(line.startswith("wdropchange"+weapon+"=")):
                         Tsave.write(re.sub('"-?\d+\.\d+"','"-100.000000"',line))
+                elif line.startswith("wunlock"):
+                    for weapon in weplist:
+                        if line.startswith("wunlock"+weapon+"="):
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"0.000000"',line))
+                            break
+                        else:
+                            continue
                 else:
                     Tsave.write(line)
     Safetywindow()
