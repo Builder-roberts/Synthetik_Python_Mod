@@ -2,7 +2,7 @@
 A save editor tool for the game Synthetik written in python.
 
 # Version 2.6.1:
-### NEW! Weaponspawn now GUARUNTEES one-weapon spawns from daily random run. As in, if you power token Nemesis, and only Nemesis,(close the game), use weaponspawn in Spawn menu, and use a daily run, you are GUARUNTEED to get Nemesis!
+### NEW! Weaponspawn now SORT OF GUARUNTEES one-weapon spawns from daily random run. As in, if you power token Nemesis, and only Nemesis,(close the game), use weaponspawn in Spawn menu, and use a daily run, you are 50% GUARUNTEED to get Nemesis! (upon further testing it seems that occasionally it doesnt want to spawn, but it should be way more likely now
 ### Changing the values next to the items/modules/whatever in your loadout will now change their power! - Manual editing, essentially.
 ### Menubar! specifically File, Power, Misc, and Help.
 ### File: If you want to edit some other Synthetik (S1) Save file, simply open it!
