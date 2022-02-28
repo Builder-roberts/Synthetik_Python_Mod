@@ -312,12 +312,13 @@ def AutoWeaponSpawnEdit():
                         if line.startswith("wunlock"+weapon+"="):
                             Tsave.write(re.sub('"-?\d+\.\d+"','"0.000000"',line))
                             break
-                        else:
-                            continue
+                        elif not(line.startswith("wdropchange"+weapon+"=")):
+                            Tsave.write(line)
+                    else:
+                        Tsave.write(line)
                 else:
                     Tsave.write(line)
     Safetywindow()
-
 
 def AutoItemSpawnEdit():
     realclass = spliting(Currentclass)
