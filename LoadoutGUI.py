@@ -272,6 +272,15 @@ def MaxData():
                 Tsave.write(line)
     Safetywindow()
 
+def CheatCodeReturn():
+    with open(filename,"r") as Save, open(tfilename,"w") as Tsave:
+        for line in Save:
+            if line.startswith("statist"):
+                Tsave.write(re.sub('"-?\d+(\.\d+)?"','"0.000000"',line))
+            else:
+                Tsave.write(line)
+    Safetywindow()
+
 def spliting(Class):
     return [char for char in Class]
 
@@ -467,6 +476,7 @@ misc.add_command(label="Daily Run Reset",command=NewDailyRun)
 misc.add_command(label="Max Data",command=MaxData)
 misc.add_command(label="Undo Research",command=undoresearch)
 misc.add_command(label="UwU OwO",command=UwU)
+misc.add_command(label="Cheat Code Reset",command=CheatCodeReturn)
 MenuBar.add_cascade(label="Misc",menu=misc)
 
 spawn = Menu(MenuBar,tearoff=0)
