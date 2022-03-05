@@ -1,5 +1,6 @@
 # Synthetik_Python_Mod
 A save editor tool for the game Synthetik written in python.
+if it can't find your save file, try looking in username/appdata/local/synthetik  it should be called Save.sav
 
 # Version 2.6.1:
 ### Cheat code reset: if you've ever used a cheat code, and want to again, this automatically resets them all!
