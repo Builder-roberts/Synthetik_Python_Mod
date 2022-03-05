@@ -2,6 +2,10 @@
 A save editor tool for the game Synthetik written in python.
 if it can't find your save file, try looking in username/appdata/local/synthetik  it should be called Save.sav
 
+![LoadoutGUI](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(4).png?raw=true)
+
+You definitely need to have Synthetik closed when you change anything.
+
 # Version 2.6.1:
 ### Cheat code reset: if you've ever used a cheat code, and want to again, this automatically resets them all!
 ### Changing the values next to the items/modules/whatever in your loadout will now change their power! - Manual editing, essentially.
@@ -13,7 +17,7 @@ if it can't find your save file, try looking in username/appdata/local/synthetik
 ### Spawn: Item and Weapon Spawn make spawn rates for token weapons higher, and everything else lower. The resets makes the spawn possibility of every item/weapon 0, the highest natural value.
 ### ALERT: Reset Item Spawn allows Armageddon shard to spawn when it shouldn't. If someone can tell me what the id for armageddon shard is, that can be fixed. until then, if you reset, just play until you get armageddon shard then quit back to the main menu.
 ### ALERT: If you want to help me make this code better, feel totally free to @Mason on discord, and/or just fork this project.
-![LoadoutGUI](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(4).png?raw=true)
+
 
 
 ## -Now, i gotta tell you, this is some thrown together, dumb as frick code written in python. there's probably bugs.
@@ -22,5 +26,6 @@ if it can't find your save file, try looking in username/appdata/local/synthetik
 ## Thank you to Tactu on discord for general coding advice, and helping edit the UI!
 
 # Future Updates:
-### 2.6 is probably the last update. unless I decide to do more things with tokens. 
+### General UI chages, Tactu is helping with refactoring and stuff.
+### Also, I'm going to add an additional frame to edit tokens with, so you dont have to open and close synthetik all the time.
 ### Gui update: the screenshot shows my current progress on making a GUI!
