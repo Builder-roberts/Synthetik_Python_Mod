@@ -62,6 +62,15 @@ PowerMod4 = tk.StringVar(main_frame)
 PowerMod5 = tk.StringVar(main_frame)
 PowerMod6 = tk.StringVar(main_frame)
 
+TokNum1 = tk.StringVar(main_frame)
+TokNum2 = tk.StringVar(main_frame)
+TokNum3 = tk.StringVar(main_frame)
+TokNum4 = tk.StringVar(main_frame)
+tokenlist = ["bonus","plus","minus"]
+wi = ["w","i"]
+io = ["0","1"]
+classio = ["1","2","3","4"]
+tokio = ["0","1","2","3"]
 
 def setsave():
     global VarSmodules
@@ -81,6 +90,9 @@ def setsave():
             elif line.startswith("tpoints_obj_weapon"):
                 P = re.search("obj_\w+(\d+)?_\w+",line).group()
                 VarPistols.append(P)
+            #weapon or item
+
+
 setsave()
 
 
@@ -272,28 +284,34 @@ def AutoWeaponSpawnEdit():
                 if line.startswith("wdropchange"):
                     for weapon in weplist:
                         if line.startswith("wdropchange"+weapon+"="):
-                            Tsave.write(re.sub('"-?\d+\.\d+"','"10000.000000"',line))
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"0.000000"',line))
                             break
                         else:
                             continue
                     if not(line.startswith("wdropchange"+weapon+"=")):
                         Tsave.write(re.sub('"-?\d+\.\d+"','"-100.000000"',line))
                 elif line.startswith("wunlock"):
+                    if len(weplist) == 0:
+                        if re.search('"\d.',line).group() == '"0.':
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"1.000000"',line))
+                            continue
+                        else:
+                            Tsave.write(line)
+                            continue
                     for weapon in weplist:
-                        if weapon == "1":
-                            if line.startswith("wunlock"+weapon+"="):
-                                Tsave.write(re.sub('"-?\d+\.\d+"','"0.000000"',line))
-                                break
-                        if weapon != "1":
-                            if line.startswith("wunlock"+weapon+"="):
-                                Tsave.write(re.sub('"-?\d+\.\d+"','"1.000000"',line))
-                                break
-                            if re.search('"\d.',line).group() == '"0.':
-                                Tsave.write(re.sub('"-?\d+\.\d+"','"1.000000"',line))
-                            else:
-                                Tsave.write(line)
+                        if line.startswith("wunlock"+weapon+"="):
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"1.000000"',line))
+                            weplist.remove(weapon)
+                            break
+                        elif re.search('"\d.',line).group() == '"0.':
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"1.000000"',line))
+                            break
+                        if weapon == weplist[-1]:
+                            Tsave.write(line)
                 else:
                     Tsave.write(line)
+                    continue
+
     Safetywindow()
 
 def AutoItemSpawnEdit():
@@ -362,6 +380,12 @@ def undoresearch():
 
 def openSave():
     os.startfile(filename)
+
+def Tokenset():
+    with open(filename,"r") as Save:
+        for line in Save:
+            return
+        return
 
 def UwU():
     global uwu
@@ -465,9 +489,25 @@ Autopower.grid(row=8,column=2)
 #power frame end
 
 #Token_frame start
+TokWeapon = tk.Button(Token_frame,text="Weapons")
+TokWeapon.grid(row=0,column=0)
+TokItems = tk.Button(Token_frame,text="Items")
+TokItems.grid(row=0,column=1)
+PowerTok = tk.Button(Token_frame,text="Power")
+PowerTok.grid(row=1,column=0)
+UPTok = tk.Button(Token_frame,text="Supply UP")
+UPTok.grid(row=1,column=1)
+DOWNTok = tk.Button(Token_frame,text="Supply DOWN")
+DOWNTok.grid(row=1,column=2)
 
-
-
+Token1 = tk.Entry(Token_frame,textvariable=TokNum1)
+Token1.grid(row=2,column=0,columnspan=3)
+Token2 = tk.Entry(Token_frame,textvariable=TokNum2)
+Token2.grid(row=3,column=0,columnspan=3)
+Token3 = tk.Entry(Token_frame,textvariable=TokNum3)
+Token3.grid(row=4,column=0,columnspan=3)
+Token4 = tk.Entry(Token_frame,textvariable=TokNum4)
+Token4.grid(row=5,column=0,columnspan=3)
 #Token_frame end
 
 
