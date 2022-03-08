@@ -13,20 +13,24 @@ username = getpass.getuser()
 filename = "C:/Users/"+username+"/AppData/Local/Synthetik/Save.sav"
 tfilename = "C:/Users/"+username+"/AppData/Local/Synthetik/TEMPORARYSAVE.txt"
 
-def browsefiles():
-    global filename
-    global tfilename
-    filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("Save files","*.sav*"),("All files","*.*")))
-    filepath = filename.rsplit("/",1)[0]
-    tfilename = filepath +"/TEMPORARYSAVE.txt"
+def browse_files(save_filename, temp_save_filename):
+    filepath = save_filename.rsplit("/",1)[0]
+    new_save_filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("Save files","*.sav*"),("All files","*.*")))
+    if new_save_filename:
+        save_filename = new_save_filename
+        filepath = save_filename.rsplit("/",1)[0]
+        temp_save_filename = filepath +"/TEMPORARYSAVE.txt"
+
     print(filepath[0])
+
+    return save_filename, temp_save_filename
 
 if not os.path.exists(filename):
     if uwu == 0:
         messagebox.showinfo('Synthetik','Sorry, your save file is not where I thought it would be! Could you please find it for me?')
     elif uwu == 1:
         messagebox.showinfo('Synfwetik','Sowwy UwU, yowr swave fiwe is nwot whewe I toht it wood bwe! OwO! could you pwease fwind it fwwor me UwU?')
-    browsefiles()
+    filename, tfilename = browse_files(filename, tfilename)
 
 # setup main tkinter window name and frame. Configure frame to fill white space and for widgets to expand to fill space
 root = tk.Tk()
@@ -526,7 +530,7 @@ def notworking():
 
 MenuBar = Menu(main_frame)
 file = Menu(MenuBar,tearoff=0)
-file.add_command(label="Open",command=browsefiles)
+file.add_command(label="Open",command=lambda: browse_files(filename, tfilename))
 file.add_command(label="Show",command=openSave)
 file.add_command(label="Exit",command=root.quit)
 MenuBar.add_cascade(label="File",menu=file)
