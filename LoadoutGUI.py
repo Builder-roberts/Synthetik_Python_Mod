@@ -47,8 +47,14 @@ root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
 items = []
-VarSmodules = []
-VarPistols =[]
+#since the modules/items/weapons wont ever change, I just made it permanent
+VarSmodules = ["obj_item130_riotguard","obj_item54_c4","obj_item132_dynamite","obj_item98_minisentry","obj_artefact_tactical","obj_artefact_instagib","obj_artefact_madness","obj_artefact_mysterybonus","obj_artefact_terrorlevel","obj_artefact_ricochet","obj_artefact_elemental","obj_artefact_friendlyfire","obj_artefact_ultradrop","obj_artefact_itemupgrade","obj_artefact_pistol","obj_artefact_buff","obj_artefact_powerup","obj_artefact_strafe","obj_artefact_crit","obj_artefact_shop","obj_artefact_healing","obj_artefact_slowdown","obj_artefact_weaponcarry","obj_perk_force","obj_perk_sunrise","obj_perk_dodgeheat","obj_perk_transmutate","obj_perk_heatcontrol","obj_perk_elementalpower","obj_perk_heatrecharge","obj_perk_itemcdvariant","obj_perk_focus","obj_perk_selfrepair","obj_perk_ammoregen","obj_perk_pistolextender","obj_perk_hframe","obj_perk_grenadier","obj_perk_heatup","obj_perk_statusextender","obj_perk_engineer","obj_perk_demolisher","obj_item110_spider","obj_item126_missiledrone","obj_item80_masterkey","obj_item38_grenade_toxic","obj_item71_sentry","obj_item101_resonator","obj_perk_drill","obj_perk_killer","obj_perk_cover","obj_perk_scarred","obj_perk_combo","obj_perk_holdbreath","obj_perk_wepupgrade","obj_perk_edge","obj_perk_reloadsurge","obj_perk_fieldration","obj_perk_drone1","obj_perk_specializedammo","obj_perk_powerstep","obj_perk_reloadstack","obj_perk_classweapon","obj_perk_raider","obj_perk_squadleader","obj_perk_assaultgunner","obj_perk_commando","obj_item124_gunner","obj_item86_commandoflare","obj_item123_cover","obj_item109_reloader2","obj_item55_stim","obj_item37_grenade_plasma","obj_item81_tanto","obj_perk_healthy","obj_perk_diehard","obj_perk_stealback","obj_perk_reactivereload","obj_perk_standstill","obj_perk_powertuning","obj_perk_specialized","obj_perk_perfection","obj_perk_longrange","obj_perk_discipline","obj_perk_dance","obj_perk_backstab","obj_perk_dodgeboost","obj_perk_ejectsurge","obj_perk_headshotammo","obj_perk_marksman","obj_perk_assassin","obj_item122_targetcpu","obj_item94_dagger","obj_item115_decoy","obj_item83_grenade_smoke","obj_item97_minelaser","obj_item82_flare","obj_item79_bolt","obj_item35_grenade_flash","obj_perk_reloadsurge2","obj_perk_return","obj_perk_berserk","obj_perk_scavengerbits","obj_perk_scraparmor","obj_perk_lowhpregen","obj_perk_shieldoc","obj_perk_shotgunmaster","obj_perk_enrage","obj_perk_fortify","obj_perk_killshield","obj_perk_aegis","obj_perk_closer","obj_perk_recovery","obj_perk_warmup","obj_perk_iframe","obj_perk_breacher","obj_perk_riotguard","obj_item99_battlecry","obj_item100_breachingcharge","obj_item12_reflector","obj_item33_shieldburst","obj_item121_tomahawk","obj_item69_taser","obj_item36_grenade_stun","obj_item6_reloader","obj_item64_chalice","obj_item63_cellreplacer","obj_item18_potion","obj_item8_injection","obj_item30_methadone","obj_item7_vial","obj_perk_randomperk"]
+VarPistols =["obj_weapon_TEC_84","obj_weapon_SUP_67","obj_weapon_DE_94","obj_weapon_A9_55","obj_weapon_REP_11","obj_weapon_HLP_64","obj_weapon_LSP_21","obj_weapon_DE_61","obj_weapon_HON_34","obj_weapon_REV_9","obj_weapon_MC_62","obj_weapon_CP_38","obj_weapon_G17_63","obj_weapon_PXS_10","obj_weapon_PTL_6"]
+#Shownmodules is going to be the more readable version of VarSmodules that will be used. I'm having Lawro#0858 make a list to use; 
+#Everything is already ready to insert his list.
+ShownModules = ["Guardian", "Composite 4", "Neutrino Bomb", "Seth-Up Suitcase Sentry", "Mode: Tactical", "Mode: Hyper Adrenaline", "Mode: Madness", "Mode: Mystery Bonus", "PU-55", "Hobb-S", "Rynn", "Rhett", "Kevv", "Zion", "Luka", "Savnt", "Pure 759", "Cario", "Taro", "Aeon-FFD", "Kokova", "Mael", "Ensiferum", "Force Unleashed", "Sun Rising", "Unceasing", "Transmutate", "Calculated", "Elemental Power", "Overdrive", "Well Oiled", "Focus", "Inner Fire", "Multiply", "Weapons Deal", "Chromatic Alloy", "Grenadier", "Forged By Fire", "Status Extender ", "Core: Drone Zeal", "Core: HE-Ammo", "Spider Mines", "Missile Drone", "Dragon’s Masterkey", "Acid Grenade", "LMG Sentry Turret", "Seismic Resonator", "Drill", "Killer", "Take Cover", "Scarred", "Madness", "Hold Breath", "Pack A Punch", "On The Edge", "Press The Attack", "Field Rations", "Drone Mod", "Specialized Ammo", "Charge", "Routine", "Weapon Drop", "Core: Looter", "Core: Squad Leader", "Core: Suppression", "Core: Commando", "Onslaught System", "Road Flare", "Hard Light Cover", "Special Ammo Supply", "Stim Pack", "Plasma Grenade", "Reverbing Blade", "Against The Odds", "Die Hard", "Blood Borne", "Keeping Cool", "Freeze!", "Power Tuning", "DMR Conversion", "Perfection", "Keeping Distance", "Discipline", "Shadow Dance", "Backstab", "Evasive Maneuvers", "Switch Position", "Head Hunter", "Core: Spotter", "Core: Professional", "Targeting Laser", "Scoundrel’s Dagger", "Decoy", "Smoke Grenade", "Laser Mine", "Flare Gun", "’Helsing’ Power Bolt", "TP Grenade Flash", "Push Forward", "Wicked", "Berserk", "Bits And Pieces", "Scrap Plating", "Stimulants", "Shield Overclock", "Weapon Mastery", "Enrage", "Fortify Position", "Shielded", "Aegis MK5 Platinum", "Into Battle", "Recovery", "Warmup", "I-Frame", "Core: Charge", "Core: Unyielding", "Battlecry Module", "Breaching Charge", "RV Rebuke System", "Shieldburst", "Tomahawk", "Auto Taser", "Stun Grenade", "Field Supply", "Lifeblood", "Cell Replacer", "Unidentified Potion", "Overdose", "Methadone","Health Vial", "Random Module"]
+#ShownPistols is not ready
+ShownPistols = VarPistols
 DoubleModules = []
 CurrentModPowers = []
 OptionMod1 = tk.StringVar(main_frame)
@@ -77,23 +83,14 @@ classio = ["1","2","3","4"]
 tokio = ["0","1","2","3"]
 
 def setsave():
-    global VarSmodules
-    VarSmodules.clear()
     global DoubleModules
     DoubleModules.clear()
-    global VarPistols
-    VarPistols.clear()
     with open(filename, "r") as Save:
         for line in Save:
             if line.startswith("tpoints_obj_perk") or line.startswith("tpoints_obj_artefact") or line.startswith("tpoints_obj_item"):
-                P = re.search("obj_\w+(\d+)?_\w+",line).group()
-                VarSmodules.append(P)
                 P = re.search('"-?\d+(\.\d+)?"',line).group()
                 P = re.search('-?\d+(\.\d+)?',P).group()
                 DoubleModules.append(P)
-            elif line.startswith("tpoints_obj_weapon"):
-                P = re.search("obj_\w+(\d+)?_\w+",line).group()
-                VarPistols.append(P)
             #weapon or item
 
 
@@ -134,17 +131,17 @@ def Testfunc(subclass):
             else:
                 continue
     PistolMod.set(VarPistols[VarPistols.index(items[0])])
-    OptionMod1.set(VarSmodules[VarSmodules.index(items[6])])
+    OptionMod1.set(ShownModules[VarSmodules.index(items[6])])
     PowerMod1.set(DoubleModules[VarSmodules.index(items[6])])
-    OptionMod2.set(VarSmodules[VarSmodules.index(items[5])])
+    OptionMod2.set(ShownModules[VarSmodules.index(items[5])])
     PowerMod2.set(DoubleModules[VarSmodules.index(items[5])])
-    OptionMod3.set(VarSmodules[VarSmodules.index(items[4])])
+    OptionMod3.set(ShownModules[VarSmodules.index(items[4])])
     PowerMod3.set(DoubleModules[VarSmodules.index(items[4])])
-    OptionMod4.set(VarSmodules[VarSmodules.index(items[3])])
+    OptionMod4.set(ShownModules[VarSmodules.index(items[3])])
     PowerMod4.set(DoubleModules[VarSmodules.index(items[3])])
-    OptionMod5.set(VarSmodules[VarSmodules.index(items[2])])
+    OptionMod5.set(ShownModules[VarSmodules.index(items[2])])
     PowerMod5.set(DoubleModules[VarSmodules.index(items[2])])
-    OptionMod6.set(VarSmodules[VarSmodules.index(items[1])])
+    OptionMod6.set(ShownModules[VarSmodules.index(items[1])])
     PowerMod6.set(DoubleModules[VarSmodules.index(items[1])])
 
 def SubmitLoadout():
@@ -155,17 +152,17 @@ def SubmitLoadout():
             if line.startswith("perkslot"+Loadout[0]+"class"+Currentclass):
                 Tsave.write(re.sub("obj_\w+(\d+)?_\w+",PistolMod.get(),line))
             elif line.startswith("perkslot"+Loadout[6]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",OptionMod1.get(),line))
+                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod1.get())],line))
             elif line.startswith("perkslot"+Loadout[5]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",OptionMod2.get(),line))
+                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod2.get())],line))
             elif line.startswith("perkslot"+Loadout[4]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",OptionMod3.get(),line))
+                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod3.get())],line))
             elif line.startswith("perkslot"+Loadout[3]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",OptionMod4.get(),line))
+                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod4.get())],line))
             elif line.startswith("perkslot"+Loadout[2]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",OptionMod5.get(),line))
+                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod5.get())],line))
             elif line.startswith("perkslot"+Loadout[1]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",OptionMod6.get(),line))
+                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod6.get())],line))
             elif line.startswith("tpoints_"):
                 if line.startswith("tpoints_"+OptionMod1.get()):
                     Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod1.get()+'"',line))
@@ -288,12 +285,12 @@ def AutoWeaponSpawnEdit():
                 if line.startswith("wdropchange"):
                     for weapon in weplist:
                         if line.startswith("wdropchange"+weapon+"="):
-                            Tsave.write(re.sub('"-?\d+\.\d+"','"0.000000"',line))
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"10.000000"',line))
                             break
                         else:
                             continue
                     if not(line.startswith("wdropchange"+weapon+"=")):
-                        Tsave.write(re.sub('"-?\d+\.\d+"','"-100.000000"',line))
+                        Tsave.write(re.sub('"-?\d+\.\d+"','"-10.000000"',line))
                 elif line.startswith("wunlock"):
                     if len(weplist) == 0:
                         if re.search('"\d.',line).group() == '"0.':
@@ -344,12 +341,12 @@ def AutoItemSpawnEdit():
                 if line.startswith("idropchange"):
                     for item in itemlist:
                         if line.startswith("idropchange "+item+"="):
-                            Tsave.write(re.sub('"-?\d+\.\d+"','"10000.000000"',line))
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"10.000000"',line))
                             break
                         else:
                             continue                        
                     if not(line.startswith("idropchange "+item+"=")):
-                        Tsave.write(re.sub('"-?\d+\.\d+"','"-100.000000"',line))
+                        Tsave.write(re.sub('"-?\d+\.\d+"','"-10.000000"',line))
                 else:
                     Tsave.write(line)
     Safetywindow()
@@ -442,42 +439,42 @@ Gun = ttk.Combobox(Power_frame, textvariable = PistolMod)
 Gun['values'] = VarPistols
 Gun.grid(row=0,column=1,columnspan=2)
 Core = ttk.Combobox(Power_frame, textvariable = OptionMod1)
-Core['values'] = VarSmodules
+Core['values'] = ShownModules
 Core.grid(row=1,column=1)
 
 CorePower = tk.Entry(Power_frame, textvariable = PowerMod1)
 CorePower.grid(row=1,column=2)
 
 StartItem = ttk.Combobox(Power_frame, textvariable = OptionMod2)
-StartItem['values'] = VarSmodules
+StartItem['values'] = ShownModules
 StartItem.grid(row=2,column=1)
 
 SIPower = tk.Entry(Power_frame, textvariable = PowerMod2)
 SIPower.grid(row=2,column=2)
 
 Item1 = ttk.Combobox(Power_frame, textvariable = OptionMod3)
-Item1['values'] = VarSmodules
+Item1['values'] = ShownModules
 Item1.grid(row=3,column=1)
 
 I1Power = tk.Entry(Power_frame,textvariable= PowerMod3)
 I1Power.grid(row=3,column=2)
 
 Item2 = ttk.Combobox(Power_frame,textvariable = OptionMod4)
-Item2['values'] = VarSmodules
+Item2['values'] = ShownModules
 Item2.grid(row=4,column=1)
 
 I2Power = tk.Entry(Power_frame,textvariable= PowerMod4)
 I2Power.grid(row=4,column=2)
 
 Mod1 = ttk.Combobox(Power_frame, textvariable =OptionMod5)
-Mod1['values'] = VarSmodules
+Mod1['values'] = ShownModules
 Mod1.grid(row=5,column=1)
 
 M1Power = tk.Entry(Power_frame,textvariable=PowerMod5)
 M1Power.grid(row=5,column=2)
 
 Mod2 = ttk.Combobox(Power_frame,textvariable = OptionMod6)
-Mod2['values'] = VarSmodules
+Mod2['values'] = ShownModules
 Mod2.grid(row=6,column=1)
 
 M2Power = tk.Entry(Power_frame,textvariable=PowerMod6)
