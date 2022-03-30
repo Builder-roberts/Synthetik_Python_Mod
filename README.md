@@ -9,7 +9,8 @@ You definitely need to have Synthetik closed when you change anything.
 HOW TO USE THE SPAWN MENU:
 ![Tutorial for Spawn](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(23).png?raw=true)
 
-# Version 2.6.1:
+# Version 2.6.2:
+### NEW! Pretty Colors! Readability! Thank you to Lawro#0858 for helping me with the update!
 ### Cheat code reset: if you've ever used a cheat code, and want to again, this automatically resets them all!
 ### Changing the values next to the items/modules/whatever in your loadout will now change their power! - Manual editing, essentially.
 ### Menubar! specifically File, Power, Misc, and Help.
