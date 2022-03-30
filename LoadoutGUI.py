@@ -20,7 +20,6 @@ def browse_files(save_filename, temp_save_filename):
         save_filename = new_save_filename
         filepath = save_filename.rsplit("/",1)[0]
         temp_save_filename = filepath +"/TEMPORARYSAVE.txt"
-
     print(filepath[0])
 
     return save_filename, temp_save_filename
@@ -47,14 +46,12 @@ root.columnconfigure(0, weight=1)
 root.rowconfigure(0, weight=1)
 
 items = []
-#since the modules/items/weapons wont ever change, I just made it permanent
+#since the modules/pistols wont ever change, I just made it permanent
 VarSmodules = ["obj_item130_riotguard","obj_item54_c4","obj_item132_dynamite","obj_item98_minisentry","obj_artefact_tactical","obj_artefact_instagib","obj_artefact_madness","obj_artefact_mysterybonus","obj_artefact_terrorlevel","obj_artefact_ricochet","obj_artefact_elemental","obj_artefact_friendlyfire","obj_artefact_ultradrop","obj_artefact_itemupgrade","obj_artefact_pistol","obj_artefact_buff","obj_artefact_powerup","obj_artefact_strafe","obj_artefact_crit","obj_artefact_shop","obj_artefact_healing","obj_artefact_slowdown","obj_artefact_weaponcarry","obj_perk_force","obj_perk_sunrise","obj_perk_dodgeheat","obj_perk_transmutate","obj_perk_heatcontrol","obj_perk_elementalpower","obj_perk_heatrecharge","obj_perk_itemcdvariant","obj_perk_focus","obj_perk_selfrepair","obj_perk_ammoregen","obj_perk_pistolextender","obj_perk_hframe","obj_perk_grenadier","obj_perk_heatup","obj_perk_statusextender","obj_perk_engineer","obj_perk_demolisher","obj_item110_spider","obj_item126_missiledrone","obj_item80_masterkey","obj_item38_grenade_toxic","obj_item71_sentry","obj_item101_resonator","obj_perk_drill","obj_perk_killer","obj_perk_cover","obj_perk_scarred","obj_perk_combo","obj_perk_holdbreath","obj_perk_wepupgrade","obj_perk_edge","obj_perk_reloadsurge","obj_perk_fieldration","obj_perk_drone1","obj_perk_specializedammo","obj_perk_powerstep","obj_perk_reloadstack","obj_perk_classweapon","obj_perk_raider","obj_perk_squadleader","obj_perk_assaultgunner","obj_perk_commando","obj_item124_gunner","obj_item86_commandoflare","obj_item123_cover","obj_item109_reloader2","obj_item55_stim","obj_item37_grenade_plasma","obj_item81_tanto","obj_perk_healthy","obj_perk_diehard","obj_perk_stealback","obj_perk_reactivereload","obj_perk_standstill","obj_perk_powertuning","obj_perk_specialized","obj_perk_perfection","obj_perk_longrange","obj_perk_discipline","obj_perk_dance","obj_perk_backstab","obj_perk_dodgeboost","obj_perk_ejectsurge","obj_perk_headshotammo","obj_perk_marksman","obj_perk_assassin","obj_item122_targetcpu","obj_item94_dagger","obj_item115_decoy","obj_item83_grenade_smoke","obj_item97_minelaser","obj_item82_flare","obj_item79_bolt","obj_item35_grenade_flash","obj_perk_reloadsurge2","obj_perk_return","obj_perk_berserk","obj_perk_scavengerbits","obj_perk_scraparmor","obj_perk_lowhpregen","obj_perk_shieldoc","obj_perk_shotgunmaster","obj_perk_enrage","obj_perk_fortify","obj_perk_killshield","obj_perk_aegis","obj_perk_closer","obj_perk_recovery","obj_perk_warmup","obj_perk_iframe","obj_perk_breacher","obj_perk_riotguard","obj_item99_battlecry","obj_item100_breachingcharge","obj_item12_reflector","obj_item33_shieldburst","obj_item121_tomahawk","obj_item69_taser","obj_item36_grenade_stun","obj_item6_reloader","obj_item64_chalice","obj_item63_cellreplacer","obj_item18_potion","obj_item8_injection","obj_item30_methadone","obj_item7_vial","obj_perk_randomperk"]
 VarPistols =["obj_weapon_TEC_84","obj_weapon_SUP_67","obj_weapon_DE_94","obj_weapon_A9_55","obj_weapon_REP_11","obj_weapon_HLP_64","obj_weapon_LSP_21","obj_weapon_DE_61","obj_weapon_HON_34","obj_weapon_REV_9","obj_weapon_MC_62","obj_weapon_CP_38","obj_weapon_G17_63","obj_weapon_PXS_10","obj_weapon_PTL_6"]
-#Shownmodules is going to be the more readable version of VarSmodules that will be used. I'm having Lawro#0858 make a list to use; 
-#Everything is already ready to insert his list.
-ShownModules = ["Guardian", "Composite 4", "Neutrino Bomb", "Seth-Up Suitcase Sentry", "Mode: Tactical", "Mode: Hyper Adrenaline", "Mode: Madness", "Mode: Mystery Bonus", "PU-55", "Hobb-S", "Rynn", "Rhett", "Kevv", "Zion", "Luka", "Savnt", "Pure 759", "Cario", "Taro", "Aeon-FFD", "Kokova", "Mael", "Ensiferum", "Force Unleashed", "Sun Rising", "Unceasing", "Transmutate", "Calculated", "Elemental Power", "Overdrive", "Well Oiled", "Focus", "Inner Fire", "Multiply", "Weapons Deal", "Chromatic Alloy", "Grenadier", "Forged By Fire", "Status Extender ", "Core: Drone Zeal", "Core: HE-Ammo", "Spider Mines", "Missile Drone", "Dragon’s Masterkey", "Acid Grenade", "LMG Sentry Turret", "Seismic Resonator", "Drill", "Killer", "Take Cover", "Scarred", "Madness", "Hold Breath", "Pack A Punch", "On The Edge", "Press The Attack", "Field Rations", "Drone Mod", "Specialized Ammo", "Charge", "Routine", "Weapon Drop", "Core: Looter", "Core: Squad Leader", "Core: Suppression", "Core: Commando", "Onslaught System", "Road Flare", "Hard Light Cover", "Special Ammo Supply", "Stim Pack", "Plasma Grenade", "Reverbing Blade", "Against The Odds", "Die Hard", "Blood Borne", "Keeping Cool", "Freeze!", "Power Tuning", "DMR Conversion", "Perfection", "Keeping Distance", "Discipline", "Shadow Dance", "Backstab", "Evasive Maneuvers", "Switch Position", "Head Hunter", "Core: Spotter", "Core: Professional", "Targeting Laser", "Scoundrel’s Dagger", "Decoy", "Smoke Grenade", "Laser Mine", "Flare Gun", "’Helsing’ Power Bolt", "TP Grenade Flash", "Push Forward", "Wicked", "Berserk", "Bits And Pieces", "Scrap Plating", "Stimulants", "Shield Overclock", "Weapon Mastery", "Enrage", "Fortify Position", "Shielded", "Aegis MK5 Platinum", "Into Battle", "Recovery", "Warmup", "I-Frame", "Core: Charge", "Core: Unyielding", "Battlecry Module", "Breaching Charge", "RV Rebuke System", "Shieldburst", "Tomahawk", "Auto Taser", "Stun Grenade", "Field Supply", "Lifeblood", "Cell Replacer", "Unidentified Potion", "Overdose", "Methadone","Health Vial", "Random Module"]
-#ShownPistols is not ready
-ShownPistols = VarPistols
+#Shownmodules is going to be the more readable version of VarSmodules that will be used. I'm having Lawro#0858 make a list to use; done
+ShownModules = ["Guardian", "Composite 4", "Neutrino Bomb", "Seth-Up Suitcase Sentry", "Mode: Tactical", "Mode: Hyper Adrenaline", "Mode: Madness", "Mode: Mystery Bonus", "PU-55", "Hobb-S", "Rynn", "Rhett", "Kevv", "Zion", "Luka", "Savnt", "Pure 759", "Cario", "Taro", "Aeon-FFD", "Kokova", "Mael", "Ensiferum","Force Unleashed", "Sun Rising", "Unceasing", "Transmutate", "Calculated", "Elemental Power", "Overdrive", "Well Oiled", "Focus", "Inner Fire", "Multiply", "Weapons Deal", "Chromatic Alloy", "Grenadier", "Forged By Fire", "Status Extender ", "Core: Drone Zeal", "Core: HE-Ammo", "Spider Mines", "Missile Drone", "Dragon’s Masterkey", "Acid Grenade", "LMG Sentry Turret", "Seismic Resonator","Drill", "Killer", "Take Cover", "Scarred", "Madness", "Hold Breath", "Pack A Punch", "On The Edge", "Press The Attack", "Field Rat0ons", "Drone Mod", "Specialized Ammo", "Charge", "Routine", "Weapon Drop", "Core: Looter", "Core: Squad Leader", "Core: Suppression", "Core: Commando", "Onslaught System", "Road Flare", "Hard Light Cover", "Special Ammo Supply", "Stim Pack", "Plasma Grenade", "Reverbing Blade", "Against The Odds", "Die Hard", "Blood Borne", "Keeping Cool", "Freeze!", "Power Tuning", "DMR Conversion", "Perfection", "Keeping Distance", "Discipline", "Shadow Dance", "Backstab", "Evasive Maneuvers", "Switch Position", "Head Hunter", "Core: Spotter", "Core: Professional", "Targeting Laser", "Scoundrel’s Dagger", "Decoy", "Smoke Grenade", "Laser Mine", "Flare Gun", "’Helsing’ Power Bolt", "TP Grenade Flash", "Push Forward", "Wicked", "Berserk", "Bits And Pieces", "Scrap Plating", "Stimulants", "Shield Overclock", "Weapon Mastery", "Enrage", "Fortify Position", "Shielded", "Aegis MK5 Platinum", "Into Battle", "Recovery", "Warmup", "I-Frame", "Core: Charge", "Core: Unyielding", "Battlecry Module", "Breaching Charge", "RV Rebuke System", "Shieldburst", "Tomahawk", "Auto Taser", "Stun Grenade","Field Supply", "Lifeblood", "Cell Replacer", "Unidentified Potion", "Overdose", "Methadone","Health Vial", "Random Module"]
+ShownPistols = ["TEC-9.95 Personal","P25 Overdrive","Titanium Eagle","Auto 9/45","57 Fusion Classic","PPQ-H Laser Pistol","Kaida Laser Pistol","Desert Eagle .50","Kaida Model H","Last Breath","Master Chief","XM2 Coil Pistol","G17 Undercover","PXS Covert Ops","P33 Compact"]
 DoubleModules = []
 CurrentModPowers = []
 OptionMod1 = tk.StringVar(main_frame)
@@ -92,16 +89,10 @@ def setsave():
                 P = re.search('-?\d+(\.\d+)?',P).group()
                 DoubleModules.append(P)
             #weapon or item
-
-
 setsave()
-
-
 
 Loadout = ["9","7","6","5","4","3","0"]
 Currentclass = "10"
-
-
 
 def Testfunc(subclass):
     global Currentclass
@@ -130,7 +121,7 @@ def Testfunc(subclass):
                         continue
             else:
                 continue
-    PistolMod.set(VarPistols[VarPistols.index(items[0])])
+    PistolMod.set(ShownPistols[VarPistols.index(items[0])])
     OptionMod1.set(ShownModules[VarSmodules.index(items[6])])
     PowerMod1.set(DoubleModules[VarSmodules.index(items[6])])
     OptionMod2.set(ShownModules[VarSmodules.index(items[5])])
@@ -143,14 +134,19 @@ def Testfunc(subclass):
     PowerMod5.set(DoubleModules[VarSmodules.index(items[2])])
     OptionMod6.set(ShownModules[VarSmodules.index(items[1])])
     PowerMod6.set(DoubleModules[VarSmodules.index(items[1])])
+    Pistolchangecolor()
+    Regchangecolor(OptionMod6,Mod2)
+    Regchangecolor(OptionMod5,Mod1) 
+    Regchangecolor(OptionMod4,Item2) 
+    Regchangecolor(OptionMod3,Item1)
+    Regchangecolor(OptionMod2,StartItem)
+    Regchangecolor(OptionMod1,Core)
 
 def SubmitLoadout():
-
-    print("now applying changes to Tsave")
     with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
         for line in Save:
             if line.startswith("perkslot"+Loadout[0]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",PistolMod.get(),line))
+                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarPistols[ShownPistols.index(PistolMod.get())],line))
             elif line.startswith("perkslot"+Loadout[6]+"class"+Currentclass):
                 Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod1.get())],line))
             elif line.startswith("perkslot"+Loadout[5]+"class"+Currentclass):
@@ -191,7 +187,6 @@ def Safetywindow():
 
 
 def CopytoSave():
-    print("this is working")
     with open(filename, "w") as Save, open(tfilename, "r") as Tsave:
         for line in Tsave:
             Save.write(line)
@@ -414,8 +409,61 @@ def UwU():
         Submit .configure(text="submit")
         Auto.configure(text="Auto Module Edit")
         uwu = 0
-        
+
+#here's the styles for the comboboxes
+style=ttk.Style()
+style.theme_use('alt')
+style.configure("Gaurdian.TCombobox",fieldbackground="blue")
+style.configure("Rouge.TCombobox",fieldbackground="darkblue")
+style.configure("Commando.TCombobox",fieldbackground="darkgreen")
+style.configure("Specialist.TCombobox",fieldbackground="red")
+style.configure("Other.TCombobox",fieldbackground="white")
+style.configure("Mode.TCombobox",fieldbackground="lightblue")
+style.configure("Artefact.TCombobox",fieldbackground="lightgreen")
+
+#here's the 2 functions that change the colors of the comboboxes
+def Pistolchangecolor():
+    Curpistol = PistolMod.get()
+    if Curpistol == ShownPistols[11] or Curpistol == ShownPistols[10]:
+        Gun.configure(style="Gaurdian.TCombobox",foreground="white")
+    elif Curpistol == ShownPistols[12] or Curpistol == ShownPistols[13]:
+        Gun.configure(style="Rouge.TCombobox",foreground="white")
+    elif Curpistol == ShownPistols[7] or Curpistol == ShownPistols[8]:
+        Gun.configure(style="Commando.TCombobox",foreground="white")
+    elif Curpistol == ShownPistols[5] or Curpistol == ShownPistols[6]:
+        Gun.configure(style="Specialist.TCombobox",foreground="white")
+    else:
+        Gun.configure(style="Other.TCombobox",foreground="black")
+    
+def Regchangecolor(Modulation,Ident):
+    Cur = Modulation.get()
+    for i in range (4,8):
+        if Cur == ShownModules[i]:
+            Ident.configure(style="Mode.TCombobox",foreground="black")
+    for i in range (8,23):
+        if Cur == ShownModules[i]:
+            Ident.configure(style="Artefact.TCombobox",foreground="black")
+    for i in range (23,47):
+        if Cur == ShownModules[i]:
+            Ident.configure(style="Specialist.TCombobox",foreground="white")
+    for i in range (47,73):
+        if Cur == ShownModules[i]:
+            Ident.configure(style="Commando.TCombobox",foreground="white")
+    for i in range (73,98):
+        if Cur == ShownModules[i]:
+            Ident.configure(style="Rouge.TCombobox",foreground="white")
+    for i in range (98,123):
+        if Cur == ShownModules[i]:
+            Ident.configure(style="Gaurdian.TCombobox",foreground="white")
+    for i in range (0,4):
+        if Cur == ShownModules[i]:
+            Ident.configure(style="Other.TCombobox",foreground="black")
+    for i in range (123,131):
+        if Cur == ShownModules[i]:
+            Ident.configure(style="Other.TCombobox",foreground="black")
+    
 #Button frame start
+
 Class10 = tk.Button(Button_frame, text="Riot Guard",fg="white", bg="blue",command=lambda: Testfunc("10"))
 Class10.grid(row=0,column=0)
 Class11 = tk.Button(Button_frame, text="Breacher",fg="white", bg="blue",command=lambda: Testfunc("11"))
@@ -436,11 +484,15 @@ Class41.grid(row=7,column=0)
 
 # Power_frame start
 Gun = ttk.Combobox(Power_frame, textvariable = PistolMod)
-Gun['values'] = VarPistols
+Gun['values'] = ShownPistols
 Gun.grid(row=0,column=1,columnspan=2)
+Gun.bind("<<ComboboxSelected>>", lambda _ :Pistolchangecolor())
+
+
 Core = ttk.Combobox(Power_frame, textvariable = OptionMod1)
 Core['values'] = ShownModules
 Core.grid(row=1,column=1)
+Core.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod1,Core))
 
 CorePower = tk.Entry(Power_frame, textvariable = PowerMod1)
 CorePower.grid(row=1,column=2)
@@ -448,6 +500,7 @@ CorePower.grid(row=1,column=2)
 StartItem = ttk.Combobox(Power_frame, textvariable = OptionMod2)
 StartItem['values'] = ShownModules
 StartItem.grid(row=2,column=1)
+StartItem.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod2,StartItem))
 
 SIPower = tk.Entry(Power_frame, textvariable = PowerMod2)
 SIPower.grid(row=2,column=2)
@@ -455,6 +508,7 @@ SIPower.grid(row=2,column=2)
 Item1 = ttk.Combobox(Power_frame, textvariable = OptionMod3)
 Item1['values'] = ShownModules
 Item1.grid(row=3,column=1)
+Item1.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod3,Item1))
 
 I1Power = tk.Entry(Power_frame,textvariable= PowerMod3)
 I1Power.grid(row=3,column=2)
@@ -462,6 +516,7 @@ I1Power.grid(row=3,column=2)
 Item2 = ttk.Combobox(Power_frame,textvariable = OptionMod4)
 Item2['values'] = ShownModules
 Item2.grid(row=4,column=1)
+Item2.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod4,Item2))
 
 I2Power = tk.Entry(Power_frame,textvariable= PowerMod4)
 I2Power.grid(row=4,column=2)
@@ -469,6 +524,7 @@ I2Power.grid(row=4,column=2)
 Mod1 = ttk.Combobox(Power_frame, textvariable =OptionMod5)
 Mod1['values'] = ShownModules
 Mod1.grid(row=5,column=1)
+Mod1.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod5,Mod1))
 
 M1Power = tk.Entry(Power_frame,textvariable=PowerMod5)
 M1Power.grid(row=5,column=2)
@@ -476,6 +532,7 @@ M1Power.grid(row=5,column=2)
 Mod2 = ttk.Combobox(Power_frame,textvariable = OptionMod6)
 Mod2['values'] = ShownModules
 Mod2.grid(row=6,column=1)
+Mod2.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod6,Mod2))
 
 M2Power = tk.Entry(Power_frame,textvariable=PowerMod6)
 M2Power.grid(row=6,column=2)
