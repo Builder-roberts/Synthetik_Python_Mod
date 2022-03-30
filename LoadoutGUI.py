@@ -160,17 +160,17 @@ def SubmitLoadout():
             elif line.startswith("perkslot"+Loadout[1]+"class"+Currentclass):
                 Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod6.get())],line))
             elif line.startswith("tpoints_"):
-                if line.startswith("tpoints_"+OptionMod1.get()):
+                if line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod1.get())]):
                     Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod1.get()+'"',line))
-                elif line.startswith("tpoints_"+OptionMod2.get()):
+                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod2.get())]):
                     Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod2.get()+'"',line))
-                elif line.startswith("tpoints_"+OptionMod3.get()):
+                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod3.get())]):
                     Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod3.get()+'"',line))
-                elif line.startswith("tpoints_"+OptionMod4.get()):
+                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod4.get())]):
                     Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod4.get()+'"',line))
-                elif line.startswith("tpoints_"+OptionMod5.get()):
+                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod5.get())]):
                     Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod5.get()+'"',line))
-                elif line.startswith("tpoints_"+OptionMod6.get()):
+                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod6.get())]):
                     Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod6.get()+'"',line))
                 else:
                     Tsave.write(line)
