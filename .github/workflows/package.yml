@@ -24,10 +24,6 @@ jobs:
 
       - name: Setup Python
         uses: actions/setup-python@v1
-
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=today::$(date +'%Y.%m.%d')"
         
       - uses: BSFishy/pip-action@v1
         with:
@@ -39,7 +35,7 @@ jobs:
           pyinstaller --noconfirm --onefile LoadoutGUI.py
 
       - name: Zip folder
-        run: Compress-Archive -Path dist -DestinationPath $RELEASE_NAME.zip
+        run: Compress-Archive -Path dist -DestinationPath SynthetikSaveEditor.zip
         shell: powershell
         env: 
           RELEASE_NAME: ${{ github.event.repository.name }}.${{ steps.date.outputs.today }}
