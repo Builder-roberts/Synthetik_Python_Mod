@@ -32,7 +32,7 @@ jobs:
       - name: Convert to exe
         id: convert
         run: |
-          pyinstaller --noconfirm --onefile LoadoutGUI.py
+          pyinstaller --noconfirm --onefile --windowed LoadoutGUI.py
 
       - name: Zip folder
         run: Compress-Archive -Path dist -DestinationPath SynthetikSaveEditor.zip
