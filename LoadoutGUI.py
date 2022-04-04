@@ -7,7 +7,7 @@ import re
 import os
 from tkinter import messagebox
 
-
+safety = 0
 uwu = 0
 username = getpass.getuser()
 filename = "C:/Users/"+username+"/AppData/Local/Synthetik/Save.sav"
@@ -180,10 +180,13 @@ def SubmitLoadout():
 
 
 def Safetywindow():
-    SafetyWindow = tk.Toplevel(root)
-    SafetyWindow.title("ALERT!")
-    tk.Label(SafetyWindow, text ="Do you want to overwrite your Save File?").pack()
-    tk.Button(SafetyWindow, text = "Yes", command=lambda: [CopytoSave(),SafetyWindow.destroy()]).pack()
+    if safety == 0:
+        CopytoSave()
+    else:
+        SafetyWindow = tk.Toplevel(root)
+        SafetyWindow.title("ALERT!")
+        tk.Label(SafetyWindow, text ="Do you want to overwrite your Save File?").pack()
+        tk.Button(SafetyWindow, text = "Yes", command=lambda: [CopytoSave(),SafetyWindow.destroy()]).pack()
 
 
 def CopytoSave():
@@ -285,7 +288,7 @@ def AutoWeaponSpawnEdit():
                         else:
                             continue
                     if not(line.startswith("wdropchange"+weapon+"=")):
-                        Tsave.write(re.sub('"-?\d+\.\d+"','"-10.000000"',line))
+                        Tsave.write(re.sub('"-?\d+\.\d+"','"-8.000000"',line))
                 elif line.startswith("wunlock"):
                     if len(weplist) == 0:
                         if re.search('"\d.',line).group() == '"0.':
@@ -341,7 +344,7 @@ def AutoItemSpawnEdit():
                         else:
                             continue                        
                     if not(line.startswith("idropchange "+item+"=")):
-                        Tsave.write(re.sub('"-?\d+\.\d+"','"-10.000000"',line))
+                        Tsave.write(re.sub('"-?\d+\.\d+"','"-8.000000"',line))
                 else:
                     Tsave.write(line)
     Safetywindow()
@@ -410,6 +413,12 @@ def UwU():
         Auto.configure(text="Auto Module Edit")
         uwu = 0
 
+def safetyFunc():
+    global safety
+    if safety != 0:
+        safety = 0
+    if safety == 0:
+        safety = 1
 #here's the styles for the comboboxes
 style=ttk.Style()
 style.theme_use('alt')
@@ -600,6 +609,7 @@ misc.add_command(label="Max Data",command=MaxData)
 misc.add_command(label="Undo Research",command=undoresearch)
 misc.add_command(label="UwU OwO",command=UwU)
 misc.add_command(label="Cheat Code Reset",command=CheatCodeReturn)
+misc.add_command(label="Safety On/Off", command=safetyFunc)
 MenuBar.add_cascade(label="Misc",menu=misc)
 
 spawn = Menu(MenuBar,tearoff=0)
