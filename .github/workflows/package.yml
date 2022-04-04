@@ -32,14 +32,14 @@ jobs:
       - uses: BSFishy/pip-action@v1
         with:
           packages: pyinstaller
-          
+
       - name: Convert to exe
         id: convert
         run: |
           pyinstaller --noconfirm --onefile --console LoadoutGUI.py
 
       - name: Zip folder
-        run: zip -r $RELEASE_NAME.zip LoadoutGUI.exe
+        run: zip -r $RELEASE_NAME.zip dist/LoadoutGUI.exe
         env: 
           RELEASE_NAME: ${{ github.event.repository.name }}.${{ steps.date.outputs.today }}
       
