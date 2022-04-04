@@ -39,7 +39,7 @@ jobs:
           pyinstaller --noconfirm --onefile --console LoadoutGUI.py
 
       - name: Zip folder
-        run: zip -r $RELEASE_NAME.zip dist
+        run: zip -r $RELEASE_NAME.zip .
         env: 
           RELEASE_NAME: ${{ github.event.repository.name }}.${{ steps.date.outputs.today }}
       
