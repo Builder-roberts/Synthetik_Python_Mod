@@ -39,7 +39,8 @@ jobs:
           pyinstaller --noconfirm --onefile LoadoutGUI.py
 
       - name: Zip folder
-        run: tar.exe -a -c -f $RELEASE_NAME.zip "dist"
+        run: Compress-Archive -Path dist -DestinationPath $RELEASE_NAME.zip
+        shell: powershell
         env: 
           RELEASE_NAME: ${{ github.event.repository.name }}.${{ steps.date.outputs.today }}
       
