@@ -1,0 +1,50 @@
+# Automatically generates a Zip package whenever the main branch is updated.
+name: CI
+
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        
+      - uses: BSFishy/pip-action@v1
+        with:
+          packages: pyinstaller
+
+      - name: Convert to exe
+        id: convert
+        run: |
+          pyinstaller --noconfirm --onefile LoadoutGUI.py
+
+      - name: Zip folder
+        run: Compress-Archive -Path dist -DestinationPath SynthetikSaveEditor.zip
+        shell: powershell
+        env: 
+          RELEASE_NAME: ${{ github.event.repository.name }}.${{ steps.date.outputs.today }}
+      
+      - name: Publish
+        uses: "marvinpinto/action-automatic-releases@v1.2.1"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ github.event_name == 'push' && 'latest' || 'pre-release' }}
+          prerelease: ${{ github.event_name != 'push' }}
+          files: |
+            *.zip
