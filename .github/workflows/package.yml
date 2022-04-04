@@ -16,7 +16,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -36,10 +36,10 @@ jobs:
       - name: Convert to exe
         id: convert
         run: |
-          pyinstaller --noconfirm --onefile --console LoadoutGUI.py
+          pyinstaller --noconfirm --onefile LoadoutGUI.py
 
       - name: Zip folder
-        run: zip -r $RELEASE_NAME.zip .
+        run: zip -r $RELEASE_NAME.zip dist
         env: 
           RELEASE_NAME: ${{ github.event.repository.name }}.${{ steps.date.outputs.today }}
       
