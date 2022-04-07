@@ -1,4 +1,8 @@
 #gui with tkinter
+import bdb
+from email.iterators import body_line_iterator
+from optparse import Values
+from pickle import NONE
 import tkinter as tk
 from tkinter import Menu, ttk
 from tkinter import filedialog
@@ -7,8 +11,10 @@ import re
 import os
 from tkinter import messagebox
 
-safety = 0
+#Turn safety to 1 so we can see what happens to the TEMPORARYSAVE
+safety = 1
 uwu = 0
+WI = "w"
 username = getpass.getuser()
 filename = "C:/Users/"+username+"/AppData/Local/Synthetik/Save.sav"
 tfilename = "C:/Users/"+username+"/AppData/Local/Synthetik/TEMPORARYSAVE.txt"
@@ -36,9 +42,9 @@ root = tk.Tk()
 root.title("Synthetik Loadout Editor")
 main_frame = ttk.Frame(root, padding=(20))
 main_frame.grid(column=0, row=0) #, sticky=('N', 'W', 'E', 'S'))
-Button_frame = ttk.Frame(main_frame)
+Button_frame = ttk.Frame(main_frame,borderwidth=5)
 Button_frame.grid(column=0,row=0)
-Power_frame = ttk.Frame(main_frame)
+Power_frame = ttk.Frame(main_frame,borderwidth=5)
 Power_frame.grid(column=1,row=0)
 Token_frame = ttk.Frame(main_frame)
 Token_frame.grid(column=2,row=0)
@@ -53,7 +59,15 @@ VarPistols =["obj_weapon_TEC_84","obj_weapon_SUP_67","obj_weapon_DE_94","obj_wea
 ShownModules = ["Guardian", "Composite 4", "Neutrino Bomb", "Seth-Up Suitcase Sentry", "Mode: Tactical", "Mode: Hyper Adrenaline", "Mode: Madness", "Mode: Mystery Bonus", "PU-55", "Hobb-S", "Rynn", "Rhett", "Kevv", "Zion", "Luka", "Savnt", "Pure 759", "Cario", "Taro", "Aeon-FFD", "Kokova", "Mael", "Ensiferum","Force Unleashed", "Sun Rising", "Unceasing", "Transmutate", "Calculated", "Elemental Power", "Overdrive", "Well Oiled", "Focus", "Inner Fire", "Multiply", "Weapons Deal", "Chromatic Alloy", "Grenadier", "Forged By Fire", "Status Extender ", "Core: Drone Zeal", "Core: HE-Ammo", "Spider Mines", "Missile Drone", "Dragon’s Masterkey", "Acid Grenade", "LMG Sentry Turret", "Seismic Resonator","Drill", "Killer", "Take Cover", "Scarred", "Madness", "Hold Breath", "Pack A Punch", "On The Edge", "Press The Attack", "Field Rat0ons", "Drone Mod", "Specialized Ammo", "Charge", "Routine", "Weapon Drop", "Core: Looter", "Core: Squad Leader", "Core: Suppression", "Core: Commando", "Onslaught System", "Road Flare", "Hard Light Cover", "Special Ammo Supply", "Stim Pack", "Plasma Grenade", "Reverbing Blade", "Against The Odds", "Die Hard", "Blood Borne", "Keeping Cool", "Freeze!", "Power Tuning", "DMR Conversion", "Perfection", "Keeping Distance", "Discipline", "Shadow Dance", "Backstab", "Evasive Maneuvers", "Switch Position", "Head Hunter", "Core: Spotter", "Core: Professional", "Targeting Laser", "Scoundrel’s Dagger", "Decoy", "Smoke Grenade", "Laser Mine", "Flare Gun", "’Helsing’ Power Bolt", "TP Grenade Flash", "Push Forward", "Wicked", "Berserk", "Bits And Pieces", "Scrap Plating", "Stimulants", "Shield Overclock", "Weapon Mastery", "Enrage", "Fortify Position", "Shielded", "Aegis MK5 Platinum", "Into Battle", "Recovery", "Warmup", "I-Frame", "Core: Charge", "Core: Unyielding", "Battlecry Module", "Breaching Charge", "RV Rebuke System", "Shieldburst", "Tomahawk", "Auto Taser", "Stun Grenade","Field Supply", "Lifeblood", "Cell Replacer", "Unidentified Potion", "Overdose", "Methadone","Health Vial", "Random Module"]
 ShownPistols = ["TEC-9.95 Personal","P25 Overdrive","Titanium Eagle","Auto 9/45","57 Fusion Classic","PPQ-H Laser Pistol","Kaida Laser Pistol","Desert Eagle .50","Kaida Model H","Last Breath","Master Chief","XM2 Coil Pistol","G17 Undercover","PXS Covert Ops","P33 Compact"]
 DoubleModules = []
-CurrentModPowers = []
+# Starting work on Token Frame functionality
+Tokens = []
+ClassTokens = []
+WeaponNumbers = range(99)
+ShownWeapons = ["unknown","SRP","CL","OBJ","DB","MG51","P33","TAC","CLG","REV","PXS","57F","DMR","SPC","FMG","R5K","VU","LSG","LSMG","12G","GM6","LP","DMR","M32s","AMD","ION","MG42","ENF","DMN","CRGR","VEC","S12","ML","M79","HON","FT","FC","CG","CP","TM","SCR","AEK","VAL","A12","RPK","RJ","RG","MAG","NG","HPC","BRN","EX","FBC","BOW","INT","A9","BC","RPG","ACR","98K","KSG","MC","DE","G17","H-LP","UMP","ANH","P25","Y-L","STY","LEV","IMP","GAT","LC","AKS","K98","UMP","LEV","GL","RS","AR15","A5C","AN94","P90","TEC-9","LG","M16","M14","STG","SC","M163","M14 (EBR)","FMG","M75","TE","PSG","QBZ","T89","K7","MOD0"]
+ItemNumbers = range(150)
+ShownItems = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149"]
+CurTokShown = ShownWeapons
+
 OptionMod1 = tk.StringVar(main_frame)
 OptionMod2 = tk.StringVar(main_frame)
 OptionMod3 = tk.StringVar(main_frame)
@@ -69,16 +83,25 @@ PowerMod4 = tk.StringVar(main_frame)
 PowerMod5 = tk.StringVar(main_frame)
 PowerMod6 = tk.StringVar(main_frame)
 
-TokNum1 = tk.StringVar(main_frame)
-TokNum2 = tk.StringVar(main_frame)
-TokNum3 = tk.StringVar(main_frame)
-TokNum4 = tk.StringVar(main_frame)
-tokenlist = ["bonus","plus","minus"]
-wi = ["w","i"]
-io = ["0","1"]
-classio = ["1","2","3","4"]
-tokio = ["0","1","2","3"]
-
+#power token
+PTokNum1 = tk.StringVar(main_frame)
+PTokNum2 = tk.StringVar(main_frame)
+PTokNum3 = tk.StringVar(main_frame)
+PTokNum4 = tk.StringVar(main_frame)
+#up token
+UTokNum1 = tk.StringVar(main_frame)
+UTokNum2 = tk.StringVar(main_frame)
+UTokNum3 = tk.StringVar(main_frame)
+UTokNum4 = tk.StringVar(main_frame)
+#down token
+DTokNum1 = tk.StringVar(main_frame)
+DTokNum2 = tk.StringVar(main_frame)
+DTokNum3 = tk.StringVar(main_frame)
+DTokNum4 = tk.StringVar(main_frame)
+#lists of token vars
+BonusTok = [PTokNum1,PTokNum2,PTokNum3,PTokNum4]
+UpTok = [UTokNum1,UTokNum2,UTokNum3,UTokNum4]
+DownTok =[DTokNum1,DTokNum2,DTokNum3,DTokNum4]
 def setsave():
     global DoubleModules
     DoubleModules.clear()
@@ -92,35 +115,34 @@ def setsave():
 setsave()
 
 Loadout = ["9","7","6","5","4","3","0"]
+ITokIdents = ["ibonus","iplus","iminus"]
+WTokIdents = ["wbonus","wplus","wminus"]
+# $savefile currentclass is one of the things that could be used in a local save file for the mod.
 Currentclass = "10"
+
 
 def Testfunc(subclass):
     global Currentclass
     Currentclass = subclass
-    CurrentModPowers.clear()
     items.clear()
+    Tokens.clear()
     with open(filename, "r") as Save:
         for line in Save:
             if line.startswith("perkslot"):
                 for num in Loadout:
-                    if line.startswith("perkslot"+num+"class"+subclass):
+                    if line.startswith("perkslot"+num+"class"+Currentclass):
                         P = re.search("obj_\w+(\d+)?_\w+",line).group()
                         items.append(P)
                     else:
                         continue
+            elif line.startswith("wbonus") or line.startswith("wplus") or line.startswith("wminus"):
+                Tokens.append(line)
+            elif line.startswith("ibonus") or line.startswith("iplus") or line.startswith("iminus"):
+                Tokens.append(line)
             else:
                 continue
-    with open(filename, "r") as Save:
-        for line in Save:
-            if line.startswith("tpoints_obj_perk") or line.startswith("tpoints_obj_artefact"):
-                for U in items:
-                    if line.startswith("tpoints_"+U):
-                        P = re.search('-?\d+(\.\d+)?',line).group()
-                        CurrentModPowers.append(P)
-                    else:
-                        continue
-            else:
-                continue
+    tokenset("w")
+
     PistolMod.set(ShownPistols[VarPistols.index(items[0])])
     OptionMod1.set(ShownModules[VarSmodules.index(items[6])])
     PowerMod1.set(DoubleModules[VarSmodules.index(items[6])])
@@ -142,7 +164,108 @@ def Testfunc(subclass):
     Regchangecolor(OptionMod2,StartItem)
     Regchangecolor(OptionMod1,Core)
 
+
+def tokenset(wi):
+    Sclass = spliting(Currentclass)
+    #make bonus tokens show up, should be split into own function
+    for tok in Tokens:
+        if tok.startswith(wi):
+            if re.search(Sclass,tok) != None:
+                ClassTokens.append(tok)
+    global WI
+    global CurTokShown
+    if wi == "w":
+        WI = "w"
+        CurTokShown = ShownWeapons
+    elif wi == "i":
+        WI = "i"
+        CurTokShown = ShownItems
+    Token1['values'] = CurTokShown
+    Token2['values'] = CurTokShown
+    Token3['values'] = CurTokShown
+    Token4['values'] = CurTokShown
+    Token5['values'] = CurTokShown
+    Token6['values'] = CurTokShown
+    Token7['values'] = CurTokShown
+    Token8['values'] = CurTokShown
+    Token9['values'] = CurTokShown
+    Token10['values'] = CurTokShown
+    Token11['values'] = CurTokShown
+    Token12['values'] = CurTokShown
+    if ClassTokens == []:
+        for B in BonusTok:
+            B.set("")
+        for U in UpTok:
+            U.set("")
+        for D in DownTok:
+            D.set("")
+    for B in BonusTok:
+        #what is a tracking variable. it tracks whether or not there is a 'wbonus' in the classtokens list
+        what = 0
+        for T in ClassTokens:
+            if T.startswith(wi+"bonus"):
+                what += 1
+                P = re.search('"-?\d+(\.\d+)?"',T).group()
+                P = float(P[1:-1])
+                P = int(P)
+                if wi == "w":
+                    B.set(ShownWeapons[P])
+                else:
+                    B.set(ShownItems[P])
+                ClassTokens.remove(T)
+                break
+            else:
+                B.set("")
+                continue
+        else:
+            if what < 1:
+                B.set("")
+        
+    for U in UpTok:
+        what = 0
+        for T in ClassTokens:
+            if T.startswith(wi+"plus"):
+                what += 1
+                P = re.search('"-?\d+(\.\d+)?"',T).group()
+                P = float(P[1:-1])
+                P = int(P)
+                if wi == "w":
+                    U.set(ShownWeapons[P])
+                else:
+                    U.set(ShownItems[P])
+                ClassTokens.remove(T)
+                break
+            else:
+                U.set("")
+                continue
+        else:
+            if what < 1:
+                U.set("")
+    for D in DownTok:
+        what = 0
+        for T in ClassTokens:
+            if T.startswith(wi+"minus"):
+                what += 1
+                P = re.search('"-?\d+(\.\d+)?"',T).group()
+                P = float(P[1:-1])
+                P = int(P)
+                if wi == "w":
+                    D.set(ShownWeapons[P])
+                else:
+                    D.set(ShownItems[P])
+                ClassTokens.remove(T)
+                break
+            else:
+                D.set("")
+                continue
+        else:
+            if what < 1:
+                D.set("")
+
+
 def SubmitLoadout():
+    subclass = spliting(Currentclass)
+    x = 0
     with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
         for line in Save:
             if line.startswith("perkslot"+Loadout[0]+"class"+Currentclass):
@@ -174,6 +297,76 @@ def SubmitLoadout():
                     Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod6.get()+'"',line))
                 else:
                     Tsave.write(line)
+            elif line.startswith("wunlock0"):
+                Tsave.write(line)
+                if WI == "w":
+                    y = 0
+                    for B in BonusTok:
+                        Y = str(y)
+                        if B.get() == '' or None:
+                            continue
+                        B = ShownWeapons.index(B.get())
+                        B = str(B)
+                        Tsave.write("wbonus_"+subclass+"__"+Y+'="'+B+'.000000"\n')
+                        y+=1
+                    y = 0
+                    for U in UpTok:
+                        Y = str(y)
+                        if U.get() == '' or None:
+                            continue
+                        U = ShownWeapons.index(U.get())
+                        U = str(U)
+                        Tsave.write("wplus_"+subclass+"__"+Y+'="'+U+'.000000"\n')
+                        y+=1
+                    y = 0
+                    for D in DownTok:
+                        Y = str(y)
+                        if D.get() == '' or None:
+                            continue
+                        D = ShownWeapons.index(D.get())
+                        D = str(D)
+                        Tsave.write("wminus_"+subclass+"__"+Y+'="'+D+'.000000"\n')
+                        y+=1
+            elif (WI == "w") and (line.startswith("wbonus") or line.startswith("wplus") or line.startswith("wminus")):
+                if re.search(subclass,line) != None:
+                    continue
+                else:
+                    Tsave.write(line)
+            elif line.startswith("iintel 0"):
+                Tsave.write(line)
+                if WI == "i":
+                    y = 0
+                    for B in BonusTok:
+                        Y = str(y)
+                        if B.get() == '' or None:
+                            continue
+                        B = ShownItems.index(B.get())
+                        B = str(B)
+                        Tsave.write("ibonus_"+subclass+"__"+Y+'="'+B+'.000000"\n')
+                        y+=1
+                    y = 0
+                    for U in UpTok:
+                        Y = str(y)
+                        if U.get() == '' or None:
+                            continue
+                        U = ShownItems.index(U.get())
+                        U = str(U)
+                        Tsave.write("iplus_"+subclass+"__"+Y+'="'+U+'.000000"\n')
+                        y+=1
+                    y = 0
+                    for D in DownTok:
+                        Y = str(y)
+                        if D.get() == '' or None:
+                            continue
+                        D = ShownItems.index(D.get())
+                        D = str(D)
+                        Tsave.write("iminus_"+subclass+"__"+Y+'="'+D+'.000000"\n')
+                        y+=1
+            elif (WI == "i") and (line.startswith("ibonus") or line.startswith("iplus") or line.startswith("iminus")):
+                if re.search(subclass,line) != None:
+                    continue
+                else:
+                    Tsave.write(line)
             else:
                 Tsave.write(line)
     Safetywindow()
@@ -188,6 +381,11 @@ def Safetywindow():
         tk.Label(SafetyWindow, text ="Do you want to overwrite your Save File?").pack()
         tk.Button(SafetyWindow, text = "Yes", command=lambda: [CopytoSave(),SafetyWindow.destroy()]).pack()
 
+def changeWI():
+    if WI == "w":
+        WI = "i"
+    else:
+        WI = "w"
 
 def CopytoSave():
     with open(filename, "w") as Save, open(tfilename, "r") as Tsave:
@@ -254,12 +452,14 @@ def CheatCodeReturn():
                 Tsave.write(line)
     Safetywindow()
 
+
+
 def spliting(Class):
-    return [char for char in Class]
+    Lis = [char for char in Class]
+    return (Lis[0] + "_" + Lis [1])
 
 def AutoWeaponSpawnEdit():
-    Subclass = spliting(Currentclass)
-    realclass = Subclass[0] + "_" + Subclass[1]
+    realclass = spliting(Currentclass)
     weplist = list()
     with open(filename, "r") as Save:
         for line in Save:
@@ -314,8 +514,7 @@ def AutoWeaponSpawnEdit():
     Safetywindow()
 
 def AutoItemSpawnEdit():
-    realclass = spliting(Currentclass)
-    subclass = realclass[0] + "_" + realclass[1]
+    subclass = spliting(Currentclass)
     itemlist = list()
     with open(filename, "r") as Save:
         for line in Save:
@@ -380,11 +579,6 @@ def undoresearch():
 def openSave():
     os.startfile(filename)
 
-def Tokenset():
-    with open(filename,"r") as Save:
-        for line in Save:
-            return
-        return
 
 def UwU():
     global uwu
@@ -503,7 +697,7 @@ Core['values'] = ShownModules
 Core.grid(row=1,column=1)
 Core.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod1,Core))
 
-CorePower = tk.Entry(Power_frame, textvariable = PowerMod1)
+CorePower = ttk.Combobox(Power_frame, textvariable = PowerMod1)
 CorePower.grid(row=1,column=2)
 
 StartItem = ttk.Combobox(Power_frame, textvariable = OptionMod2)
@@ -511,7 +705,7 @@ StartItem['values'] = ShownModules
 StartItem.grid(row=2,column=1)
 StartItem.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod2,StartItem))
 
-SIPower = tk.Entry(Power_frame, textvariable = PowerMod2)
+SIPower = ttk.Combobox(Power_frame, textvariable = PowerMod2)
 SIPower.grid(row=2,column=2)
 
 Item1 = ttk.Combobox(Power_frame, textvariable = OptionMod3)
@@ -519,7 +713,7 @@ Item1['values'] = ShownModules
 Item1.grid(row=3,column=1)
 Item1.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod3,Item1))
 
-I1Power = tk.Entry(Power_frame,textvariable= PowerMod3)
+I1Power = ttk.Combobox(Power_frame,textvariable= PowerMod3)
 I1Power.grid(row=3,column=2)
 
 Item2 = ttk.Combobox(Power_frame,textvariable = OptionMod4)
@@ -527,7 +721,7 @@ Item2['values'] = ShownModules
 Item2.grid(row=4,column=1)
 Item2.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod4,Item2))
 
-I2Power = tk.Entry(Power_frame,textvariable= PowerMod4)
+I2Power = ttk.Combobox(Power_frame,textvariable= PowerMod4)
 I2Power.grid(row=4,column=2)
 
 Mod1 = ttk.Combobox(Power_frame, textvariable =OptionMod5)
@@ -535,7 +729,7 @@ Mod1['values'] = ShownModules
 Mod1.grid(row=5,column=1)
 Mod1.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod5,Mod1))
 
-M1Power = tk.Entry(Power_frame,textvariable=PowerMod5)
+M1Power = ttk.Combobox(Power_frame,textvariable=PowerMod5)
 M1Power.grid(row=5,column=2)
 
 Mod2 = ttk.Combobox(Power_frame,textvariable = OptionMod6)
@@ -543,38 +737,71 @@ Mod2['values'] = ShownModules
 Mod2.grid(row=6,column=1)
 Mod2.bind("<<ComboboxSelected>>", lambda _ : Regchangecolor(OptionMod6,Mod2))
 
-M2Power = tk.Entry(Power_frame,textvariable=PowerMod6)
+M2Power = ttk.Combobox(Power_frame,textvariable=PowerMod6)
 M2Power.grid(row=6,column=2)
 
 Submit = tk.Button(Power_frame,text="submit",command=SubmitLoadout)
 Submit.grid(row=7,column=1,columnspan=2)
 Auto = tk.Button(Power_frame,text="Auto Module Edit", command=lambda: AutoModuleEdit(Autopower.get()))
 Auto.grid(row=8,column=1)
-Autopower = tk.Entry(Power_frame)
+Autopower = ttk.Combobox(Power_frame)
 Autopower.grid(row=8,column=2)
 
 #power frame end
 
 #Token_frame start
-TokWeapon = tk.Button(Token_frame,text="Weapons")
+TokWeapon = tk.Button(Token_frame,text="Weapons",command=lambda:tokenset("w"))
 TokWeapon.grid(row=0,column=0)
-TokItems = tk.Button(Token_frame,text="Items")
+TokItems = tk.Button(Token_frame,text="Items",command=lambda:tokenset("i"))
 TokItems.grid(row=0,column=1)
-PowerTok = tk.Button(Token_frame,text="Power")
-PowerTok.grid(row=1,column=0)
-UPTok = tk.Button(Token_frame,text="Supply UP")
-UPTok.grid(row=1,column=1)
-DOWNTok = tk.Button(Token_frame,text="Supply DOWN")
-DOWNTok.grid(row=1,column=2)
 
-Token1 = tk.Entry(Token_frame,textvariable=TokNum1)
-Token1.grid(row=2,column=0,columnspan=3)
-Token2 = tk.Entry(Token_frame,textvariable=TokNum2)
-Token2.grid(row=3,column=0,columnspan=3)
-Token3 = tk.Entry(Token_frame,textvariable=TokNum3)
-Token3.grid(row=4,column=0,columnspan=3)
-Token4 = tk.Entry(Token_frame,textvariable=TokNum4)
-Token4.grid(row=5,column=0,columnspan=3)
+#Bonus tokens
+Bonus_Frame = ttk.Frame(Token_frame,borderwidth=5)
+Bonus_Frame.grid(column=0,row=1,columnspan=2)
+Token1 =  ttk.Combobox(Bonus_Frame,textvariable=PTokNum1)
+Token1['values'] = CurTokShown
+Token1.grid(row=0,column=0)
+Token2 = ttk.Combobox(Bonus_Frame,textvariable=PTokNum2)
+Token2['values'] = CurTokShown
+Token2.grid(row=1,column=0)
+Token3 = ttk.Combobox(Bonus_Frame,textvariable=PTokNum3)
+Token3['values'] = CurTokShown
+Token3.grid(row=2,column=0)
+Token4 = ttk.Combobox(Bonus_Frame,textvariable=PTokNum4)
+Token4['values'] = CurTokShown
+Token4.grid(row=3,column=0)
+
+#up tokens
+UP_Frame = ttk.Frame(Token_frame, borderwidth=5)
+UP_Frame.grid(column=0,row=2,columnspan=2)
+Token5 = ttk.Combobox(UP_Frame,textvariable=UTokNum1)
+Token5['values'] = CurTokShown
+Token5.grid(row=6,column=0,columnspan=3)
+Token6 = ttk.Combobox(UP_Frame,textvariable=UTokNum2)
+Token6['values'] = CurTokShown
+Token6.grid(row=7,column=0,columnspan=3)
+Token7 = ttk.Combobox(UP_Frame,textvariable=UTokNum3)
+Token7['values'] = CurTokShown
+Token7.grid(row=8,column=0,columnspan=3)
+Token8 = ttk.Combobox(UP_Frame,textvariable=UTokNum4)
+Token8['values'] = CurTokShown
+Token8.grid(row=9,column=0,columnspan=3)
+
+#down tokens
+DOWN_Frame = ttk.Frame(Token_frame,borderwidth=5)
+DOWN_Frame.grid(column=0,row=3,columnspan=2)
+Token9 = ttk.Combobox(DOWN_Frame,textvariable=DTokNum1)
+Token9['values'] = CurTokShown
+Token9.grid(row=10,column=0,columnspan=3)
+Token10 = ttk.Combobox(DOWN_Frame,textvariable=DTokNum2)
+Token10['values'] = CurTokShown
+Token10.grid(row=11,column=0,columnspan=3)
+Token11 = ttk.Combobox(DOWN_Frame,textvariable=DTokNum3)
+Token11['values'] = CurTokShown
+Token11.grid(row=12,column=0,columnspan=3)
+Token12 = ttk.Combobox(DOWN_Frame,textvariable=DTokNum4)
+Token12['values'] = CurTokShown
+Token12.grid(row=13,column=0,columnspan=3)
 #Token_frame end
 
 
