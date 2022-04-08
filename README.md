@@ -1,10 +1,10 @@
 # Synthetik_Python_Mod
-A save editor tool for the game Synthetik written in python.
-if it can't find your save file, try looking in username/appdata/local/synthetik  it should be called Save.sav
+A save editow toow fow the game Synthetik wwitten in python.
+if it can't find ur save fiwe, twy wooking in usewnyame/appdata/wocaw/synthetik  it shouwd be cawwed Save.sav
 
-You definitely need to have Synthetik closed when you change anything.
+u definyitewy nyeed to have Synthetik cwosed when u change anything.
 
-HOW TO USE THE SPAWN MENU:
+HOW TO USE THE SPAWN MENyU:
 ![Tutorial for Spawn](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(23).png?raw=true)
 
 # Vewsion 2.7
