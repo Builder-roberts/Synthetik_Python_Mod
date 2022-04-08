@@ -6,6 +6,7 @@ You definitely need to have Synthetik closed when you change anything.
 
 HOW TO USE THE SPAWN MENU:
 ![Tutorial for Spawn](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(23).png?raw=true)
+The right side of the mod now allows you to do this outside the game
 
 ### Video tutorial will go here
 # Version 2.7
