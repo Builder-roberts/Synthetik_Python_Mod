@@ -1,8 +1,5 @@
 #gui with tkinter
-import bdb
-from email.iterators import body_line_iterator
-from optparse import Values
-from pickle import NONE
+from lib2to3.pgen2 import token
 import tkinter as tk
 from tkinter import Menu, ttk
 from tkinter import filedialog
@@ -12,9 +9,9 @@ import os
 from tkinter import messagebox
 
 #Turn safety to 1 so we can see what happens to the TEMPORARYSAVE
-safety = 1
+safety = 0
 uwu = 0
-WI = "w"
+WI = "i"
 username = getpass.getuser()
 filename = "C:/Users/"+username+"/AppData/Local/Synthetik/Save.sav"
 tfilename = "C:/Users/"+username+"/AppData/Local/Synthetik/TEMPORARYSAVE.txt"
@@ -57,7 +54,9 @@ VarSmodules = ["obj_item130_riotguard","obj_item54_c4","obj_item132_dynamite","o
 VarPistols =["obj_weapon_TEC_84","obj_weapon_SUP_67","obj_weapon_DE_94","obj_weapon_A9_55","obj_weapon_REP_11","obj_weapon_HLP_64","obj_weapon_LSP_21","obj_weapon_DE_61","obj_weapon_HON_34","obj_weapon_REV_9","obj_weapon_MC_62","obj_weapon_CP_38","obj_weapon_G17_63","obj_weapon_PXS_10","obj_weapon_PTL_6"]
 #Shownmodules is going to be the more readable version of VarSmodules that will be used. I'm having Lawro#0858 make a list to use; done
 ShownModules = ["Guardian", "Composite 4", "Neutrino Bomb", "Seth-Up Suitcase Sentry", "Mode: Tactical", "Mode: Hyper Adrenaline", "Mode: Madness", "Mode: Mystery Bonus", "PU-55", "Hobb-S", "Rynn", "Rhett", "Kevv", "Zion", "Luka", "Savnt", "Pure 759", "Cario", "Taro", "Aeon-FFD", "Kokova", "Mael", "Ensiferum","Force Unleashed", "Sun Rising", "Unceasing", "Transmutate", "Calculated", "Elemental Power", "Overdrive", "Well Oiled", "Focus", "Inner Fire", "Multiply", "Weapons Deal", "Chromatic Alloy", "Grenadier", "Forged By Fire", "Status Extender ", "Core: Drone Zeal", "Core: HE-Ammo", "Spider Mines", "Missile Drone", "Dragon’s Masterkey", "Acid Grenade", "LMG Sentry Turret", "Seismic Resonator","Drill", "Killer", "Take Cover", "Scarred", "Madness", "Hold Breath", "Pack A Punch", "On The Edge", "Press The Attack", "Field Rat0ons", "Drone Mod", "Specialized Ammo", "Charge", "Routine", "Weapon Drop", "Core: Looter", "Core: Squad Leader", "Core: Suppression", "Core: Commando", "Onslaught System", "Road Flare", "Hard Light Cover", "Special Ammo Supply", "Stim Pack", "Plasma Grenade", "Reverbing Blade", "Against The Odds", "Die Hard", "Blood Borne", "Keeping Cool", "Freeze!", "Power Tuning", "DMR Conversion", "Perfection", "Keeping Distance", "Discipline", "Shadow Dance", "Backstab", "Evasive Maneuvers", "Switch Position", "Head Hunter", "Core: Spotter", "Core: Professional", "Targeting Laser", "Scoundrel’s Dagger", "Decoy", "Smoke Grenade", "Laser Mine", "Flare Gun", "’Helsing’ Power Bolt", "TP Grenade Flash", "Push Forward", "Wicked", "Berserk", "Bits And Pieces", "Scrap Plating", "Stimulants", "Shield Overclock", "Weapon Mastery", "Enrage", "Fortify Position", "Shielded", "Aegis MK5 Platinum", "Into Battle", "Recovery", "Warmup", "I-Frame", "Core: Charge", "Core: Unyielding", "Battlecry Module", "Breaching Charge", "RV Rebuke System", "Shieldburst", "Tomahawk", "Auto Taser", "Stun Grenade","Field Supply", "Lifeblood", "Cell Replacer", "Unidentified Potion", "Overdose", "Methadone","Health Vial", "Random Module"]
+UWUShownModules = ["Guawdian", "Composite 4", "Nyeutwinyo Bomb", "Seth-Up Suitcase Sentwy", "Mode: Tacticaw", "Mode: Hypew Adwenyawinye", "Mode: Madnyess", "Mode: Mystewy Bonyus", "PU-55", "Hobb-S", "wynn", "whett", "Kevv", "Zion", "wuka", "Savnt", "Puwe 759", "Cawio", "Tawo", "Aeon-FFD", "Kokova", "Maew", "Ensifewum","Fowce Unweashed", "Sun wising", "Unceasing", "Twansmutate", "Cawcuwated", "Ewementaw Powew", "uvwdwive", "Weww Oiwed", "Focus", "Innyew Fiwe", "Muwtipwy", "Weapons Deaw", "Chwomatic Awwoy", "Gwenyadiew", "Fowged By Fiwe", "Status Extendew ", "Cowe: Dwonye Zeaw", "Cowe: HE-Ammo", "Spidew Minyes", "Missiwe Dwonye", "Dwagon’s Mastewkey", "Acid Gwenyade", "wMG Sentwy Tuwwet", "Seismic wesonyatow","Dwiww", "Kiwwew", "Take Cuvw", "Scawwed", "Madnyess", "Howd Bweath", "Pack A Punch", "On The Edge", "Pwess The Attack", "Fiewd wat0ons", "Dwonye Mod", "Speciawized Ammo", "Chawge", "woutinye", "Weapon Dwop", "Cowe: wootew", "Cowe: Squad weadew", "Cowe: Suppwession", "Cowe: Commando", "Onswaught System", "woad Fwr", "Hawd wight Cuvw", "Speciaw Ammo Suppwy", "Stim Pack", "Pwasma Gwenyade", "wevewbing Bwade", "Against The Odds", "Die Hawd", "Bwood Bownye", "Keeping Coow", "Fweeze!", "Powew Tunying", "DMw Convewsion", "Pewfection", "Keeping Distance", "Discipwinye", "Shadow Dance", "Backstab", "Evasive Manyeuvews", "Switch Position", "Head Huntew", "Cowe: Spottew", "Cowe: Pwofessionyaw", "Tawgeting wasew", "Scoundwew’s Daggew", "Decoy", "Smoke Gwenyade", "wasew Minye", "Fwr Gun", "’Hewsing’ Powew Bowt", "TP Gwenyade Fwash", "Push Fowwawd", "Wicked", "Bewsewk", "Bits And Pieces", "Scwap Pwating", "Stimuwants", "Shiewd uvwcwock", "Weapon Mastewy", "Enwage", "Fowtify Position", "Shiewded", "Aegis MK5 Pwatinyum", "Into Battwe", "wecuvwy", "Wawmup", "I-Fwame", "Cowe: Chawge", "Cowe: Unyiewding", "Battwecwy Moduwe", "Bweaching Chawge", "wV webuke System", "Shiewdbuwst", "Tomahawk", "Auto Tasew", "Stun Gwenyade","Fiewd Suppwy", "wifebwood", "Ceww wepwacew", "Unyidentified Potion", "uvwdose", "Methadonye","Heawth Viaw", "wandom Moduwe"]
 ShownPistols = ["TEC-9.95 Personal","P25 Overdrive","Titanium Eagle","Auto 9/45","57 Fusion Classic","PPQ-H Laser Pistol","Kaida Laser Pistol","Desert Eagle .50","Kaida Model H","Last Breath","Master Chief","XM2 Coil Pistol","G17 Undercover","PXS Covert Ops","P33 Compact"]
+UWUShownPistols = ["TEC-9.95 Pewsonyaw","P25 uvwdwive","Titanyium Eagwe","Auto 9/45","57 Fusion Cwassic","PPQ-H wasew Pistow","Kaida wasew Pistow","Desewt Eagwe .50","Kaida Modew H","wast Bweath","Mastew Chief","XM2 Coiw Pistow","G17 Undewcuvw","PXS Cuvwt Ops","P33 Compact"]
 DoubleModules = []
 # Starting work on Token Frame functionality
 Tokens = []
@@ -65,8 +64,48 @@ ClassTokens = []
 WeaponNumbers = range(99)
 ShownWeapons = ["unknown","SRP","CL","OBJ","DB","MG51","P33","TAC","CLG","REV","PXS","57F","DMR","SPC","FMG","R5K","VU","LSG","LSMG","12G","GM6","LP","DMR","M32s","AMD","ION","MG42","ENF","DMN","CRGR","VEC","S12","ML","M79","HON","FT","FC","CG","CP","TM","SCR","AEK","VAL","A12","RPK","RJ","RG","MAG","NG","HPC","BRN","EX","FBC","BOW","INT","A9","BC","RPG","ACR","98K","KSG","MC","DE","G17","H-LP","UMP","ANH","P25","Y-L","STY","LEV","IMP","GAT","LC","AKS","K98","UMP","LEV","GL","RS","AR15","A5C","AN94","P90","TEC-9","LG","M16","M14","STG","SC","M163","M14 (EBR)","FMG","M75","TE","PSG","QBZ","T89","K7","MOD0"]
 ItemNumbers = range(150)
-ShownItems = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149"]
-CurTokShown = ShownWeapons
+ShownItems = ["Unidentified0","Chaos Potion","Hyperfeed","Shock Impulse","Umbra Adaptive Cloak","Healing Crystal","Field Supply","Health Vial","Overdose",
+"Fangs of Mordigan","Unstable Current","Divine Reconstructor","RV Rebuke System","Devil's Dice","Maddness Glasses","Refractor Crystal","Upgrade Kit",
+"Orb of Iron","Unidentified Potion","Orb of Lightning","Orb of Fire","Orb of Wind","Blood Rite","Twin Link 2","Heart Core",
+"Refresher","Core Upgrade Kit","Black Berserk Charm","Unidentified1","Unidentified2","Methadone","Incubus","Tsunami Talisman",
+"ShieldBurst","HE Grenade","Flash Grenade","Stun Grenade","Plasma Grenade","Acid Grenade","Psy Field","Heavy Steel Trap",
+"PowerShot","R-Plating","Fast Sling","Facemelter","Uranium 235","Maverick MKV","Sidewinder","Fire Prism",
+"Order 322","Last Stand","Stinger Jet Glider","Air Com","Power Array","Composite 4","Stim Pack","Phaser",
+"Gun Drone Spawner","Heart Seeker","M205 Launcher","Target Cogitator","Rosarius","Reality Ripper","Cell Replacer","Lifeblood",
+"Direct Current","Akira","Lightning Boots","Ring of Experience","Auto Taser","Blood Bolt","LMG sentry Turret","DMR Sentry Turret",
+"Unidentified3","Module Core","Ring of Glass","Bloodthirsty Ring","Unidentified4","Ripjack Hyper Blade","'Helsing' Power Bolt","Dragon's Masterkey",
+"Reverbing Blade","Flare Gun","Smoke Grenade","M26 MA Shotgun System","Kunai Throwing Knives","Road Flare","G87 Beamer","Icarus",
+"Redline","Biting Throwing Stars","Z1 Sundering Shuriken","Fan of Knives","Infinity Drill Piece","Scoundrel's Dagger","ZR99 'Living Bomb'","ZK77 'Sticky Bomb'",
+"Laser Mine","'Seth-Up' Suitcase Sentry","Battlecry Module","Breaching Charge","Seismic Resonator","Air Horn","Brawndo","Eclipse",
+"Unidentified5","Unidentified6","Magic Mag","Auto-Overclocker","Special Ammo Supply","Spider Mines","Heat Sink","Black Market Teleporter",
+"Maddness Button","Heat Spreader","Decoy","Shielded Decoy","GPS","Gold Nugget","Custom Upgrade Kit","Metal Detector",
+"Tomahawk","Targeting Laser","Hard Light Cover","Onslaught System","Intensity Chamber","Missile Drone","Unidentified7","Unidentified8",
+"Unidentified9","Guardian","High Command","Neutrino Bomb","Magnum","Bandana","Orbital Relay","Missile Control",
+"Trapper's Teleporter","ShieldLink","Underbarrel Mod Chip","Shaker","Elemental Resonance","Fire Water","Energy Link","Nitroglycerine",
+"Unidentified10","Unidentified11","Unidentified12","Orb of Fusion","Crux of the Laser Caster"]
+UWUShownitems = ["Unyidentified","Chaos Potion","Hypewfeed","Shock Impuwse","Umbwa Adaptive Cwoak","Heawing Cwystaw","Fiewd Suppwy","Heawth Viaw","uvwdose",
+"Fangs of Mowdigan","Unstabwe Cuwwent","Divinye weconstwuctow","wV webuke System","Deviw's Dice","Maddnyess Gwasses","wefwactow Cwystaw","Upgwade Kit",
+"Owb of Iwon","Unyidentified Potion","Owb of wightnying","Owb of Fiwe","Owb of Wind","Bwood wite","Twin wink 2","Heawt Cowe",
+"wefweshew","Cowe Upgwade Kit","Bwack Bewsewk Chawm","Unyidentified","Unyidentified","Methadonye","Incubus","Tsunyami Tawisman",
+"ShiewdBuwst","HE Gwenyade","Fwash Gwenyade","Stun Gwenyade","Pwasma Gwenyade","Acid Gwenyade","Psy Fiewd","Heavy Steew Twap",
+"PowewShot","w-Pwating","Fast Swing","Facemewtew","Uwanyium 235","Mavewick MKV","Sidewindew","Fiwe Pwism",
+"Owdew 322","wast Stand","Stingew Jet Gwidew","Aiw Com","Powew Awway","Composite 4","Stim Pack","Phasew",
+"Gun Dwonye Spawnyew","Heawt Seekew","M205 waunchew","Tawget Cogitatow","wosawius","weawity wippew","Ceww wepwacew","wifebwood",
+"Diwect Cuwwent","Akiwa","wightnying Boots","wing of Expewience","Auto Tasew","Bwood Bowt","wMG sentwy Tuwwet","DMw Sentwy Tuwwet",
+"Unyidentified","Moduwe Cowe","wing of Gwass","Bwoodthiwsty wing","Unyidentified","wipjack Hypew Bwade","'Hewsing' Powew Bowt","Dwagon's Mastewkey",
+"wevewbing Bwade","Fwr Gun","Smoke Gwenyade","M26 MA Shotgun System","Kunyai Thwowing Knyives","woad Fwr","G87 Beamew","Icawus",
+"wedwinye","Biting Thwowing Staws","Z1 Sundewing Shuwiken","Fan of Knyives","Infinyity Dwiww Piece","Scoundwew's Daggew","Zw99 'wiving Bomb'","ZK77 'Sticky Bomb'",
+"wasew Minye","'Seth-Up' Suitcase Sentwy","Battwecwy Moduwe","Bweaching Chawge","Seismic wesonyatow","Aiw Hown","Bwawndo","Ecwipse",
+"Unyidentified","Unyidentified","Magic Mag","Auto-uvwcwockew","Speciaw Ammo Suppwy","Spidew Minyes","Heat Sink","Bwack Mawket Tewepowtew",
+"Maddnyess Button","Heat Spweadew","Decoy","Shiewded Decoy","GPS","Gowd Nyugget","Custom Upgwade Kit","Metaw Detectow",
+"Tomahawk","Tawgeting wasew","Hawd wight Cuvw","Onswaught System","Intensity Chambew","Missiwe Dwonye","Unyidentified","Unyidentified",
+"Unyidentified","Guawdian","High Command","Nyeutwinyo Bomb","Magnyum","Bandanya","Owbitaw weway","Missiwe Contwow",
+"Twappew's Tewepowtew","Shiewdwink","Undewbawwew Mod Chip","Shakew","Ewementaw wesonyance","Fiwe Watew","Enyewgy wink","Nyitwogwycewinye",
+"Unyidentified","Unyidentified","Unyidentified","Owb of Fusion","Cwux of the wasew Castew"]
+if uwu == 0:
+    CurTokShown = ShownWeapons
+else:
+    CurTokShown = ShownWeapons
 
 OptionMod1 = tk.StringVar(main_frame)
 OptionMod2 = tk.StringVar(main_frame)
@@ -141,21 +180,29 @@ def Testfunc(subclass):
                 Tokens.append(line)
             else:
                 continue
-    tokenset("w")
+    if uwu == 0:
+        PistolMod.set(ShownPistols[VarPistols.index(items[0])])
+        OptionMod1.set(ShownModules[VarSmodules.index(items[6])])
+        OptionMod2.set(ShownModules[VarSmodules.index(items[5])])
+        OptionMod3.set(ShownModules[VarSmodules.index(items[4])])
+        OptionMod4.set(ShownModules[VarSmodules.index(items[3])])
+        OptionMod5.set(ShownModules[VarSmodules.index(items[2])])
+        OptionMod6.set(ShownModules[VarSmodules.index(items[1])])
+    else:
+        PistolMod.set(UWUShownPistols[VarPistols.index(items[0])])
+        OptionMod1.set(UWUShownModules[VarSmodules.index(items[6])])
+        OptionMod2.set(UWUShownModules[VarSmodules.index(items[5])])
+        OptionMod3.set(UWUShownModules[VarSmodules.index(items[4])])
+        OptionMod4.set(UWUShownModules[VarSmodules.index(items[3])])
+        OptionMod5.set(UWUShownModules[VarSmodules.index(items[2])])
+        OptionMod6.set(UWUShownModules[VarSmodules.index(items[1])])
 
-    PistolMod.set(ShownPistols[VarPistols.index(items[0])])
-    OptionMod1.set(ShownModules[VarSmodules.index(items[6])])
-    PowerMod1.set(DoubleModules[VarSmodules.index(items[6])])
-    OptionMod2.set(ShownModules[VarSmodules.index(items[5])])
-    PowerMod2.set(DoubleModules[VarSmodules.index(items[5])])
-    OptionMod3.set(ShownModules[VarSmodules.index(items[4])])
-    PowerMod3.set(DoubleModules[VarSmodules.index(items[4])])
-    OptionMod4.set(ShownModules[VarSmodules.index(items[3])])
-    PowerMod4.set(DoubleModules[VarSmodules.index(items[3])])
-    OptionMod5.set(ShownModules[VarSmodules.index(items[2])])
-    PowerMod5.set(DoubleModules[VarSmodules.index(items[2])])
-    OptionMod6.set(ShownModules[VarSmodules.index(items[1])])
     PowerMod6.set(DoubleModules[VarSmodules.index(items[1])])
+    PowerMod5.set(DoubleModules[VarSmodules.index(items[2])])
+    PowerMod4.set(DoubleModules[VarSmodules.index(items[3])])
+    PowerMod3.set(DoubleModules[VarSmodules.index(items[4])])
+    PowerMod2.set(DoubleModules[VarSmodules.index(items[5])])
+    PowerMod1.set(DoubleModules[VarSmodules.index(items[6])])
     Pistolchangecolor()
     Regchangecolor(OptionMod6,Mod2)
     Regchangecolor(OptionMod5,Mod1) 
@@ -163,6 +210,7 @@ def Testfunc(subclass):
     Regchangecolor(OptionMod3,Item1)
     Regchangecolor(OptionMod2,StartItem)
     Regchangecolor(OptionMod1,Core)
+    tokenset(WI)
 
 
 def tokenset(wi):
@@ -174,12 +222,20 @@ def tokenset(wi):
                 ClassTokens.append(tok)
     global WI
     global CurTokShown
-    if wi == "w":
-        WI = "w"
-        CurTokShown = ShownWeapons
-    elif wi == "i":
-        WI = "i"
-        CurTokShown = ShownItems
+    if uwu == 0:
+        if wi == "w":
+            WI = "w"
+            CurTokShown = ShownWeapons
+        elif wi == "i":
+            WI = "i"
+            CurTokShown = ShownItems
+    else:
+        if wi == "w":
+            WI = "w"
+            CurTokShown = ShownWeapons
+        elif wi == "i":
+            WI = "i"
+            CurTokShown = UWUShownitems
     Token1['values'] = CurTokShown
     Token2['values'] = CurTokShown
     Token3['values'] = CurTokShown
@@ -208,11 +264,18 @@ def tokenset(wi):
                 P = re.search('"-?\d+(\.\d+)?"',T).group()
                 P = float(P[1:-1])
                 P = int(P)
-                if wi == "w":
-                    B.set(ShownWeapons[P])
+                if uwu == 0:
+                    if wi == "w":
+                        B.set(ShownWeapons[P])
+                    else:
+                        B.set(ShownItems[P])
+                    ClassTokens.remove(T)
                 else:
-                    B.set(ShownItems[P])
-                ClassTokens.remove(T)
+                    if wi == "w":
+                        B.set(ShownWeapons[P])
+                    else:
+                        B.set(UWUShownitems[P])
+                    ClassTokens.remove(T)
                 break
             else:
                 B.set("")
@@ -229,11 +292,18 @@ def tokenset(wi):
                 P = re.search('"-?\d+(\.\d+)?"',T).group()
                 P = float(P[1:-1])
                 P = int(P)
-                if wi == "w":
-                    U.set(ShownWeapons[P])
+                if uwu == 0:
+                    if wi == "w":
+                        U.set(ShownWeapons[P])
+                    else:
+                        U.set(ShownItems[P])
+                    ClassTokens.remove(T)
                 else:
-                    U.set(ShownItems[P])
-                ClassTokens.remove(T)
+                    if wi == "w":
+                        U.set(ShownWeapons[P])
+                    else:
+                        U.set(UWUShownitems[P])
+                    ClassTokens.remove(T)
                 break
             else:
                 U.set("")
@@ -249,11 +319,18 @@ def tokenset(wi):
                 P = re.search('"-?\d+(\.\d+)?"',T).group()
                 P = float(P[1:-1])
                 P = int(P)
-                if wi == "w":
-                    D.set(ShownWeapons[P])
+                if uwu == 0:
+                    if wi == "w":
+                        D.set(ShownWeapons[P])
+                    else:
+                        D.set(ShownItems[P])
+                    ClassTokens.remove(T)
                 else:
-                    D.set(ShownItems[P])
-                ClassTokens.remove(T)
+                    if wi == "w":
+                        D.set(ShownWeapons[P])
+                    else:
+                        D.set(UWUShownitems[P])
+                    ClassTokens.remove(T)
                 break
             else:
                 D.set("")
@@ -267,108 +344,212 @@ def SubmitLoadout():
     subclass = spliting(Currentclass)
     x = 0
     with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
-        for line in Save:
-            if line.startswith("perkslot"+Loadout[0]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarPistols[ShownPistols.index(PistolMod.get())],line))
-            elif line.startswith("perkslot"+Loadout[6]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod1.get())],line))
-            elif line.startswith("perkslot"+Loadout[5]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod2.get())],line))
-            elif line.startswith("perkslot"+Loadout[4]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod3.get())],line))
-            elif line.startswith("perkslot"+Loadout[3]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod4.get())],line))
-            elif line.startswith("perkslot"+Loadout[2]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod5.get())],line))
-            elif line.startswith("perkslot"+Loadout[1]+"class"+Currentclass):
-                Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod6.get())],line))
-            elif line.startswith("tpoints_"):
-                if line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod1.get())]):
-                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod1.get()+'"',line))
-                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod2.get())]):
-                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod2.get()+'"',line))
-                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod3.get())]):
-                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod3.get()+'"',line))
-                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod4.get())]):
-                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod4.get()+'"',line))
-                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod5.get())]):
-                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod5.get()+'"',line))
-                elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod6.get())]):
-                    Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod6.get()+'"',line))
+        if uwu == 0:
+            for line in Save:
+                if line.startswith("perkslot"+Loadout[0]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarPistols[ShownPistols.index(PistolMod.get())],line))
+                elif line.startswith("perkslot"+Loadout[6]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod1.get())],line))
+                elif line.startswith("perkslot"+Loadout[5]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod2.get())],line))
+                elif line.startswith("perkslot"+Loadout[4]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod3.get())],line))
+                elif line.startswith("perkslot"+Loadout[3]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod4.get())],line))
+                elif line.startswith("perkslot"+Loadout[2]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod5.get())],line))
+                elif line.startswith("perkslot"+Loadout[1]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[ShownModules.index(OptionMod6.get())],line))
+                elif line.startswith("tpoints_"):
+                    if line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod1.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod1.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod2.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod2.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod3.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod3.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod4.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod4.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod5.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod5.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[ShownModules.index(OptionMod6.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod6.get()+'"',line))
+                    else:
+                        Tsave.write(line)
+                elif line.startswith("wunlock0"):
+                    Tsave.write(line)
+                    if WI == "w":
+                        y = 0
+                        for B in BonusTok:
+                            Y = str(y)
+                            if B.get() == '' or None:
+                                continue
+                            B = ShownWeapons.index(B.get())
+                            B = str(B)
+                            Tsave.write("wbonus_"+subclass+"__"+Y+'="'+B+'.000000"\n')
+                            y+=1
+                        y = 0
+                        for U in UpTok:
+                            Y = str(y)
+                            if U.get() == '' or None:
+                                continue
+                            U = ShownWeapons.index(U.get())
+                            U = str(U)
+                            Tsave.write("wplus_"+subclass+"__"+Y+'="'+U+'.000000"\n')
+                            y+=1
+                        y = 0
+                        for D in DownTok:
+                            Y = str(y)
+                            if D.get() == '' or None:
+                                continue
+                            D = ShownWeapons.index(D.get())
+                            D = str(D)
+                            Tsave.write("wminus_"+subclass+"__"+Y+'="'+D+'.000000"\n')
+                            y+=1
+                elif (WI == "w") and (line.startswith("wbonus") or line.startswith("wplus") or line.startswith("wminus")):
+                    if re.search(subclass,line) != None:
+                        continue
+                    else:
+                        Tsave.write(line)
+                elif line.startswith("iintel 0"):
+                    Tsave.write(line)
+                    if WI == "i":
+                        y = 0
+                        for B in BonusTok:
+                            Y = str(y)
+                            if B.get() == '' or None:
+                                continue
+                            B = ShownItems.index(B.get())
+                            B = str(B)
+                            Tsave.write("ibonus_"+subclass+"__"+Y+'="'+B+'.000000"\n')
+                            y+=1
+                        y = 0
+                        for U in UpTok:
+                            Y = str(y)
+                            if U.get() == '' or None:
+                                continue
+                            U = ShownItems.index(U.get())
+                            U = str(U)
+                            Tsave.write("iplus_"+subclass+"__"+Y+'="'+U+'.000000"\n')
+                            y+=1
+                        y = 0
+                        for D in DownTok:
+                            Y = str(y)
+                            if D.get() == '' or None:
+                                continue
+                            D = ShownItems.index(D.get())
+                            D = str(D)
+                            Tsave.write("iminus_"+subclass+"__"+Y+'="'+D+'.000000"\n')
+                            y+=1
+                elif (WI == "i") and (line.startswith("ibonus") or line.startswith("iplus") or line.startswith("iminus")):
+                    if re.search(subclass,line) != None:
+                        continue
+                    else:
+                        Tsave.write(line)
                 else:
                     Tsave.write(line)
-            elif line.startswith("wunlock0"):
-                Tsave.write(line)
-                if WI == "w":
-                    y = 0
-                    for B in BonusTok:
-                        Y = str(y)
-                        if B.get() == '' or None:
-                            continue
-                        B = ShownWeapons.index(B.get())
-                        B = str(B)
-                        Tsave.write("wbonus_"+subclass+"__"+Y+'="'+B+'.000000"\n')
-                        y+=1
-                    y = 0
-                    for U in UpTok:
-                        Y = str(y)
-                        if U.get() == '' or None:
-                            continue
-                        U = ShownWeapons.index(U.get())
-                        U = str(U)
-                        Tsave.write("wplus_"+subclass+"__"+Y+'="'+U+'.000000"\n')
-                        y+=1
-                    y = 0
-                    for D in DownTok:
-                        Y = str(y)
-                        if D.get() == '' or None:
-                            continue
-                        D = ShownWeapons.index(D.get())
-                        D = str(D)
-                        Tsave.write("wminus_"+subclass+"__"+Y+'="'+D+'.000000"\n')
-                        y+=1
-            elif (WI == "w") and (line.startswith("wbonus") or line.startswith("wplus") or line.startswith("wminus")):
-                if re.search(subclass,line) != None:
-                    continue
+        else:
+            for line in Save:
+                if line.startswith("perkslot"+Loadout[0]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarPistols[UWUShownPistols.index(PistolMod.get())],line))
+                elif line.startswith("perkslot"+Loadout[6]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[UWUShownModules.index(OptionMod1.get())],line))
+                elif line.startswith("perkslot"+Loadout[5]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[UWUShownModules.index(OptionMod2.get())],line))
+                elif line.startswith("perkslot"+Loadout[4]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[UWUShownModules.index(OptionMod3.get())],line))
+                elif line.startswith("perkslot"+Loadout[3]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[UWUShownModules.index(OptionMod4.get())],line))
+                elif line.startswith("perkslot"+Loadout[2]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[UWUShownModules.index(OptionMod5.get())],line))
+                elif line.startswith("perkslot"+Loadout[1]+"class"+Currentclass):
+                    Tsave.write(re.sub("obj_\w+(\d+)?_\w+",VarSmodules[UWUShownModules.index(OptionMod6.get())],line))
+                elif line.startswith("tpoints_"):
+                    if line.startswith("tpoints_"+VarSmodules[UWUShownModules.index(OptionMod1.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod1.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[UWUShownModules.index(OptionMod2.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod2.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[UWUShownModules.index(OptionMod3.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod3.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[UWUShownModules.index(OptionMod4.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod4.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[UWUShownModules.index(OptionMod5.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod5.get()+'"',line))
+                    elif line.startswith("tpoints_"+VarSmodules[UWUShownModules.index(OptionMod6.get())]):
+                        Tsave.write(re.sub('"-?\d+(\.\d+)?"','"'+PowerMod6.get()+'"',line))
+                    else:
+                        Tsave.write(line)
+                elif line.startswith("wunlock0"):
+                    Tsave.write(line)
+                    if WI == "w":
+                        y = 0
+                        for B in BonusTok:
+                            Y = str(y)
+                            if B.get() == '' or None:
+                                continue
+                            B = ShownWeapons.index(B.get())
+                            B = str(B)
+                            Tsave.write("wbonus_"+subclass+"__"+Y+'="'+B+'.000000"\n')
+                            y+=1
+                        y = 0
+                        for U in UpTok:
+                            Y = str(y)
+                            if U.get() == '' or None:
+                                continue
+                            U = ShownWeapons.index(U.get())
+                            U = str(U)
+                            Tsave.write("wplus_"+subclass+"__"+Y+'="'+U+'.000000"\n')
+                            y+=1
+                        y = 0
+                        for D in DownTok:
+                            Y = str(y)
+                            if D.get() == '' or None:
+                                continue
+                            D = ShownWeapons.index(D.get())
+                            D = str(D)
+                            Tsave.write("wminus_"+subclass+"__"+Y+'="'+D+'.000000"\n')
+                            y+=1
+                elif (WI == "w") and (line.startswith("wbonus") or line.startswith("wplus") or line.startswith("wminus")):
+                    if re.search(subclass,line) != None:
+                        continue
+                    else:
+                        Tsave.write(line)
+                elif line.startswith("iintel 0"):
+                    Tsave.write(line)
+                    if WI == "i":
+                        y = 0
+                        for B in BonusTok:
+                            Y = str(y)
+                            if B.get() == '' or None:
+                                continue
+                            B = UWUShownitems.index(B.get())
+                            B = str(B)
+                            Tsave.write("ibonus_"+subclass+"__"+Y+'="'+B+'.000000"\n')
+                            y+=1
+                        y = 0
+                        for U in UpTok:
+                            Y = str(y)
+                            if U.get() == '' or None:
+                                continue
+                            U = UWUShownitems.index(U.get())
+                            U = str(U)
+                            Tsave.write("iplus_"+subclass+"__"+Y+'="'+U+'.000000"\n')
+                            y+=1
+                        y = 0
+                        for D in DownTok:
+                            Y = str(y)
+                            if D.get() == '' or None:
+                                continue
+                            D = UWUShownitems.index(D.get())
+                            D = str(D)
+                            Tsave.write("iminus_"+subclass+"__"+Y+'="'+D+'.000000"\n')
+                            y+=1
+                elif (WI == "i") and (line.startswith("ibonus") or line.startswith("iplus") or line.startswith("iminus")):
+                    if re.search(subclass,line) != None:
+                        continue
+                    else:
+                        Tsave.write(line)
                 else:
                     Tsave.write(line)
-            elif line.startswith("iintel 0"):
-                Tsave.write(line)
-                if WI == "i":
-                    y = 0
-                    for B in BonusTok:
-                        Y = str(y)
-                        if B.get() == '' or None:
-                            continue
-                        B = ShownItems.index(B.get())
-                        B = str(B)
-                        Tsave.write("ibonus_"+subclass+"__"+Y+'="'+B+'.000000"\n')
-                        y+=1
-                    y = 0
-                    for U in UpTok:
-                        Y = str(y)
-                        if U.get() == '' or None:
-                            continue
-                        U = ShownItems.index(U.get())
-                        U = str(U)
-                        Tsave.write("iplus_"+subclass+"__"+Y+'="'+U+'.000000"\n')
-                        y+=1
-                    y = 0
-                    for D in DownTok:
-                        Y = str(y)
-                        if D.get() == '' or None:
-                            continue
-                        D = ShownItems.index(D.get())
-                        D = str(D)
-                        Tsave.write("iminus_"+subclass+"__"+Y+'="'+D+'.000000"\n')
-                        y+=1
-            elif (WI == "i") and (line.startswith("ibonus") or line.startswith("iplus") or line.startswith("iminus")):
-                if re.search(subclass,line) != None:
-                    continue
-                else:
-                    Tsave.write(line)
-            else:
-                Tsave.write(line)
     Safetywindow()
 
 
@@ -530,10 +711,6 @@ def AutoItemSpawnEdit():
             return
     with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
         if len(itemlist) != 0:
-            if uwu == 0:
-                messagebox.showinfo("Just so you know","Setting Drop chances for tokened items to 100. Setting drop chances for all other items to -100.\nThis only works for one run, one time per item. OTHER ITEMS WILL NOT SPAWN\nThis might also be a bit off kilter- perhaps the tokened item ids do not corellate 1-1 with thier spawn ids")
-            elif uwu == 1:
-                messagebox.showinfo("just so uwu know","setting dwop chances fow tokened items tuwu 100. Setting dwop chances fow aww othew items tuwu -100.\nthis onwy wowks fow owne wun, owne time pew item. Othew items wiww nowt spawn\nthis might awso be a bit off kiwtew- pewhaps the tokened item ids duwu nowt cowewwate 1-1 with thiew spawn ids")
             for line in Save:
                 if line.startswith("idropchange"):
                     for item in itemlist:
@@ -593,6 +770,20 @@ def UwU():
         Class41.configure(text="Demolishew")
         Submit .configure(text="submwit")
         Auto.configure(text="Auto Mwoduwle Edwit")
+        Gun["values"] = UWUShownPistols
+        Core["values"] = UWUShownModules
+        StartItem["values"] = UWUShownModules
+        Item1["values"] = UWUShownModules
+        Item2["values"] = UWUShownModules
+        Mod1["values"] = UWUShownModules
+        Mod2["values"] = UWUShownModules
+        PistolMod.set(UWUShownPistols[VarPistols.index(items[0])])
+        OptionMod1.set(UWUShownModules[VarSmodules.index(items[6])])
+        OptionMod2.set(UWUShownModules[VarSmodules.index(items[5])])
+        OptionMod3.set(UWUShownModules[VarSmodules.index(items[4])])
+        OptionMod4.set(UWUShownModules[VarSmodules.index(items[3])])
+        OptionMod5.set(UWUShownModules[VarSmodules.index(items[2])])
+        OptionMod6.set(UWUShownModules[VarSmodules.index(items[1])])
         uwu = 1
     elif uwu == 1:
         Class10.configure(text="Riot Guard")
@@ -605,6 +796,20 @@ def UwU():
         Class41.configure(text="Demolisher")
         Submit .configure(text="submit")
         Auto.configure(text="Auto Module Edit")
+        Gun["values"] = ShownPistols
+        Core["values"] = ShownModules
+        StartItem["values"] = ShownModules
+        Item1["values"] = ShownModules
+        Item2["values"] = ShownModules
+        Mod1["values"] = ShownModules
+        Mod2["values"] = ShownModules
+        PistolMod.set(ShownPistols[VarPistols.index(items[0])])
+        OptionMod1.set(ShownModules[VarSmodules.index(items[6])])
+        OptionMod2.set(ShownModules[VarSmodules.index(items[5])])
+        OptionMod3.set(ShownModules[VarSmodules.index(items[4])])
+        OptionMod4.set(ShownModules[VarSmodules.index(items[3])])
+        OptionMod5.set(ShownModules[VarSmodules.index(items[2])])
+        OptionMod6.set(ShownModules[VarSmodules.index(items[1])])
         uwu = 0
 
 def safetyFunc():
@@ -744,7 +949,7 @@ Submit = tk.Button(Power_frame,text="submit",command=SubmitLoadout)
 Submit.grid(row=7,column=1,columnspan=2)
 Auto = tk.Button(Power_frame,text="Auto Module Edit", command=lambda: AutoModuleEdit(Autopower.get()))
 Auto.grid(row=8,column=1)
-Autopower = ttk.Combobox(Power_frame)
+Autopower = ttk.Entry(Power_frame)
 Autopower.grid(row=8,column=2)
 
 #power frame end
@@ -807,7 +1012,7 @@ Token12.grid(row=13,column=0,columnspan=3)
 
 def about():
     if uwu == 0:
-        messagebox.showinfo('Synthetik Python Mod','By: Builder_Roberts\nMade for Synthetik 1!')
+        messagebox.showinfo('Synthetik Python Mod','By: Builder_Roberts\nMade for Synthetik 1!\n With help from: Tactu, Arti, Lawro, Saper')
     elif uwu == 1:
         messagebox.showinfo('synthetik python mod','by: Buiwdew_Wobewts\nmade fow Synthetik 1!')
 
@@ -853,5 +1058,7 @@ MenuBar.add_cascade(label="Help",menu=Helpbar)
 
 
 Testfunc(Currentclass)
+UwU()
+tokenset(WI)
 root.configure(menu = MenuBar)
 root.mainloop()
