@@ -1,4 +1,5 @@
 #gui with tkinter
+from ctypes.wintypes import WORD
 import tkinter as tk
 from tkinter import Menu, ttk
 from tkinter import filedialog
@@ -9,41 +10,14 @@ from tkinter import messagebox
 
 #Turn safety to 1 so we can see what happens to the TEMPORARYSAVE
 #uwu is gone. the uwu purge is complete.
+# all global variables will be put up here
 safety = 0
 WI = "i"
-username = getpass.getuser()
-filename = "C:/Users/"+username+"/AppData/Local/Synthetik/Save.sav"
-tfilename = "C:/Users/"+username+"/AppData/Local/Synthetik/TEMPORARYSAVE.txt"
-
-def browse_files(save_filename, temp_save_filename):
-    filepath = save_filename.rsplit("/",1)[0]
-    new_save_filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("Save files","*.sav*"),("All files","*.*")))
-    if new_save_filename:
-        save_filename = new_save_filename
-        filepath = save_filename.rsplit("/",1)[0]
-        temp_save_filename = filepath +"/TEMPORARYSAVE.txt"
-    print(filepath[0])
-
-    return save_filename, temp_save_filename
-
-if not os.path.exists(filename):
-    messagebox.showinfo('Synthetik','Sorry, your save file is not where I thought it would be! Could you please find it for me?')
-    filename, tfilename = browse_files(filename, tfilename)
-
-# setup main tkinter window name and frame. Configure frame to fill white space and for widgets to expand to fill space
-root = tk.Tk()
-root.title("Synthetik Loadout Editor")
-main_frame = ttk.Frame(root, padding=(20))
-main_frame.grid(column=0, row=0) #, sticky=('N', 'W', 'E', 'S'))
-Button_frame = ttk.Frame(main_frame,borderwidth=5)
-Button_frame.grid(column=0,row=0)
-Power_frame = ttk.Frame(main_frame,borderwidth=5)
-Power_frame.grid(column=1,row=0)
-Token_frame = ttk.Frame(main_frame)
-Token_frame.grid(column=2,row=0)
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
-
+Loadout = ["9","7","6","5","4","3","0"]
+ITokIdents = ["ibonus","iplus","iminus"]
+WTokIdents = ["wbonus","wplus","wminus"]
+# $savefile currentclass is one of the things that could be used in a local save file for the mod.
+Currentclass = "10"
 items = []
 #since the modules/pistols wont ever change, I just made it permanent
 VarSmodules = ["obj_item130_riotguard","obj_item54_c4","obj_item132_dynamite","obj_item98_minisentry","obj_artefact_tactical","obj_artefact_instagib","obj_artefact_madness","obj_artefact_mysterybonus","obj_artefact_terrorlevel","obj_artefact_ricochet","obj_artefact_elemental","obj_artefact_friendlyfire","obj_artefact_ultradrop","obj_artefact_itemupgrade","obj_artefact_pistol","obj_artefact_buff","obj_artefact_powerup","obj_artefact_strafe","obj_artefact_crit","obj_artefact_shop","obj_artefact_healing","obj_artefact_slowdown","obj_artefact_weaponcarry","obj_perk_force","obj_perk_sunrise","obj_perk_dodgeheat","obj_perk_transmutate","obj_perk_heatcontrol","obj_perk_elementalpower","obj_perk_heatrecharge","obj_perk_itemcdvariant","obj_perk_focus","obj_perk_selfrepair","obj_perk_ammoregen","obj_perk_pistolextender","obj_perk_hframe","obj_perk_grenadier","obj_perk_heatup","obj_perk_statusextender","obj_perk_engineer","obj_perk_demolisher","obj_item110_spider","obj_item126_missiledrone","obj_item80_masterkey","obj_item38_grenade_toxic","obj_item71_sentry","obj_item101_resonator","obj_perk_drill","obj_perk_killer","obj_perk_cover","obj_perk_scarred","obj_perk_combo","obj_perk_holdbreath","obj_perk_wepupgrade","obj_perk_edge","obj_perk_reloadsurge","obj_perk_fieldration","obj_perk_drone1","obj_perk_specializedammo","obj_perk_powerstep","obj_perk_reloadstack","obj_perk_classweapon","obj_perk_raider","obj_perk_squadleader","obj_perk_assaultgunner","obj_perk_commando","obj_item124_gunner","obj_item86_commandoflare","obj_item123_cover","obj_item109_reloader2","obj_item55_stim","obj_item37_grenade_plasma","obj_item81_tanto","obj_perk_healthy","obj_perk_diehard","obj_perk_stealback","obj_perk_reactivereload","obj_perk_standstill","obj_perk_powertuning","obj_perk_specialized","obj_perk_perfection","obj_perk_longrange","obj_perk_discipline","obj_perk_dance","obj_perk_backstab","obj_perk_dodgeboost","obj_perk_ejectsurge","obj_perk_headshotammo","obj_perk_marksman","obj_perk_assassin","obj_item122_targetcpu","obj_item94_dagger","obj_item115_decoy","obj_item83_grenade_smoke","obj_item97_minelaser","obj_item82_flare","obj_item79_bolt","obj_item35_grenade_flash","obj_perk_reloadsurge2","obj_perk_return","obj_perk_berserk","obj_perk_scavengerbits","obj_perk_scraparmor","obj_perk_lowhpregen","obj_perk_shieldoc","obj_perk_shotgunmaster","obj_perk_enrage","obj_perk_fortify","obj_perk_killshield","obj_perk_aegis","obj_perk_closer","obj_perk_recovery","obj_perk_warmup","obj_perk_iframe","obj_perk_breacher","obj_perk_riotguard","obj_item99_battlecry","obj_item100_breachingcharge","obj_item12_reflector","obj_item33_shieldburst","obj_item121_tomahawk","obj_item69_taser","obj_item36_grenade_stun","obj_item6_reloader","obj_item64_chalice","obj_item63_cellreplacer","obj_item18_potion","obj_item8_injection","obj_item30_methadone","obj_item7_vial","obj_perk_randomperk"]
@@ -78,6 +52,41 @@ ShownItems = ["Unidentified0","Chaos Potion","Hyperfeed","Shock Impulse","Umbra 
 "Trapper's Teleporter","ShieldLink","Underbarrel Mod Chip","Shaker","Elemental Resonance","Fire Water","Energy Link","Nitroglycerine",
 "Stun Mine","Acid Mine","Armageddon Shard","Orb of Fusion","Crux of the Laser Caster","PSY Cloud Grenade"]
 CurTokShown = ShownWeapons
+WeaponSpawnIds = []
+ItemSpawnIds = []
+username = getpass.getuser()
+filename = "C:/Users/"+username+"/AppData/Local/Synthetik/Save.sav"
+tfilename = "C:/Users/"+username+"/AppData/Local/Synthetik/TEMPORARYSAVE.txt"
+
+def browse_files(save_filename, temp_save_filename):
+    filepath = save_filename.rsplit("/",1)[0]
+    new_save_filename = filedialog.askopenfilename(initialdir="/", title="Select a file", filetypes=(("Save files","*.sav*"),("All files","*.*")))
+    if new_save_filename:
+        save_filename = new_save_filename
+        filepath = save_filename.rsplit("/",1)[0]
+        temp_save_filename = filepath +"/TEMPORARYSAVE.txt"
+    print(filepath[0])
+
+    return save_filename, temp_save_filename
+
+if not os.path.exists(filename):
+    messagebox.showinfo('Synthetik','Sorry, your save file is not where I thought it would be! Could you please find it for me?')
+    filename, tfilename = browse_files(filename, tfilename)
+
+# setup main tkinter window name and frame. Configure frame to fill white space and for widgets to expand to fill space
+root = tk.Tk()
+root.title("Synthetik Loadout Editor")
+main_frame = ttk.Frame(root, padding=(20))
+main_frame.grid(column=0, row=0) #, sticky=('N', 'W', 'E', 'S'))
+Button_frame = ttk.Frame(main_frame,borderwidth=5)
+Button_frame.grid(column=0,row=0)
+Power_frame = ttk.Frame(main_frame,borderwidth=5)
+Power_frame.grid(column=1,row=0)
+Token_frame = ttk.Frame(main_frame)
+Token_frame.grid(column=2,row=0)
+root.columnconfigure(0, weight=1)
+root.rowconfigure(0, weight=1)
+
 
 OptionMod1 = tk.StringVar(main_frame)
 OptionMod2 = tk.StringVar(main_frame)
@@ -125,11 +134,7 @@ def setsave():
             #weapon or item
 setsave()
 
-Loadout = ["9","7","6","5","4","3","0"]
-ITokIdents = ["ibonus","iplus","iminus"]
-WTokIdents = ["wbonus","wplus","wminus"]
-# $savefile currentclass is one of the things that could be used in a local save file for the mod.
-Currentclass = "10"
+
 
 
 def Testfunc(subclass):
@@ -636,6 +641,106 @@ def Regchangecolor(Modulation,Ident):
         if Cur == ShownModules[i]:
             Ident.configure(style="Other.TCombobox",foreground="black")
     
+
+def about():
+    messagebox.showinfo('Synthetik Python Mod','By: Builder_Roberts\nMade for Synthetik 1!\n With help from: Tactu, Arti, Lawro, Saper, ElectricOldMen')
+
+def notworking():
+    messagebox.showinfo('Actual help','first: try opening and closing synthetik. Make sure Synthetik is closed. That will reset the save file to what Synthetik Needs.\nSecond: message @Mason on the discord. He is the creator of this after all.')
+
+WeaponSpawnNames = 'Nemesis Prototype,Chaos Launcher,Object 29,Road Warrior,Apollon 5 LMG,P33 Compact,Tactical Observer,Mjolnir Chain LTN,Last Breath,PXS Covert Ops,57 Fusion Classic,Sour DMR,Spectre,Medic FMG-9,R5000 Sudden DMR,Vindicator Ultra,Raptor Laser SG,LS Laser Sub,Super 90,GM6 Lynx Evo,Kaida Laser Pistol,Eraser DMR,M32 Multipurpose,AMD 65,ION Obliterator,Armageddon,Enforcer Carbine,Damnnation,SS58 Plasma Charger,KI Vector,Spas 12,ML7000 Plus,M79 Terminator,Kaida Model H,FS5 Flametounge,Flak Heavy Cannon,RRX Coil Shotgun,XM2 Coil Pistol,Twin Mill Mk.2,SCR Laser Socom,AEK Special Elite,AS VAL,Battle Hymn,RPK Tundra,Ripjack,Liandry Railgun,MAG47 Heavy LMG,Kaida Nailgun,HIG-S Particle Cannon,Bren Anti-Air,X512 Experimental,Makeshift Firecannon,Ballistic CRX_Bow,420 Sniperdragon,Auto 9/45,K3 Boltcaster SMG,Human RPG,Kaida Medic ACR-X,Human Model 9800K,KSG 2000,Desert Eagle,Master Chief,G17 Undercover,PPQ-H Laser Pistol,UMP-9 Semi,Annilhilator,P25 overdrive,Yoko-Lagann,Super Shorty,W21 Lever Action,Pressurized Impaler,Gladiator,HMN Laser Cannon,AKS-74U,K98 Classic,UMP Tornado,T-8-00 Guage,Ares GL-16,Viking Riotshield,Eminince AR,A5-C Test Version,AN-94 Deathstalker,P9000 Supernova,TEC 9.95,LG2 Onslaught,Last Ditch M16,F14 Mini,Sturmgewher 44,Raider Scrap Cannon,Specialist M16-A5,Tuned M14 EBR,FMG-9 Personal,M75 Heavy Support,Titanium Eagle,PSG Emerald Sword,QBZ_Laser,Type-89 Tokko,K7 Competition'
+def WNewSpawn():
+    SpawnWindow = tk.Toplevel(main_frame)
+    howtotext = tk.Label(SpawnWindow,text="Here's a list of every weapon in the game. delete every name you don't want to show up")
+    howtotext.pack()
+    WeaponNames = tk.Text(SpawnWindow,wrap="word")
+    WeaponNames.insert('1.0',WeaponSpawnNames)
+    WeaponNames.pack()
+    warningtext = tk.Label(SpawnWindow,text="Make sure to copy your finished list, this application doesn't remember.\n You'll need to use this frequently; the game eventually restores the original spawn list.")
+    warningtext.pack()
+    Makethesespawn = tk.Button(SpawnWindow,text="Confirm Spawn List",command= lambda:WGetspawn(WeaponNames))
+    Makethesespawn.pack()
+
+def WGetspawn(identity):
+    content = identity.get('1.0','end')
+    Clist = list(map(str,content.split(',')))
+    Clist[-1] = Clist[-1].replace('\n','')
+    WeaponSpawnIds.clear()
+    for item in Clist:
+        if item not in ShownWeapons:
+            Clist.remove(item)
+        else:
+            WeaponSpawnIds.append(str(ShownWeapons.index(item)))
+    weplist = WeaponSpawnIds
+    with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
+        if len(weplist) != 0:
+            for line in Save:
+                if line.startswith("wdropchange"):
+                    for weapon in weplist:
+                        if line.startswith("wdropchange"+weapon+"="):
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"10.000000"',line))
+                            break
+                        else:
+                            continue
+                    if not(line.startswith("wdropchange"+weapon+"=")):
+                        Tsave.write(re.sub('"-?\d+\.\d+"','"-8.000000"',line))
+                elif line.startswith("wunlock"):
+                    for weapon in weplist:
+                        if line.startswith("wunlock"+weapon+"="):
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"1.000000"',line))
+                            weplist.remove(weapon)
+                            break
+                        elif re.search('"\d.',line).group() == '"0.':
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"1.000000"',line))
+                            break
+                        if weapon == weplist[-1]:
+                            Tsave.write(line)
+                else:
+                    Tsave.write(line)
+                    continue
+
+    Safetywindow()
+
+ItemSpawnNames = '''Chaos Potion,Hyperfeed,Shock Impulse,Umbra Adaptive Cloak,Healing Crystal,Field Supply,Health Vial,Overdose,Fangs of Mordigan,Unstable Current,Divine Reconstructor,RV Rebuke System,Devil's Dice,Maddness Glasses,Refractor Crystal,Upgrade Kit,Orb of Iron,Unidentified Potion,Orb of Lightning,Orb of Fire,Orb of Wind,Blood Rite,Twin Link 2,Heart Core,Refresher,Core Upgrade Kit,Black Berserk Charm,Trophy System Drone?,Combat Amphetamine?,Methadone,Incubus,Tsunami Talisman,ShieldBurst,HE Grenade,Flash Grenade,Stun Grenade,Plasma Grenade,Acid Grenade,Psy Field,Heavy Steel Trap,PowerShot,R-Plating,Fast Sling,Facemelter,Uranium 235,Maverick MKV,Sidewinder,Fire Prism,Order 322,Last Stand,Stinger Jet Glider,Air Com,Power Array,Composite 4,Stim Pack,Phaser,Gun Drone Spawner,Heart Seeker,M205 Launcher,Target Cogitator,Rosarius,Reality Ripper,Cell Replacer,Lifeblood,Direct Current,Akira,Lightning Boots,Ring of Experience,Auto Taser,Blood Bolt,LMG sentry Turret,DMR Sentry Turret,Turret?,Module Core,Ring of Glass,Bloodthirsty Ring,Unsoldered Chip?,Ripjack Hyper Blade,'Helsing' Power Bolt,Dragon's Masterkey,Reverbing Blade,Flare Gun,Smoke Grenade,M26 MA Shotgun System,Kunai Throwing Knives,Road Flare,G87 Beamer,Icarus,Redline,Biting Throwing Stars,Z1 Sundering Shuriken,Fan of Knives,Infinity Drill Piece,Scoundrel's Dagger,ZR99 'Living Bomb',ZK77 'Sticky Bomb',Laser Mine,'Seth-Up' Suitcase Sentry,Battlecry Module,Breaching Charge,Seismic Resonator,Air Horn,Brawndo,Eclipse,Stun Mine (Null),Acid Mine (Null),Magic Mag,Auto-Overclocker,Special Ammo Supply,Spider Mines,Heat Sink,Black Market Teleporter,Maddness Button,Heat Spreader,Decoy,Shielded Decoy,GPS,Gold Nugget,Custom Upgrade Kit,Metal Detector,Tomahawk,Targeting Laser,Hard Light Cover,Onslaught System,Intensity Chamber,Missile Drone,Constructor?,Remove Building?,Research?,Guardian,High Command,Neutrino Bomb,Magnum,Bandana,Orbital Relay,Missile Control,Trapper's Teleporter,ShieldLink,Underbarrel Mod Chip,Shaker,Elemental Resonance,Fire Water,Energy Link,Nitroglycerine,Stun Mine,Acid Mine,Armageddon Shard,Orb of Fusion,Crux of the Laser Caster,PSY Cloud Grenade'''
+
+def INewSpawn():
+    SpawnWindow = tk.Toplevel(main_frame)
+    howtotext = tk.Label(SpawnWindow,text="Here's a list of every Item in the game. delete every item you don't want to show up")
+    howtotext.pack()
+    ItemNames = tk.Text(SpawnWindow,wrap="word")
+    ItemNames.insert('1.0',ItemSpawnNames)
+    ItemNames.pack()
+    warningtext = tk.Label(SpawnWindow,text="Make sure to copy your finished list, this application doesn't remember.\n You'll need to use this frequently; the game eventually restores the original spawn list.")
+    warningtext.pack()
+    Makethesespawn = tk.Button(SpawnWindow,text="Confirm Spawn List",command= lambda:IGetSpawn(ItemNames))
+    Makethesespawn.pack()
+
+def IGetSpawn(identity):
+    content = identity.get('1.0','end')
+    Clist = list(map(str,content.split(',')))
+    Clist[-1] = Clist[-1].replace('\n','')
+    ItemSpawnIds.clear()
+    for item in Clist:
+        if item not in ShownItems:
+            Clist.remove(item)
+        else:
+            ItemSpawnIds.append(str(ShownItems.index(item)))
+    itemlist = ItemSpawnIds
+    with open(filename, "r") as Save, open(tfilename, "w") as Tsave:
+        if len(itemlist) != 0:
+            for line in Save:
+                if line.startswith("idropchange"):
+                    for item in itemlist:
+                        if line.startswith("idropchange "+item+"="):
+                            Tsave.write(re.sub('"-?\d+\.\d+"','"10.000000"',line))
+                            break
+                        else:
+                            continue                        
+                    if not(line.startswith("idropchange "+item+"=")):
+                        Tsave.write(re.sub('"-?\d+\.\d+"','"-8.000000"',line))
+                else:
+                    Tsave.write(line)
+    Safetywindow()
 #Button frame start
 
 Class10 = tk.Button(Button_frame, text="Riot Guard",fg="white", bg="blue",command=lambda: Testfunc("10"))
@@ -775,13 +880,6 @@ Token12['values'] = CurTokShown
 Token12.grid(row=13,column=0,columnspan=3)
 #Token_frame end
 
-
-def about():
-    messagebox.showinfo('Synthetik Python Mod','By: Builder_Roberts\nMade for Synthetik 1!\n With help from: Tactu, Arti, Lawro, Saper')
-
-def notworking():
-    messagebox.showinfo('Actual help','first: try opening and closing synthetik. Make sure Synthetik is closed. That will reset the save file to what Synthetik Needs.\nSecond: message @Mason on the discord. He is the creator of this after all.')
-
 MenuBar = Menu(main_frame)
 file = Menu(MenuBar,tearoff=0)
 file.add_command(label="Open",command=lambda: browse_files(filename, tfilename))
@@ -803,10 +901,12 @@ misc.add_command(label="Safety On/Off", command=safetyFunc)
 MenuBar.add_cascade(label="Misc",menu=misc)
 
 spawn = Menu(MenuBar,tearoff=0)
-spawn.add_command(label="Item Spawn",command=AutoItemSpawnEdit)
+spawn.add_command(label="Weapon spawn",command=WNewSpawn)
+spawn.add_command(label="Item spawn",command=INewSpawn)
 spawn.add_command(label="Reset Item Spawn",command=itemspawnreset)
-spawn.add_command(label="Weapon Spawn", command=AutoWeaponSpawnEdit)
 spawn.add_command(label="Reset Weapon Spawn",command=weaponspawnreset)
+spawn.add_command(label="Old Weapon Spawn", command=AutoWeaponSpawnEdit)
+spawn.add_command(label="Old Item Spawn",command=AutoItemSpawnEdit)
 MenuBar.add_cascade(label="Spawn",menu=spawn)
 
 Helpbar = Menu(MenuBar,tearoff=0)
