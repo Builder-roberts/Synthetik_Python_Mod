@@ -7,6 +7,7 @@ import getpass
 import re
 import os
 from tkinter import messagebox
+from typing import Text
 
 #Turn safety to 1 so we can see what happens to the TEMPORARYSAVE
 #uwu is gone. the uwu purge is complete.
@@ -834,50 +835,56 @@ TokItems.grid(row=0,column=1)
 #Bonus tokens
 Bonus_Frame = ttk.Frame(Token_frame,borderwidth=5)
 Bonus_Frame.grid(column=0,row=1,columnspan=2)
+BonusLabel = tk.Label(Bonus_Frame,text="Power tokens")
+BonusLabel.grid(row=0,column=0)
 Token1 =  ttk.Combobox(Bonus_Frame,textvariable=PTokNum1)
 Token1['values'] = CurTokShown
-Token1.grid(row=0,column=0)
+Token1.grid(row=1,column=0)
 Token2 = ttk.Combobox(Bonus_Frame,textvariable=PTokNum2)
 Token2['values'] = CurTokShown
-Token2.grid(row=1,column=0)
+Token2.grid(row=2,column=0)
 Token3 = ttk.Combobox(Bonus_Frame,textvariable=PTokNum3)
 Token3['values'] = CurTokShown
-Token3.grid(row=2,column=0)
+Token3.grid(row=3,column=0)
 Token4 = ttk.Combobox(Bonus_Frame,textvariable=PTokNum4)
 Token4['values'] = CurTokShown
-Token4.grid(row=3,column=0)
+Token4.grid(row=4,column=0)
 
 #up tokens
 UP_Frame = ttk.Frame(Token_frame, borderwidth=5)
 UP_Frame.grid(column=0,row=2,columnspan=2)
+UPLabel = tk.Label(UP_Frame,text="Supply UP tokens")
+UPLabel.grid(row=0,column=0)
 Token5 = ttk.Combobox(UP_Frame,textvariable=UTokNum1)
 Token5['values'] = CurTokShown
-Token5.grid(row=6,column=0,columnspan=3)
+Token5.grid(row=6,column=0)
 Token6 = ttk.Combobox(UP_Frame,textvariable=UTokNum2)
 Token6['values'] = CurTokShown
-Token6.grid(row=7,column=0,columnspan=3)
+Token6.grid(row=7,column=0)
 Token7 = ttk.Combobox(UP_Frame,textvariable=UTokNum3)
 Token7['values'] = CurTokShown
-Token7.grid(row=8,column=0,columnspan=3)
+Token7.grid(row=8,column=0)
 Token8 = ttk.Combobox(UP_Frame,textvariable=UTokNum4)
 Token8['values'] = CurTokShown
-Token8.grid(row=9,column=0,columnspan=3)
+Token8.grid(row=9,column=0)
 
 #down tokens
 DOWN_Frame = ttk.Frame(Token_frame,borderwidth=5)
 DOWN_Frame.grid(column=0,row=3,columnspan=2)
+DownLabel = tk.Label(DOWN_Frame,text="Supply Down tokens")
+DownLabel.grid(row=0,column=0)
 Token9 = ttk.Combobox(DOWN_Frame,textvariable=DTokNum1)
 Token9['values'] = CurTokShown
-Token9.grid(row=10,column=0,columnspan=3)
+Token9.grid(row=10,column=0)
 Token10 = ttk.Combobox(DOWN_Frame,textvariable=DTokNum2)
 Token10['values'] = CurTokShown
-Token10.grid(row=11,column=0,columnspan=3)
+Token10.grid(row=11,column=0)
 Token11 = ttk.Combobox(DOWN_Frame,textvariable=DTokNum3)
 Token11['values'] = CurTokShown
-Token11.grid(row=12,column=0,columnspan=3)
+Token11.grid(row=12,column=0)
 Token12 = ttk.Combobox(DOWN_Frame,textvariable=DTokNum4)
 Token12['values'] = CurTokShown
-Token12.grid(row=13,column=0,columnspan=3)
+Token12.grid(row=13,column=0)
 #Token_frame end
 
 MenuBar = Menu(main_frame)
