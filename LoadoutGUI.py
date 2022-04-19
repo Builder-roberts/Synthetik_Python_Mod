@@ -641,7 +641,15 @@ def Regchangecolor(Modulation,Ident):
     for i in range (123,131):
         if Cur == ShownModules[i]:
             Ident.configure(style="Other.TCombobox",foreground="black")
-    
+            
+def UnlockAll():
+    with open(filename,"r") as Save, open(tfilename, "w") as Tsave:
+        for line in Save:
+            if re.search("unlock_",line) == None:
+                Tsave.write(line)
+            else:
+                Tsave.write(re.sub('"-?\d+\.\d+"','"1.000000"',line))
+    Safetywindow()
 
 def about():
     messagebox.showinfo('Synthetik Python Mod','By: Builder_Roberts\nMade for Synthetik 1!\n With help from: Tactu, Arti, Lawro, Saper, ElectricOldMen')
@@ -905,6 +913,7 @@ misc.add_command(label="Max Data",command=MaxData)
 misc.add_command(label="Undo Research",command=undoresearch)
 misc.add_command(label="Cheat Code Reset",command=CheatCodeReturn)
 misc.add_command(label="Safety On/Off", command=safetyFunc)
+misc.add_command(label="Unlock All",command=UnlockAll)
 MenuBar.add_cascade(label="Misc",menu=misc)
 
 spawn = Menu(MenuBar,tearoff=0)
