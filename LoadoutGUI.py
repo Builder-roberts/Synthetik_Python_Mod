@@ -912,7 +912,7 @@ misc.add_command(label="Daily Run Reset",command=NewDailyRun)
 misc.add_command(label="Max Data",command=MaxData)
 misc.add_command(label="Undo Research",command=undoresearch)
 misc.add_command(label="Cheat Code Reset",command=CheatCodeReturn)
-misc.add_command(label="Safety On/Off", command=safetyFunc)
+misc.add_command(label="Ask For Confirmation", command=safetyFunc)
 misc.add_command(label="Unlock All",command=UnlockAll)
 MenuBar.add_cascade(label="Misc",menu=misc)
 
