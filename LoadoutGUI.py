@@ -667,7 +667,7 @@ def WNewSpawn():
     WeaponNames.pack()
     warningtext = tk.Label(SpawnWindow,text="Make sure to copy your finished list, this application doesn't remember.\n You'll need to use this frequently; the game eventually restores the original spawn list.")
     warningtext.pack()
-    Makethesespawn = tk.Button(SpawnWindow,text="Confirm Spawn List",command= lambda:WGetspawn(WeaponNames))
+    Makethesespawn = tk.Button(SpawnWindow,text="Confirm Spawn List",command= lambda:[WGetspawn(WeaponNames), SpawnWindow.destroy()])
     Makethesespawn.pack()
 
 def WGetspawn(identity):
@@ -707,7 +707,6 @@ def WGetspawn(identity):
                 else:
                     Tsave.write(line)
                     continue
-
     Safetywindow()
 
 ItemSpawnNames = '''Chaos Potion,Hyperfeed,Shock Impulse,Umbra Adaptive Cloak,Healing Crystal,Field Supply,Health Vial,Overdose,Fangs of Mordigan,Unstable Current,Divine Reconstructor,RV Rebuke System,Devil's Dice,Maddness Glasses,Refractor Crystal,Upgrade Kit,Orb of Iron,Unidentified Potion,Orb of Lightning,Orb of Fire,Orb of Wind,Blood Rite,Twin Link 2,Heart Core,Refresher,Core Upgrade Kit,Black Berserk Charm,Trophy System Drone?,Combat Amphetamine?,Methadone,Incubus,Tsunami Talisman,ShieldBurst,HE Grenade,Flash Grenade,Stun Grenade,Plasma Grenade,Acid Grenade,Psy Field,Heavy Steel Trap,PowerShot,R-Plating,Fast Sling,Facemelter,Uranium 235,Maverick MKV,Sidewinder,Fire Prism,Order 322,Last Stand,Stinger Jet Glider,Air Com,Power Array,Composite 4,Stim Pack,Phaser,Gun Drone Spawner,Heart Seeker,M205 Launcher,Target Cogitator,Rosarius,Reality Ripper,Cell Replacer,Lifeblood,Direct Current,Akira,Lightning Boots,Ring of Experience,Auto Taser,Blood Bolt,LMG sentry Turret,DMR Sentry Turret,Turret?,Module Core,Ring of Glass,Bloodthirsty Ring,Unsoldered Chip?,Ripjack Hyper Blade,'Helsing' Power Bolt,Dragon's Masterkey,Reverbing Blade,Flare Gun,Smoke Grenade,M26 MA Shotgun System,Kunai Throwing Knives,Road Flare,G87 Beamer,Icarus,Redline,Biting Throwing Stars,Z1 Sundering Shuriken,Fan of Knives,Infinity Drill Piece,Scoundrel's Dagger,ZR99 'Living Bomb',ZK77 'Sticky Bomb',Laser Mine,'Seth-Up' Suitcase Sentry,Battlecry Module,Breaching Charge,Seismic Resonator,Air Horn,Brawndo,Eclipse,Stun Mine (Null),Acid Mine (Null),Magic Mag,Auto-Overclocker,Special Ammo Supply,Spider Mines,Heat Sink,Black Market Teleporter,Maddness Button,Heat Spreader,Decoy,Shielded Decoy,GPS,Gold Nugget,Custom Upgrade Kit,Metal Detector,Tomahawk,Targeting Laser,Hard Light Cover,Onslaught System,Intensity Chamber,Missile Drone,Constructor?,Remove Building?,Research?,Guardian,High Command,Neutrino Bomb,Magnum,Bandana,Orbital Relay,Missile Control,Trapper's Teleporter,ShieldLink,Underbarrel Mod Chip,Shaker,Elemental Resonance,Fire Water,Energy Link,Nitroglycerine,Stun Mine,Acid Mine,Armageddon Shard,Orb of Fusion,Crux of the Laser Caster,PSY Cloud Grenade'''
@@ -721,7 +720,7 @@ def INewSpawn():
     ItemNames.pack()
     warningtext = tk.Label(SpawnWindow,text="Make sure to copy your finished list, this application doesn't remember.\n You'll need to use this frequently; the game eventually restores the original spawn list.")
     warningtext.pack()
-    Makethesespawn = tk.Button(SpawnWindow,text="Confirm Spawn List",command= lambda:IGetSpawn(ItemNames))
+    Makethesespawn = tk.Button(SpawnWindow,text="Confirm Spawn List",command= [lambda:IGetSpawn(ItemNames),SpawnWindow.destroy()])
     Makethesespawn.pack()
 
 def IGetSpawn(identity):
