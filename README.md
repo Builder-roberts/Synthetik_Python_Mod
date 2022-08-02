@@ -4,11 +4,12 @@ if it can't find your save file, try looking in username/appdata/local/synthetik
 
 You definitely need to have Synthetik closed when you change anything.
 
-HOW TO USE THE SPAWN MENU:
+
+
+HOW TO USE THE OLD SPAWN MENU:
 ![Tutorial for Spawn](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(23).png?raw=true)
 The right side of the mod now allows you to do this outside the game
 
-### Video tutorial will go here
 # Version 2.7
 ### NEW! The right side now works! you now have the capability to change your tokens outside of the game! it goes: bonus tokens, Up tokens, Down tokens.
 ### Pretty Colors! Readability! Thank you to Lawro#0858 for helping me with the update!
@@ -29,7 +30,6 @@ The right side of the mod now allows you to do this outside the game
 ## Thank you to Tactu on discord for general coding advice, and helping edit the UI!
 
 # Future Updates:
-### General UI chages, Tactu is helping with refactoring and stuff.
-### Going to make a tutorial video soon (written 4/7/2022)
-### Also, I'm going to add an additional frame to edit tokens with, so you dont have to open and close synthetik all the time. - Done this update!
-### Now I just need names for the items section for 2.7.1, then i'll add colors to the weapons and items.
+### I just need names for the items section for 2.7.1, then i'll add colors to the weapons and items. (Still to do 8/2/22)
+### Changing to Class-based coding structure for easier readability and modification
+### Changing Newspawns from Text-based entry to Slider-based entry
