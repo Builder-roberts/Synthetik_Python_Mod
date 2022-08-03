@@ -1,14 +1,19 @@
 # Synthetik_Python_Mod
 A save editor tool for the game Synthetik written in python.
-if it can't find your save file, try looking in username/appdata/local/synthetik  it should be called Save.sav
+if it can't find your save file, try looking in username/appdata/local/synthetik it should be called Save.sav
+(you may have to type that directly into the file-path)
 
 You definitely need to have Synthetik closed when you change anything.
 
-
-
 HOW TO USE THE OLD SPAWN MENU:
-![Tutorial for Spawn](https://github.com/Builder-roberts/Synthetik_Python_Mod/blob/main/Screenshot%20(23).png?raw=true)
-The right side of the mod now allows you to do this outside the game
+Select the class you want.
+Power Token the items you want, then "Submit". (Do the same for Weapons)
+Then click "Spawn -> Old Item Spawn" (& Old Weapon Spawn) In the top bar.
+
+HOW TO USE THE NEW SPAWN MENU:
+Click "Spawn -> Item spawn" (or Weapon Spawn)
+Delete any of the items you don't want showing up (there should be no spaces in,between each,item)
+Click "Confirm Spawn List"
 
 # Version 2.7
 ### NEW! The right side now works! you now have the capability to change your tokens outside of the game! it goes: bonus tokens, Up tokens, Down tokens.
@@ -33,3 +38,4 @@ The right side of the mod now allows you to do this outside the game
 ### I just need names for the items section for 2.7.1, then i'll add colors to the weapons and items. (Still to do 8/2/22)
 ### Changing to Class-based coding structure for easier readability and modification
 ### Changing Newspawns from Text-based entry to Slider-based entry
+### Save for the mod itself so you don't have to keep copying and pasting things into the new spawn menu
