@@ -6,13 +6,19 @@ if it can't find your save file, try looking in username/appdata/local/synthetik
 You definitely need to have Synthetik closed when you change anything.
 
 HOW TO USE THE OLD SPAWN MENU:
+
 Select the class you want.
+
 Power Token the items you want, then "Submit". (Do the same for Weapons)
+
 Then click "Spawn -> Old Item Spawn" (& Old Weapon Spawn) In the top bar.
 
 HOW TO USE THE NEW SPAWN MENU:
+
 Click "Spawn -> Item spawn" (or Weapon Spawn)
+
 Delete any of the items you don't want showing up (there should be no spaces in,between each,item)
+
 Click "Confirm Spawn List"
 
 # Version 2.7
