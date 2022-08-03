@@ -21,6 +21,8 @@ Delete any of the items you don't want showing up (there should be no spaces in,
 
 Click "Confirm Spawn List"
 
+ALERT TO ALL NEW SPAWN MENU USERS: the current version uses typos. when those are fixed, your current copied lists will not work.
+
 # Version 2.7
 ### NEW! The right side now works! you now have the capability to change your tokens outside of the game! it goes: bonus tokens, Up tokens, Down tokens.
 ### Pretty Colors! Readability! Thank you to Lawro#0858 for helping me with the update!
