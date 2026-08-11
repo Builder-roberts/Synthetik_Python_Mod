@@ -20,15 +20,19 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
-
+      - uses: actions/checkout@v4
       - name: Setup Python
-        uses: actions/setup-python@v1
-        
-      - uses: BSFishy/pip-action@v1
+        uses: actions/setup-python@v5
         with:
-          packages: pyinstaller
-
+          python-version: '3.12'
+        
+      - name: Install PyInstaller
+        run: pip install pyinstaller
+          
+      - name: List workspace files
+        run: Get-ChildItem -Recurse -Depth 2
+        shell: powershell
+        
       - name: Convert to exe
         id: convert
         run: |
