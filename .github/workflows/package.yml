@@ -28,7 +28,10 @@ jobs:
         
       - name: Install PyInstaller
         run: pip install pyinstaller
-          
+
+      - name: Install dependencies
+        run: pip install pyinstaller pillow
+        
       - name: List workspace files
         run: Get-ChildItem -Recurse -Depth 2
         shell: powershell
