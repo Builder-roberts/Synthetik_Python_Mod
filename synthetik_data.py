@@ -1,0 +1,318 @@
+"""synthetik_data.py
+
+Static game data shared by LoadoutGUI.py and LoadoutEditor.py.
+
+This used to be copy-pasted, verbatim, into both scripts. That meant any fix
+or addition (a new perk, a corrected name) had to be made twice, and the two
+files could quietly drift out of sync. Now there's exactly one copy.
+
+None of these lists change at runtime - they mirror fixed IDs in Synthetik's
+save format - so they're safe to import as plain module-level constants.
+"""
+
+# --- Perk / module slots -----------------------------------------------
+# The save file stores loadout slots as "perkslot<N>class<CLASS>". These are
+# the slot numbers used, in order: [pistol, item2, item1, mod2, mod1, mod0(core)]
+# plus one unused/legacy slot. See Change_class()/Testfunc() for how it's used.
+LOADOUT_SLOTS = ["9", "7", "6", "5", "4", "3", "0"]
+
+# Internal object IDs for every perk/artifact/item that can go in a module slot.
+VAR_MODULES = ["obj_item130_riotguard", "obj_item54_c4", "obj_item132_dynamite", "obj_item98_minisentry", "obj_artefact_tactical", "obj_artefact_instagib", "obj_artefact_madness", "obj_artefact_mysterybonus", "obj_artefact_terrorlevel", "obj_artefact_ricochet", "obj_artefact_elemental", "obj_artefact_friendlyfire", "obj_artefact_ultradrop", "obj_artefact_itemupgrade", "obj_artefact_pistol", "obj_artefact_buff", "obj_artefact_powerup", "obj_artefact_strafe", "obj_artefact_crit", "obj_artefact_shop", "obj_artefact_healing", "obj_artefact_slowdown", "obj_artefact_weaponcarry", "obj_perk_force", "obj_perk_sunrise", "obj_perk_dodgeheat", "obj_perk_transmutate", "obj_perk_heatcontrol", "obj_perk_elementalpower", "obj_perk_heatrecharge", "obj_perk_itemcdvariant", "obj_perk_focus", "obj_perk_selfrepair", "obj_perk_ammoregen", "obj_perk_pistolextender", "obj_perk_hframe", "obj_perk_grenadier", "obj_perk_heatup", "obj_perk_statusextender", "obj_perk_engineer", "obj_perk_demolisher", "obj_item110_spider", "obj_item126_missiledrone", "obj_item80_masterkey", "obj_item38_grenade_toxic", "obj_item71_sentry", "obj_item101_resonator", "obj_perk_drill", "obj_perk_killer", "obj_perk_cover", "obj_perk_scarred", "obj_perk_combo", "obj_perk_holdbreath", "obj_perk_wepupgrade", "obj_perk_edge", "obj_perk_reloadsurge", "obj_perk_fieldration", "obj_perk_drone1", "obj_perk_specializedammo", "obj_perk_powerstep", "obj_perk_reloadstack", "obj_perk_classweapon", "obj_perk_raider", "obj_perk_squadleader", "obj_perk_assaultgunner", "obj_perk_commando", "obj_item124_gunner", "obj_item86_commandoflare", "obj_item123_cover", "obj_item109_reloader2", "obj_item55_stim", "obj_item37_grenade_plasma", "obj_item81_tanto", "obj_perk_healthy", "obj_perk_diehard", "obj_perk_stealback", "obj_perk_reactivereload", "obj_perk_standstill", "obj_perk_powertuning", "obj_perk_specialized", "obj_perk_perfection", "obj_perk_longrange", "obj_perk_discipline", "obj_perk_dance", "obj_perk_backstab", "obj_perk_dodgeboost", "obj_perk_ejectsurge", "obj_perk_headshotammo", "obj_perk_marksman", "obj_perk_assassin", "obj_item122_targetcpu", "obj_item94_dagger", "obj_item115_decoy", "obj_item83_grenade_smoke", "obj_item97_minelaser", "obj_item82_flare", "obj_item79_bolt", "obj_item35_grenade_flash", "obj_perk_reloadsurge2", "obj_perk_return", "obj_perk_berserk", "obj_perk_scavengerbits", "obj_perk_scraparmor", "obj_perk_lowhpregen", "obj_perk_shieldoc", "obj_perk_shotgunmaster", "obj_perk_enrage", "obj_perk_fortify", "obj_perk_killshield", "obj_perk_aegis", "obj_perk_closer", "obj_perk_recovery", "obj_perk_warmup", "obj_perk_iframe", "obj_perk_breacher", "obj_perk_riotguard", "obj_item99_battlecry", "obj_item100_breachingcharge", "obj_item12_reflector", "obj_item33_shieldburst", "obj_item121_tomahawk", "obj_item69_taser", "obj_item36_grenade_stun", "obj_item6_reloader", "obj_item64_chalice", "obj_item63_cellreplacer", "obj_item18_potion", "obj_item8_injection", "obj_item30_methadone", "obj_item7_vial", "obj_perk_randomperk"]
+
+# Human-readable names, in the SAME order as VAR_MODULES above (index-aligned).
+SHOWN_MODULES = ["Guardian", "Composite 4", "Neutrino Bomb", "Seth-Up Suitcase Sentry", "Mode: Tactical", "Mode: Hyper Adrenaline", "Mode: Madness", "Mode: Mystery Bonus", "PU-55", "Hobb-S", "Rynn", "Rhett", "Kevv", "Zion", "Luka", "Savnt", "Pure 759", "Cario", "Taro", "Aeon-FFD", "Kokova", "Mael", "Ensiferum", "Force Unleashed", "Sun Rising", "Unceasing", "Transmutate", "Calculated", "Elemental Power", "Overdrive", "Well Oiled", "Focus", "Inner Fire", "Multiply", "Weapons Deal", "Chromatic Alloy", "Grenadier", "Forged By Fire", "Status Extender ", "Core: Drone Zeal", "Core: HE-Ammo", "Spider Mines", "Missile Drone", "Dragon\u2019s Masterkey", "Acid Grenade", "LMG Sentry Turret", "Seismic Resonator", "Drill", "Killer", "Take Cover", "Scarred", "Madness", "Hold Breath", "Pack A Punch", "On The Edge", "Press The Attack", "Field Rat0ons", "Drone Mod", "Specialized Ammo", "Charge", "Routine", "Weapon Drop", "Core: Looter", "Core: Squad Leader", "Core: Suppression", "Core: Commando", "Onslaught System", "Road Flare", "Hard Light Cover", "Special Ammo Supply", "Stim Pack", "Plasma Grenade", "Reverbing Blade", "Against The Odds", "Die Hard", "Blood Borne", "Keeping Cool", "Freeze!", "Power Tuning", "DMR Conversion", "Perfection", "Keeping Distance", "Discipline", "Shadow Dance", "Backstab", "Evasive Maneuvers", "Switch Position", "Head Hunter", "Core: Spotter", "Core: Professional", "Targeting Laser", "Scoundrel\u2019s Dagger", "Decoy", "Smoke Grenade", "Laser Mine", "Flare Gun", "\u2019Helsing\u2019 Power Bolt", "TP Grenade Flash", "Push Forward", "Wicked", "Berserk", "Bits And Pieces", "Scrap Plating", "Stimulants", "Shield Overclock", "Weapon Mastery", "Enrage", "Fortify Position", "Shielded", "Aegis MK5 Platinum", "Into Battle", "Recovery", "Warmup", "I-Frame", "Core: Charge", "Core: Unyielding", "Battlecry Module", "Breaching Charge", "RV Rebuke System", "Shieldburst", "Tomahawk", "Auto Taser", "Stun Grenade", "Field Supply", "Lifeblood", "Cell Replacer", "Unidentified Potion", "Overdose", "Methadone", "Health Vial", "Random Module"]
+
+# Internal IDs / display names for the fixed pistol slot. Index-aligned.
+VAR_PISTOLS = ["obj_weapon_TEC_84", "obj_weapon_SUP_67", "obj_weapon_DE_94", "obj_weapon_A9_55", "obj_weapon_REP_11", "obj_weapon_HLP_64", "obj_weapon_LSP_21", "obj_weapon_DE_61", "obj_weapon_HON_34", "obj_weapon_REV_9", "obj_weapon_MC_62", "obj_weapon_CP_38", "obj_weapon_G17_63", "obj_weapon_PXS_10", "obj_weapon_PTL_6"]
+SHOWN_PISTOLS = ["TEC-9.95 Personal", "P25 Overdrive", "Titanium Eagle", "Auto 9/45", "57 Fusion Classic", "PPQ-H Laser Pistol", "Kaida Laser Pistol", "Desert Eagle .50", "Kaida Model H", "Last Breath", "Master Chief", "XM2 Coil Pistol", "G17 Undercover", "PXS Covert Ops", "P33 Compact"]
+
+# Full weapon / item roster (index == the game's internal drop/unlock ID).
+SHOWN_WEAPONS = ["Null", "Nemesis Prototype", "Chaos Launcher", "Object 29", "Road Warrior", "Apollon 5 LMG", "P33 Compact", "Tactical Observer", "Mjolnir Chain LTN", "Last Breath", "PXS Covert Ops", "57 Fusion Classic", "Sour DMR", "Spectre", "Medic FMG-9", "R5000 Sudden DMR", "Vindicator Ultra", "Raptor Laser SG", "LS Laser Sub", "Super 90", "GM6 Lynx Evo", "Kaida Laser Pistol", "Eraser DMR", "M32 Multipurpose", "AMD 65", "ION Obliterator", "Armageddon", "Enforcer Carbine", "Damnnation", "SS58 Plasma Charger", "KI Vector", "Spas 12", "ML7000 Plus", "M79 Terminator", "Kaida Model H", "FS5 Flametounge", "Flak Heavy Cannon", "RRX Coil Shotgun", "XM2 Coil Pistol", "Twin Mill Mk.2", "SCR Laser Socom", "AEK Special Elite", "AS VAL", "Battle Hymn", "RPK Tundra", "Ripjack", "Liandry Railgun", "MAG47 Heavy LMG", "Kaida Nailgun", "HIG-S Particle Cannon", "Bren Anti-Air", "X512 Experimental", "Makeshift Firecannon", "Ballistic CRX_Bow", "420 Sniperdragon", "Auto 9/45", "K3 Boltcaster SMG", "Human RPG", "Kaida Medic ACR-X", "Human Model 9800K", "KSG 2000", "Desert Eagle", "Master Chief", "G17 Undercover", "PPQ-H Laser Pistol", "UMP-9 Semi", "Annilhilator", "P25 overdrive", "Yoko-Lagann", "Super Shorty", "W21 Lever Action", "Pressurized Impaler", "Gladiator", "HMN Laser Cannon", "AKS-74U", "K98 Classic", "UMP Tornado", "T-8-00 Guage", "Ares GL-16", "Viking Riotshield", "Eminince AR", "A5-C Test Version", "AN-94 Deathstalker", "P9000 Supernova", "TEC 9.95", "LG2 Onslaught", "Last Ditch M16", "F14 Mini", "Sturmgewher 44", "Raider Scrap Cannon", "Specialist M16-A5", "Tuned M14 EBR", "FMG-9 Personal", "M75 Heavy Support", "Titanium Eagle", "PSG Emerald Sword", "QBZ_Laser", "Type-89 Tokko", "K7 Competition", "ModWeapon 0"]
+SHOWN_ITEMS = ["Unidentified0", "Chaos Potion", "Hyperfeed", "Shock Impulse", "Umbra Adaptive Cloak", "Healing Crystal", "Field Supply", "Health Vial", "Overdose", "Fangs of Mordigan", "Unstable Current", "Divine Reconstructor", "RV Rebuke System", "Devil's Dice", "Maddness Glasses", "Refractor Crystal", "Upgrade Kit", "Orb of Iron", "Unidentified Potion", "Orb of Lightning", "Orb of Fire", "Orb of Wind", "Blood Rite", "Twin Link 2", "Heart Core", "Refresher", "Core Upgrade Kit", "Black Berserk Charm", "Trophy System Drone?", "Combat Amphetamine?", "Methadone", "Incubus", "Tsunami Talisman", "ShieldBurst", "HE Grenade", "Flash Grenade", "Stun Grenade", "Plasma Grenade", "Acid Grenade", "Psy Field", "Heavy Steel Trap", "PowerShot", "R-Plating", "Fast Sling", "Facemelter", "Uranium 235", "Maverick MKV", "Sidewinder", "Fire Prism", "Order 322", "Last Stand", "Stinger Jet Glider", "Air Com", "Power Array", "Composite 4", "Stim Pack", "Phaser", "Gun Drone Spawner", "Heart Seeker", "M205 Launcher", "Target Cogitator", "Rosarius", "Reality Ripper", "Cell Replacer", "Lifeblood", "Direct Current", "Akira", "Lightning Boots", "Ring of Experience", "Auto Taser", "Blood Bolt", "LMG sentry Turret", "DMR Sentry Turret", "Turret?", "Module Core", "Ring of Glass", "Bloodthirsty Ring", "Unsoldered Chip?", "Ripjack Hyper Blade", "'Helsing' Power Bolt", "Dragon's Masterkey", "Reverbing Blade", "Flare Gun", "Smoke Grenade", "M26 MA Shotgun System", "Kunai Throwing Knives", "Road Flare", "G87 Beamer", "Icarus", "Redline", "Biting Throwing Stars", "Z1 Sundering Shuriken", "Fan of Knives", "Infinity Drill Piece", "Scoundrel's Dagger", "ZR99 'Living Bomb'", "ZK77 'Sticky Bomb'", "Laser Mine", "'Seth-Up' Suitcase Sentry", "Battlecry Module", "Breaching Charge", "Seismic Resonator", "Air Horn", "Brawndo", "Eclipse", "Stun Mine (Null)", "Acid Mine (Null)", "Magic Mag", "Auto-Overclocker", "Special Ammo Supply", "Spider Mines", "Heat Sink", "Black Market Teleporter", "Maddness Button", "Heat Spreader", "Decoy", "Shielded Decoy", "GPS", "Gold Nugget", "Custom Upgrade Kit", "Metal Detector", "Tomahawk", "Targeting Laser", "Hard Light Cover", "Onslaught System", "Intensity Chamber", "Missile Drone", "Constructor?", "Remove Building?", "Research?", "Guardian", "High Command", "Neutrino Bomb", "Magnum", "Bandana", "Orbital Relay", "Missile Control", "Trapper's Teleporter", "ShieldLink", "Underbarrel Mod Chip", "Shaker", "Elemental Resonance", "Fire Water", "Energy Link", "Nitroglycerine", "Stun Mine", "Acid Mine", "Armageddon Shard", "Orb of Fusion", "Crux of the Laser Caster", "PSY Cloud Grenade"]
+
+# Comma-joined versions of the two lists above, used to seed the "Spawn List"
+# text boxes (weapon/item spawn editing windows). Kept separate from the
+# lists themselves since "Null"/index-0 placeholders are dropped here.
+WEAPON_SPAWN_NAMES = ",".join(SHOWN_WEAPONS[1:99])
+ITEM_SPAWN_NAMES = ",".join(SHOWN_ITEMS[1:])
+
+# Per-class subclass codes, keyed by the button label shown in the class picker.
+# Each Synthetik class has a base version (e.g. Riot Guard) and a subclass
+# variant (e.g. Breacher); the save file tells them apart with these codes.
+CLASS_CODES = [
+    ("Riot Guard", "10", "blue"),
+    ("Breacher", "11", "blue"),
+    ("Sniper", "20", "darkblue"),
+    ("Assassin", "21", "darkblue"),
+    ("Raider", "30", "darkgreen"),
+    ("Heavy Gunner", "31", "darkgreen"),
+    ("Engineer", "40", "red"),
+    ("Demolisher", "41", "red"),
+]
+
+# "OP" (overpowered) preset tpoints values used by the one-click "Quick OP
+# module power" menu action. Order matches the order tpoints_obj_perk_* lines
+# appear in the save file - this is fragile by nature (see OPModuleEdit).
+OP_MODULE_POWER = ["10.000000", "2.500000", "2.000000", "3.000000", "-7.000000", "7.000000", "30.000000", "50.000000", "10.000000", "15.000000", "6.000000", "4.000000", "4.000000", "5.000000", "10.000000", "3.000000", "1.000000", "1.000000", "8.000000", "7.000000", "5.000000", "10.000000", "7.000000", "2.500000", "40.000000", "7.000000", "5.000000", "20.000000", "-0.000100", "10.000000", "7.000000", "7.000000", "3.000000", "1", "1", "1", "1", "15.000000", "10.000000", "8.000000", "4.000000", "5.500000", "2.900000", "1.600000", "10.000000", "7.000000", "5.000000", "6.000000", "20.000000", "20.000000", "2.500000", "10.000000", "1", "1", "10.000000", "20.000000", "20.000000", "30.000000", "20.00000", "20.000000", "4.000000", "5.000000", "10.000000", "2.500000", "10.000000", "2.00000", "7.000000", "7.000000", "-34.000000", "12.000000", "1", "1", "1"]
+# --- Spawn-list images ----------------------------------------------
+# Filenames (relative to the assets/weapons/ and assets/items/ folders
+# shipped alongside this script) for each weapon/item's spawn-list
+# thumbnail. Keyed by the same display name used in SHOWN_WEAPONS/
+# SHOWN_ITEMS. A handful of entries (dev/debug items with a '?' in
+# their name, e.g. "Turret?") have no dedicated art in the source pack
+# and fall back to PLACEHOLDER_IMAGE.
+PLACEHOLDER_IMAGE = "Standard0019.webp"
+
+WEAPON_IMAGES = {
+    'Nemesis Prototype': 'Nemesis_Prototype.webp',
+    'Chaos Launcher': 'Chaos_Launcher.webp',
+    'Object 29': 'Object_29.webp',
+    'Road Warrior': 'Road_Warrior.webp',
+    'Apollon 5 LMG': 'Apollon_5_LMG.webp',
+    'P33 Compact': 'P33_Compact.webp',
+    'Tactical Observer': 'Tactical_Observer.webp',
+    'Mjolnir Chain LTN': 'Mjolnir_Chain_LTN.webp',
+    'Last Breath': 'Last_Breath.webp',
+    'PXS Covert Ops': 'PXS_Covert_Ops.webp',
+    '57 Fusion Classic': '57fusion.webp',
+    'Sour DMR': 'R2000_Sour_DMR.webp',
+    'Spectre': 'Spectre.webp',
+    'Medic FMG-9': 'Medic_FMG_9.webp',
+    'R5000 Sudden DMR': 'R5000_Sudden_DMR.webp',
+    'Vindicator Ultra': 'Viciator_Ultra.webp',
+    'Raptor Laser SG': 'Raptor_Laser_SG.webp',
+    'LS Laser Sub': 'LS_Laser_Sub.webp',
+    'Super 90': 'Super_90.webp',
+    'GM6 Lynx Evo': 'GM6_Lynx_EVO.webp',
+    'Kaida Laser Pistol': 'Kaida_Laser_Pistol.webp',
+    'Eraser DMR': 'Eraser_DMR.webp',
+    'M32 Multipurpose': 'M32_Multi_Purpose.webp',
+    'AMD 65': 'AMD_65.webp',
+    'ION Obliterator': 'Ion_Obliterator.webp',
+    'Armageddon': 'Armageddon.webp',
+    'Enforcer Carbine': 'Enforcer_Carbine.webp',
+    'Damnnation': 'Damnation.webp',
+    'SS58 Plasma Charger': 'SS58_Plasma_Charger.webp',
+    'KI Vector': 'KI_Vector.webp',
+    'Spas 12': 'SPAS_12.webp',
+    'ML7000 Plus': 'ML7000_Plus.webp',
+    'M79 Terminator': 'M79_Terminator.webp',
+    'Kaida Model H': 'Kaida_Model_H.webp',
+    'FS5 Flametounge': 'FS5_Flametongue.webp',
+    'Flak Heavy Cannon': 'Heavy_Flak_Cannon.webp',
+    'RRX Coil Shotgun': 'RRX_Coil_Shotgun.webp',
+    'XM2 Coil Pistol': 'XM2_Coil_Pistol.webp',
+    'Twin Mill Mk.2': 'Twin_Mill_MkII.webp',
+    'SCR Laser Socom': 'SCR_Laser_SOCOM.webp',
+    'AEK Special Elite': 'AEK_Special_Elite.webp',
+    'AS VAL': 'AS_VAL.webp',
+    'Battle Hymn': 'Battle_Hymn.webp',
+    'RPK Tundra': 'RPK_12_Tundra.webp',
+    'Ripjack': 'Ripjack.webp',
+    'Liandry Railgun': 'Railgun2.webp',
+    'MAG47 Heavy LMG': 'MAG47_Heavy_MG.webp',
+    'Kaida Nailgun': 'Kaida_Nailgun.webp',
+    'HIG-S Particle Cannon': 'HIG_S_Particle_Cannon.webp',
+    'Bren Anti-Air': 'Bren_Anti_Air.webp',
+    'X512 Experimental': 'X512_Experimental.webp',
+    'Makeshift Firecannon': 'Makeshift_Firecannon.webp',
+    'Ballistic CRX_Bow': 'Ballistic_CRX_Bow.webp',
+    '420 Sniperdragon': '420_SniperDragon.webp',
+    'Auto 9/45': 'Auto_945.webp',
+    'K3 Boltcaster SMG': 'K3_Auto_Boltcaster.webp',
+    'Human RPG': 'Humanmodelcropped.webp',
+    'Kaida Medic ACR-X': 'Kaida_Medic_ACR_X.webp',
+    'Human Model 9800K': 'Humanmodelcropped.webp',
+    'KSG 2000': 'KSG_2000.webp',
+    'Desert Eagle': 'Desert_Eagle_50.webp',
+    'Master Chief': 'Master_Chief.webp',
+    'G17 Undercover': 'G17_Undercover.webp',
+    'PPQ-H Laser Pistol': 'PPQ_H_Laser_Pistol.webp',
+    'UMP-9 Semi': 'UMP_9_Semi.webp',
+    'Annilhilator': 'Annihilator_ANH_5.webp',
+    'P25 overdrive': 'P25_Overdrive.webp',
+    'Yoko-Lagann': 'Yoko_Lagann.webp',
+    'Super Shorty': 'Super_Shorty.webp',
+    'W21 Lever Action': 'W21_Lever_Action.webp',
+    'Pressurized Impaler': 'Pressurized_Impaler.webp',
+    'Gladiator': 'Gladiator.webp',
+    'HMN Laser Cannon': 'HMN_Laser_Cannon.webp',
+    'AKS-74U': 'AKS_74U.webp',
+    'K98 Classic': 'K98_Classic.webp',
+    'UMP Tornado': 'UMP_10_Tornado.webp',
+    'T-8-00 Guage': 'T_8_00_Gauge.webp',
+    'Ares GL-16': 'Ares_GL_16.webp',
+    'Viking Riotshield': 'Viking_Riotshield.webp',
+    'Eminince AR': 'Eminence_AR.webp',
+    'A5-C Test Version': 'A_5C_Test_Version.webp',
+    'AN-94 Deathstalker': 'AN_94_Deathstalker.webp',
+    'P9000 Supernova': 'P9000_Supernova.webp',
+    'TEC 9.95': 'Tec9.webp',
+    'LG2 Onslaught': 'LG_2_Onslaught.webp',
+    'Last Ditch M16': 'Last_Ditch_M16.webp',
+    'F14 Mini': 'M14_Mini.webp',
+    'Sturmgewher 44': 'Sturmgewehr_44.webp',
+    'Raider Scrap Cannon': 'Raider_Scrap_Cannon.webp',
+    'Specialist M16-A5': 'Specialist_M16_A3.webp',
+    'Tuned M14 EBR': 'Tuned_M14_EBR.webp',
+    'FMG-9 Personal': 'FMG_9_Personal.webp',
+    'M75 Heavy Support': 'M75_Heavy_Support.webp',
+    'Titanium Eagle': 'Titanium_Eagle.webp',
+    'PSG Emerald Sword': 'PSG.webp',
+    'QBZ_Laser': 'QBZ.webp',
+    'Type-89 Tokko': 'Type89_Tokko.webp',
+    'K7 Competition': 'K7_Competition.webp',
+}
+
+ITEM_IMAGES = {
+    'Chaos Potion': 'Chaos_Potion_PNG.webp',
+    'Hyperfeed': 'Hyperfeed_PNG.webp',
+    'Shock Impulse': 'Shock_impulse.webp',
+    'Umbra Adaptive Cloak': 'Umbra_Adaptive_Cloak.webp',
+    'Healing Crystal': 'Healing_Crystal_PNG.webp',
+    'Field Supply': 'Field_Supply_PNG.webp',
+    'Health Vial': 'Health_Vial_PNG.webp',
+    'Overdose': 'Overdose_PNG.webp',
+    'Fangs of Mordigan': 'Fangs_of_Mordigan.webp',
+    'Unstable Current': 'Unstable_Current_1.webp',
+    'Divine Reconstructor': 'Divine_Reconstructor.webp',
+    'RV Rebuke System': 'Rv_rebuke_system_PNG.webp',
+    "Devil's Dice": 'Devil_27s_Dice_PNG.webp',
+    'Maddness Glasses': 'Madness_Glasses_PNG.webp',
+    'Refractor Crystal': 'Refractor_Crystal_PNG.webp',
+    'Upgrade Kit': 'Weapon_Upgrade_Kit_PNG.webp',
+    'Orb of Iron': 'Orb_of_Iron_PNG.webp',
+    'Unidentified Potion': 'Unidentified_Potion_PNG.webp',
+    'Orb of Lightning': 'Orb_of_Lightning.webp',
+    'Orb of Fire': 'Orb_of_Fire_PNG.webp',
+    'Orb of Wind': 'Orb_of_Wind_PNG.webp',
+    'Blood Rite': 'Blood_Rite_PNG.webp',
+    'Twin Link 2': 'Twin_Link_II_PNG.webp',
+    'Heart Core': 'Heart_Core_PNG.webp',
+    'Refresher': 'Standard0019.webp',
+    'Core Upgrade Kit': 'Core_Upgrade_Kit.webp',
+    'Black Berserk Charm': 'Black_berserk_charm_PNG.webp',
+    'Trophy System Drone?': 'Trophy_System_Drone_PNG.webp',
+    'Combat Amphetamine?': 'Combat_amphetamine_PNG.webp',
+    'Methadone': 'Methadone_PNG.webp',
+    'Incubus': 'Incubus_PNG.webp',
+    'Tsunami Talisman': 'Tsunami_Talisman_PNG.webp',
+    'ShieldBurst': 'Shieldburst.webp',
+    'HE Grenade': 'HE_Grenade_PNG.webp',
+    'Flash Grenade': 'Flash_Grenade_PNG.webp',
+    'Stun Grenade': 'Stun_Grenade_PNG.webp',
+    'Plasma Grenade': 'Plasma_Grenade_PNG.webp',
+    'Acid Grenade': 'Acid_Grenade_PNG.webp',
+    'Psy Field': 'Psy_Field_PNG.webp',
+    'Heavy Steel Trap': 'Heavy_Steel_Trap_PNG.webp',
+    'PowerShot': 'Powershot_PNG.webp',
+    'R-Plating': 'R_Plating_PNG.webp',
+    'Fast Sling': 'Fast_sling_PNG.webp',
+    'Facemelter': 'Facemelter_PNG.webp',
+    'Uranium 235': 'Uranium_235_PNG_1.webp',
+    'Maverick MKV': 'Maverick_MKV_PNG.webp',
+    'Sidewinder': 'Sidewinder.webp',
+    'Fire Prism': 'Fire_Prism.webp',
+    'Order 322': 'Order_322.webp',
+    'Last Stand': 'Last_Stand_PNG.webp',
+    'Stinger Jet Glider': 'Stinger_Jet_Glider_PNG.webp',
+    'Air Com': 'Air_Com_PNG.webp',
+    'Power Array': 'Power_array.webp',
+    'Composite 4': 'Composite_4_PNG.webp',
+    'Stim Pack': 'Stim_Pack_PNG.webp',
+    'Phaser': 'Phaser_PNG.webp',
+    'Gun Drone Spawner': 'Gun_Drone_Spawner_PNG.webp',
+    'Heart Seeker': 'Heart_Seeker.webp',
+    'M205 Launcher': 'M205_Launcher_PNG.webp',
+    'Target Cogitator': 'Target_Cogitator_PNG.webp',
+    'Rosarius': 'Rosarius_PNG.webp',
+    'Reality Ripper': 'Reality_Ripper.webp',
+    'Cell Replacer': 'Cell_Replacer_PNG.webp',
+    'Lifeblood': 'Lifeblood_PNG.webp',
+    'Direct Current': 'Direct_Current.webp',
+    'Akira': 'Akira_PNG.webp',
+    'Lightning Boots': 'Lightning_Boots_PNG.webp',
+    'Ring of Experience': 'Ring_of_Experience.webp',
+    'Auto Taser': 'Auto_Taser_PNG.webp',
+    'Blood Bolt': 'Blood_Bolt_PNG.webp',
+    'LMG sentry Turret': 'LMG_Sentry_Turret.webp',
+    'DMR Sentry Turret': 'DMR_Sentry_Turret_PNG.webp',
+    'Turret?': 'Standard0019.webp',
+    'Module Core': 'Standard0019.webp',
+    'Ring of Glass': 'Ring_of_Glass.webp',
+    'Bloodthirsty Ring': 'Bloodthirsty_Ring.webp',
+    'Unsoldered Chip?': 'Unsoldered_Chip_PNG.webp',
+    'Ripjack Hyper Blade': 'Ripjack_Hyper_Blade_PNG.webp',
+    "'Helsing' Power Bolt": 'Helsing_Power_Shot_PNG.webp',
+    "Dragon's Masterkey": 'Dragon_27s_Masterkey_PNG.webp',
+    'Reverbing Blade': 'Reverbing_Blade.webp',
+    'Flare Gun': 'Flare_gun_PNG.webp',
+    'Smoke Grenade': 'Smoke_Grenade.webp',
+    'M26 MA Shotgun System': 'M26_MA_Shotgun_System_PNG.webp',
+    'Kunai Throwing Knives': 'Kunai_throwing_knives_PNG.webp',
+    'Road Flare': 'Road_flare_PNG.webp',
+    'G87 Beamer': 'G87_Beamer.webp',
+    'Icarus': 'Icarus.webp',
+    'Redline': 'Redline.webp',
+    'Biting Throwing Stars': 'Biting_Throwing_Stars.webp',
+    'Z1 Sundering Shuriken': 'Sundering_Shuriken.webp',
+    'Fan of Knives': 'Fan_of_Knives.webp',
+    'Infinity Drill Piece': 'Infinity_Drill_Piece.webp',
+    "Scoundrel's Dagger": 'Scoundrels_Dagger.webp',
+    "ZR99 'Living Bomb'": 'Living_Bomb.webp',
+    "ZK77 'Sticky Bomb'": 'Sticky_Bomb.webp',
+    'Laser Mine': 'Laser_Mine.webp',
+    "'Seth-Up' Suitcase Sentry": 'Suitcase_Sentry.webp',
+    'Battlecry Module': 'Battlecry_Module.webp',
+    'Breaching Charge': 'Breaching_Charge.webp',
+    'Seismic Resonator': 'Seismic_Resonator.webp',
+    'Air Horn': 'Air_Horn.webp',
+    'Brawndo': 'Brawndo.webp',
+    'Eclipse': 'Eclipse.webp',
+    'Stun Mine (Null)': 'Standard0019.webp',
+    'Acid Mine (Null)': 'Standard0019.webp',
+    'Magic Mag': 'Magic_Mag.webp',
+    'Auto-Overclocker': 'Auto_Overclocker.webp',
+    'Special Ammo Supply': 'Special_Ammo_Supply.webp',
+    'Spider Mines': 'Spider_Mines.webp',
+    'Heat Sink': 'Heat_Sink.webp',
+    'Black Market Teleporter': 'Black_Market_Teleporter.webp',
+    'Maddness Button': 'Madness_Button.webp',
+    'Heat Spreader': 'Heat_Spreader.webp',
+    'Decoy': 'Decoy.webp',
+    'Shielded Decoy': 'Shielded_Decoy.webp',
+    'GPS': 'GPS.webp',
+    'Gold Nugget': 'Gold_Nugget.webp',
+    'Custom Upgrade Kit': 'Custom_Upgrade_Kit.webp',
+    'Metal Detector': 'Metal_Detector.webp',
+    'Tomahawk': 'Tomahawk.webp',
+    'Targeting Laser': 'Targeting_Laser.webp',
+    'Hard Light Cover': 'Hard_Light_Cover.webp',
+    'Onslaught System': 'Onslaught_System.webp',
+    'Intensity Chamber': 'Intensity_Chamber.webp',
+    'Missile Drone': 'Missile_Drone.webp',
+    'Constructor?': 'Standard0019.webp',
+    'Remove Building?': 'Standard0019.webp',
+    'Research?': 'Standard0019.webp',
+    'Guardian': 'Guardian_item.webp',
+    'High Command': 'High_Command.webp',
+    'Neutrino Bomb': 'Neutrino_Bomb.webp',
+    'Magnum': 'Magnum.webp',
+    'Bandana': 'Bandana.webp',
+    'Orbital Relay': 'Orbital_Relay.webp',
+    'Missile Control': 'Missile_Control.webp',
+    "Trapper's Teleporter": 'Trappers_Teleporter.webp',
+    'ShieldLink': 'Shield_Link.webp',
+    'Underbarrel Mod Chip': 'Underbarrel_mod_chip.webp',
+    'Shaker': 'Shaker.webp',
+    'Elemental Resonance': 'Elemental_resonance.webp',
+    'Fire Water': 'Fire_water.webp',
+    'Energy Link': 'Energy_link.webp',
+    'Nitroglycerine': 'Nitroglycerine.webp',
+    'Stun Mine': 'Standard0019.webp',
+    'Acid Mine': 'Standard0019.webp',
+    'Armageddon Shard': 'Armageddon_shard.webp',
+    'Orb of Fusion': 'Orb_of_Fusion.webp',
+    'Crux of the Laser Caster': 'Laser_Caster.webp',
+    'PSY Cloud Grenade': 'Standard0019.webp',
+}
