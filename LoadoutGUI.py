@@ -130,6 +130,12 @@ class Root(tk.Tk):
         self.up_tok = [tk.StringVar(self) for _ in range(4)]
         self.down_tok = [tk.StringVar(self) for _ in range(4)]
         self.autopower_var = tk.StringVar(self)
+        self.subclass_lvl = tk.IntVar(self, value=0)
+        self.prestige_var = tk.BooleanVar(self, value=False)
+        self.class_challenge_var = tk.BooleanVar(self, value=False)
+        self.insanity_challenge_var = tk.BooleanVar(self, value=False)
+        # Individual insanity sub-challenges: 400%(ski), Hyper(sad), Tactical(sta), Madness(sma)
+        self.insanity_sub_vars = {code: tk.BooleanVar(self, value=False) for code in ("ski", "sad", "sta", "sma")}
 
         # ---- widgets -------------------------------------------------
         self._build_styles()
@@ -213,6 +219,25 @@ class Root(tk.Tk):
             self.reg_change_color(option_mod, combobox)
 
         self.tokenset(self.current_token_kind)
+        self._load_subclass_lvl()
+
+    def _load_subclass_lvl(self):
+        """Read subclasslvl/subclasspst/scl/ski/sad/sta/sma<class_code> from
+        the save file into the slider + challenge checkboxes."""
+        def read_value(key):
+            with open(self.filename, "r") as save:
+                for line in save:
+                    if line.startswith(key + "="):
+                        raw = re.search(r'"-?\d+(\.\d+)?"', line).group()[1:-1]
+                        return float(raw)
+            return 0.0
+
+        self.subclass_lvl.set(int(read_value(f"subclasslvl{self.current_class}")))
+        self.prestige_var.set(read_value(f"subclasspst{self.current_class}") >= 1)
+        self.class_challenge_var.set(read_value(f"scl{self.current_class}") > 0)
+        for code, var in self.insanity_sub_vars.items():
+            var.set(read_value(f"{code}{self.current_class}") >= 2)
+        self._sync_insanity_master()
 
     def tokenset(self, kind):
         """Populate the Bonus/Up/Down token values for the given kind ('w' or
@@ -256,9 +281,30 @@ class Root(tk.Tk):
         """Write the current UI selections back into the save file (via the temp file)."""
         split_class = self.spliting(self.current_class)
         selected_module_ids = [VAR_MODULES[SHOWN_MODULES.index(mod.get())] for mod in self.option_mods]
+        subclass_lvl_key = f"subclasslvl{self.current_class}"
+        # single-value keys to overwrite for the current class: key -> new numeric value
+        challenge_writes = {
+            f"subclasspst{self.current_class}": 1 if self.prestige_var.get() else 0,
+            f"scl{self.current_class}": 2 if self.insanity_challenge_var.get() else (1 if self.class_challenge_var.get() else 0),
+        }
+        for code, var in self.insanity_sub_vars.items():
+            challenge_writes[f"{code}{self.current_class}"] = 2 if var.get() else 0
 
         with open(self.filename, "r") as save, open(self.tfilename, "w") as tsave:
             for line in save:
+                if line.startswith(subclass_lvl_key + "="):
+                    tsave.write(re.sub(r'"-?\d+(\.\d+)?"', f'"{self.subclass_lvl.get()}.000000"', line))
+                    continue
+
+                matched_challenge = False
+                for key, value in challenge_writes.items():
+                    if line.startswith(key + "="):
+                        tsave.write(re.sub(r'"-?\d+(\.\d+)?"', f'"{value}.000000"', line))
+                        matched_challenge = True
+                        break
+                if matched_challenge:
+                    continue
+
                 if line.startswith(f"perkslot{LOADOUT_SLOTS[0]}class{self.current_class}"):
                     tsave.write(re.sub(r"obj_\w+(\d+)?_\w+", VAR_PISTOLS[SHOWN_PISTOLS.index(self.pistol_mod.get())], line))
                     continue
@@ -782,6 +828,56 @@ class Root(tk.Tk):
         self.submit_button = tk.Button(self.editor_tab, text="SUBMIT", command=self.submit_loadout)
         self.submit_button.pack(side=tk.BOTTOM, fill=tk.X)
 
+        self._build_subclass_lvl_frame()
+
+    def _build_subclass_lvl_frame(self):
+        """Subclass level slider (0-25, steps of 5) + Prestige/Class
+        Challenge/Insanity Challenge checkbuttons, under the main frame and
+        above the submit button."""
+        frame = ttk.Frame(self.editor_tab, padding=(20, 0))
+        frame.pack(side=tk.BOTTOM, fill=tk.X)
+
+        tk.Label(frame, text="Subclass Level").pack()
+        self.subclass_lvl_scale = tk.Scale(
+            frame, from_=0, to=25, resolution=5, orient=tk.HORIZONTAL,
+            variable=self.subclass_lvl,
+        )
+        self.subclass_lvl_scale.pack(fill=tk.X)
+
+        check_row = ttk.Frame(frame)
+        check_row.pack(fill=tk.X, pady=(0, 4))
+        tk.Checkbutton(check_row, text="Prestige", variable=self.prestige_var).pack(side=tk.LEFT, padx=(0, 12))
+        tk.Checkbutton(check_row, text="Class Challenge", variable=self.class_challenge_var).pack(side=tk.LEFT, padx=(0, 12))
+        tk.Checkbutton(
+            check_row, text="Insanity Challenge", variable=self.insanity_challenge_var,
+            command=self._on_insanity_master_toggle,
+        ).pack(side=tk.LEFT)
+
+        insanity_sub_row = ttk.Frame(frame)
+        insanity_sub_row.pack(fill=tk.X, pady=(0, 8))
+        sub_labels = {"ski": "400%", "sad": "Hyper", "sta": "Tactical", "sma": "Madness"}
+        for code, label in sub_labels.items():
+            tk.Checkbutton(
+                insanity_sub_row, text=label, variable=self.insanity_sub_vars[code],
+                command=self._sync_insanity_master,
+            ).pack(side=tk.LEFT, padx=(0, 12))
+
+    def _on_insanity_master_toggle(self):
+        """Checking/unchecking the master 'Insanity Challenge' box sets all
+        4 sub-challenge checkboxes to match, and implies Class Challenge."""
+        value = self.insanity_challenge_var.get()
+        for var in self.insanity_sub_vars.values():
+            var.set(value)
+        if value:
+            self.class_challenge_var.set(True)
+
+    def _sync_insanity_master(self):
+        """Master box reflects whether all 4 sub-challenges are checked."""
+        all_checked = all(v.get() for v in self.insanity_sub_vars.values())
+        self.insanity_challenge_var.set(all_checked)
+        if all_checked:
+            self.class_challenge_var.set(True)
+
     def _build_class_buttons(self):
         self.class_buttons = {}
         for label, code, color in CLASS_CODES:
@@ -962,4 +1058,3 @@ if __name__ == "__main__":
 #   module-level globals (safety, current_class, loadout_items, tokens,
 #   class_tokens, double_modules, current_token_kind, current_token_shown,
 #   weapon_spawn_ids, item_spawn_ids) -> same names as self.* attributes.
-
