@@ -482,6 +482,29 @@ class Root(tk.Tk):
     def item_spawn_reset(self):
         self._rewrite_lines_matching("idropchange", '"0.000000"')
 
+    def max_level_all_classes(self):
+        """Set every subclass to level 25 with Prestige, Class Challenge, and
+        Insanity Challenge (ski/sad/sta/sma=2, scl=2, subclasspst=1) complete."""
+        class_codes = set(re.findall(r"subclasslvl(\d+)=", open(self.filename).read()))
+        with open(self.filename, "r") as save, open(self.tfilename, "w") as tsave:
+            for line in save:
+                for code in class_codes:
+                    if line.startswith(f"subclasslvl{code}="):
+                        tsave.write(re.sub(r'"-?\d+(\.\d+)?"', '"25.000000"', line))
+                        break
+                    if line.startswith(f"subclasspst{code}="):
+                        tsave.write(re.sub(r'"-?\d+(\.\d+)?"', '"1.000000"', line))
+                        break
+                    if line.startswith(f"scl{code}="):
+                        tsave.write(re.sub(r'"-?\d+(\.\d+)?"', '"2.000000"', line))
+                        break
+                    if any(line.startswith(f"{prefix}{code}=") for prefix in ("ski", "sad", "sta", "sma")):
+                        tsave.write(re.sub(r'"-?\d+(\.\d+)?"', '"2.000000"', line))
+                        break
+                else:
+                    tsave.write(line)
+        self.safety_window()
+
     def about(self):
         messagebox.showinfo(
             "Synthetik Python Mod",
@@ -1001,7 +1024,10 @@ class Root(tk.Tk):
         tk.Button(tab, text="Toggle Ask-For-Confirmation Before Saving", command=self.safety_func).grid(
             row=8, column=0, sticky="ew", padx=14, pady=2
         )
-        tk.Button(tab, text="Unlock All", command=self.unlock_all).grid(row=9, column=0, sticky="ew", padx=14, pady=(2, 14))
+        tk.Button(tab, text="Unlock All", command=self.unlock_all).grid(row=9, column=0, sticky="ew", padx=14, pady=2)
+        tk.Button(tab, text="MAX Level All Classes", command=self.max_level_all_classes).grid(
+            row=10, column=0, sticky="ew", padx=14, pady=(2, 14)
+        )
 
     def _build_menu(self):
         menu_bar = Menu(self)
