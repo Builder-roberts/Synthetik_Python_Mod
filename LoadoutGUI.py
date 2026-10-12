@@ -119,7 +119,9 @@ class Root(tk.Tk):
         self.option_mods = [tk.StringVar(self) for _ in range(6)]
         self.power_mods = [tk.StringVar(self) for _ in range(6)]
         self.autopower_var = tk.StringVar(self)
-        self.subclass_lvl = tk.IntVar(self, value=0)
+        # StringVar (not IntVar) so the entry box can be empty/mid-typing without
+        # raising; use _get_subclass_lvl() to read it as an int.
+        self.subclass_lvl = tk.StringVar(self, value="0")
         self.prestige_var = tk.BooleanVar(self, value=False)
         self.class_challenge_var = tk.BooleanVar(self, value=False)
         self.insanity_challenge_var = tk.BooleanVar(self, value=False)
@@ -209,21 +211,35 @@ class Root(tk.Tk):
 
     def _load_subclass_lvl(self):
         """Read subclasslvl/subclasspst/scl/ski/sad/sta/sma<class_code> from
-        the save file into the slider + challenge checkboxes."""
+        the save file into the level entry + challenge checkboxes.
+
+        The save file is the only source of these defaults: whatever level
+        and completed challenges it records for the selected class are what
+        the UI shows. A key missing from the file counts as 0 / not done.
+        """
+        with open(self.filename, "r") as save:
+            lines = save.readlines()
+
         def read_value(key):
-            with open(self.filename, "r") as save:
-                for line in save:
-                    if line.startswith(key + "="):
-                        raw = re.search(r'"-?\d+(\.\d+)?"', line).group()[1:-1]
-                        return float(raw)
+            for line in lines:
+                if line.startswith(key + "="):
+                    found = re.search(r'"-?\d+(\.\d+)?"', line)
+                    if found:
+                        return float(found.group()[1:-1])
             return 0.0
 
-        self.subclass_lvl.set(int(read_value(f"subclasslvl{self.current_class}")))
-        self.prestige_var.set(read_value(f"subclasspst{self.current_class}") >= 1)
-        self.class_challenge_var.set(read_value(f"scl{self.current_class}") > 0)
+        cls = self.current_class
+        self.subclass_lvl.set(str(int(read_value(f"subclasslvl{cls}"))))
+        self.prestige_var.set(read_value(f"subclasspst{cls}") >= 1)
+        self.class_challenge_var.set(read_value(f"scl{cls}") > 0)
         for code, var in self.insanity_sub_vars.items():
-            var.set(read_value(f"{code}{self.current_class}") >= 2)
+            var.set(read_value(f"{code}{cls}") >= 2)
         self._sync_insanity_master()
+
+    def _get_subclass_lvl(self):
+        """Current contents of the level entry as an int (blank -> 0)."""
+        text = self.subclass_lvl.get().strip()
+        return int(text) if text.isdigit() else 0
 
     # ======================================================================
     # Save-file writing
@@ -232,6 +248,7 @@ class Root(tk.Tk):
         """Write the current UI selections back into the save file (via the temp file)."""
         selected_module_ids = [VAR_MODULES[SHOWN_MODULES.index(mod.get())] for mod in self.option_mods]
         subclass_lvl_key = f"subclasslvl{self.current_class}"
+        subclass_lvl = self._get_subclass_lvl()
         # single-value keys to overwrite for the current class: key -> new numeric value
         challenge_writes = {
             f"subclasspst{self.current_class}": 1 if self.prestige_var.get() else 0,
@@ -243,7 +260,7 @@ class Root(tk.Tk):
         with open(self.filename, "r") as save, open(self.tfilename, "w") as tsave:
             for line in save:
                 if line.startswith(subclass_lvl_key + "="):
-                    tsave.write(re.sub(r'"-?\d+(\.\d+)?"', f'"{self.subclass_lvl.get()}.000000"', line))
+                    tsave.write(re.sub(r'"-?\d+(\.\d+)?"', f'"{subclass_lvl}.000000"', line))
                     continue
 
                 matched_challenge = False
@@ -300,6 +317,9 @@ class Root(tk.Tk):
             for line in tsave:
                 save.write(line)
         self.setsave()
+        # Re-sync level/challenge widgets with what is now in the file, so
+        # actions like "MAX Level All Classes" show up immediately.
+        self._load_subclass_lvl()
 
     def safety_func(self):
         """Toggle whether saving asks for confirmation first."""
@@ -724,18 +744,22 @@ class Root(tk.Tk):
         self._build_subclass_lvl_frame()
 
     def _build_subclass_lvl_frame(self):
-        """Subclass level slider (0-25, steps of 5) + Prestige/Class
-        Challenge/Insanity Challenge checkbuttons, under the main frame and
-        above the submit button."""
+        """Subclass level integer entry + Prestige/Class Challenge/Insanity
+        Challenge checkbuttons, under the main frame and above the submit
+        button."""
         frame = ttk.Frame(self.editor_tab, padding=(20, 0))
         frame.pack(side=tk.BOTTOM, fill=tk.X)
 
-        tk.Label(frame, text="Subclass Level").pack()
-        self.subclass_lvl_scale = tk.Scale(
-            frame, from_=0, to=25, resolution=5, orient=tk.HORIZONTAL,
-            variable=self.subclass_lvl,
+        level_row = ttk.Frame(frame)
+        level_row.pack(fill=tk.X, pady=(0, 4))
+        tk.Label(level_row, text="Subclass Level").pack(side=tk.LEFT, padx=(0, 8))
+        # Digits only (blank allowed while typing; treated as 0 on submit).
+        digits_only = (self.register(lambda proposed: proposed == "" or proposed.isdigit()), "%P")
+        self.subclass_lvl_entry = tk.Entry(
+            level_row, textvariable=self.subclass_lvl, width=6,
+            validate="key", validatecommand=digits_only,
         )
-        self.subclass_lvl_scale.pack(fill=tk.X)
+        self.subclass_lvl_entry.pack(side=tk.LEFT)
 
         check_row = ttk.Frame(frame)
         check_row.pack(fill=tk.X, pady=(0, 4))
