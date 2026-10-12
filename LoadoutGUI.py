@@ -5,7 +5,7 @@ Synthetik Loadout Editor v3.0 - class-based rewrite of LoadoutGUI.py.
 This now has the same functionality as LoadoutGUI.py, restructured into a
 tabbed window (a ttk.Notebook across the whole main window):
   - "Synthetik Editor" tab: class picker, pistol + 6 module dropdowns with
-    power fields and class-color coding, weapon/item token editor, submit.
+    power fields and class-color coding, weapon/item spawn lists, submit.
   - "Weapons" / "Items" tabs: spawn-list checklists (Select All/Deselect
     All + one checkbox per weapon/item, pre-checked from the save file's
     current wdropchange/idropchange values).
@@ -36,7 +36,7 @@ from synthetik_data import (
     CLASS_CODES,
     ITEM_IMAGES,
     LOADOUT_SLOTS,
-    OP_MODULE_POWER,
+    OP_MODULE_POWER_BY_ID,
     PLACEHOLDER_IMAGE,
     SHOWN_ITEMS,
     SHOWN_MODULES,
@@ -79,7 +79,7 @@ MODULE_COLOR_RANGES = [
     (47, 73, "Commando.TCombobox", "white"),
     (73, 98, "Rouge.TCombobox", "white"),
     (98, 123, "Gaurdian.TCombobox", "white"),
-    (123, 131, "Other.TCombobox", "black"),
+    (123, 132, "Other.TCombobox", "black"),
 ]
 
 # Slots for OptionMod1..6, in that order - see change_class()/submit_loadout().
@@ -96,19 +96,11 @@ class Root(tk.Tk):
         # ---- state ------------------------------------------------------
         # safety == 0 -> save immediately. safety == 1 -> ask first.
         self.safety = 0
-        self.current_token_kind = "i"          # "w" or "i"
         self.current_class = "10"
-        self.loadout_items = []                # perk/item object IDs, current class's slots
-        self.tokens = []                        # raw w*/i* token lines from the save
-        self.class_tokens = []                  # subset of self.tokens for current class
-        self.double_modules = []                # tpoints_* values, index-aligned to VAR_MODULES
+        self.loadout_slots = {}                # {slot number: object ID} for the current class
+        self.module_power = {}                 # {object ID: tpoints_ value}, read by ID (file order varies by version)
         self.weapon_spawn_ids = []
         self.item_spawn_ids = []
-        self.current_token_shown = SHOWN_ITEMS  # whichever of SHOWN_WEAPONS/SHOWN_ITEMS is active
-        # No Token_frame UI anymore, but tokenset() still refreshes token
-        # values (invisibly) from the save file so submit_loadout() keeps
-        # writing back whatever bonus/plus/minus tokens were already there.
-        self.token_comboboxes = []
 
         username = getpass.getuser()
         self.filename = f"C:/Users/{username}/AppData/Local/Synthetik/Save.sav"
@@ -126,9 +118,6 @@ class Root(tk.Tk):
         self.pistol_mod = tk.StringVar(self)
         self.option_mods = [tk.StringVar(self) for _ in range(6)]
         self.power_mods = [tk.StringVar(self) for _ in range(6)]
-        self.bonus_tok = [tk.StringVar(self) for _ in range(4)]
-        self.up_tok = [tk.StringVar(self) for _ in range(4)]
-        self.down_tok = [tk.StringVar(self) for _ in range(4)]
         self.autopower_var = tk.StringVar(self)
         self.subclass_lvl = tk.IntVar(self, value=0)
         self.prestige_var = tk.BooleanVar(self, value=False)
@@ -150,7 +139,6 @@ class Root(tk.Tk):
         # ---- initial load -------------------------------------------------
         self.setsave()
         self.change_class(self.current_class)
-        self.tokenset(self.current_token_kind)
 
     # ======================================================================
     # File location
@@ -176,49 +164,47 @@ class Root(tk.Tk):
     # Save-file reading
     # ======================================================================
     def setsave(self):
-        """Re-read every module's tpoints_ (power) value from the save file."""
-        self.double_modules.clear()
+        """Re-read every module's tpoints_ (power) value from the save file.
+
+        Stored by object ID, not position: the order of the tpoints_ lines
+        differs between game versions.
+        """
+        self.module_power.clear()
+        pattern = re.compile(r'^tpoints_(obj_(?:perk|artefact|item)\w*)="(-?\d+(?:\.\d+)?)"')
         with open(self.filename, "r") as save:
             for line in save:
-                if line.startswith(("tpoints_obj_perk", "tpoints_obj_artefact", "tpoints_obj_item")):
-                    power_str = re.search(r'"-?\d+(\.\d+)?"', line).group()
-                    power_str = re.search(r"-?\d+(\.\d+)?", power_str).group()
-                    self.double_modules.append(power_str)
-
-    @staticmethod
-    def spliting(class_code):
-        """'10' -> '1_0' - the save file separates class and subclass with an underscore."""
-        return f"{class_code[0]}_{class_code[1]}"
+                match = pattern.match(line)
+                if match:
+                    self.module_power[match.group(1)] = match.group(2)
 
     def change_class(self, subclass):
-        """Load the given class's loadout (pistol, 6 modules, their power, tokens) into the UI."""
-        self.current_class = subclass
-        self.loadout_items.clear()
-        self.tokens.clear()
+        """Load the given class's loadout (pistol, 6 modules, their power) into the UI.
 
+        Slots are looked up by number rather than by line order - newer saves
+        list perkslot0..9 ascending, older ones listed them descending.
+        """
+        self.current_class = subclass
+        self.loadout_slots.clear()
+
+        pattern = re.compile(rf'^perkslot(\d+)class{self.current_class}="([^"]*)"')
         with open(self.filename, "r") as save:
             for line in save:
-                if line.startswith("perkslot"):
-                    for slot in LOADOUT_SLOTS:
-                        if line.startswith(f"perkslot{slot}class{self.current_class}"):
-                            item_id = re.search(r"obj_\w+(\d+)?_\w+", line).group()
-                            self.loadout_items.append(item_id)
-                elif line.startswith(("wbonus", "wplus", "wminus", "ibonus", "iplus", "iminus")):
-                    self.tokens.append(line)
+                match = pattern.match(line)
+                if match:
+                    self.loadout_slots[match.group(1)] = match.group(2)
 
-        self.pistol_mod.set(SHOWN_PISTOLS[VAR_PISTOLS.index(self.loadout_items[0])])
+        self.pistol_mod.set(SHOWN_PISTOLS[VAR_PISTOLS.index(self.loadout_slots[LOADOUT_SLOTS[0]])])
 
-        # loadout_items[1:7] are the 6 module slots, but in reverse order
-        # versus option_mods[0..5] - see LoadoutGUI.py's Testfunc() for why.
-        for option_mod, power_mod, item in zip(self.option_mods, self.power_mods, reversed(self.loadout_items[1:7])):
+        # option_mods[0..5] <-> MODULE_SLOT_CODES (slots 0,3,4,5,6,7)
+        for option_mod, power_mod, slot_code in zip(self.option_mods, self.power_mods, MODULE_SLOT_CODES):
+            item = self.loadout_slots[slot_code]
             option_mod.set(SHOWN_MODULES[VAR_MODULES.index(item)])
-            power_mod.set(self.double_modules[VAR_MODULES.index(item)])
+            power_mod.set(self.module_power.get(item, "1.000000"))
 
         self.pistol_change_color()
         for option_mod, combobox in zip(self.option_mods, self.module_comboboxes):
             self.reg_change_color(option_mod, combobox)
 
-        self.tokenset(self.current_token_kind)
         self._load_subclass_lvl()
 
     def _load_subclass_lvl(self):
@@ -239,47 +225,11 @@ class Root(tk.Tk):
             var.set(read_value(f"{code}{self.current_class}") >= 2)
         self._sync_insanity_master()
 
-    def tokenset(self, kind):
-        """Populate the Bonus/Up/Down token values for the given kind ('w' or
-        'i'). There's no visible UI for these anymore, but the values still
-        need to be refreshed from the save file so submit_loadout() writes
-        back the same tokens instead of clobbering them.
-        """
-        split_class = self.spliting(self.current_class)
-        for token in self.tokens:
-            if token.startswith(kind) and re.search(split_class, token) is not None:
-                self.class_tokens.append(token)
-
-        self.current_token_kind = kind
-        self.current_token_shown = SHOWN_WEAPONS if kind == "w" else SHOWN_ITEMS
-        for combobox in self.token_comboboxes:
-            combobox["values"] = self.current_token_shown
-
-        def fill_group(target_vars, prefix):
-            """Fill one group of 4 token variables (bonus/plus/minus) from class_tokens."""
-            for target in target_vars:
-                matched = False
-                for token in self.class_tokens:
-                    if token.startswith(kind + prefix):
-                        raw = re.search(r'"-?\d+(\.\d+)?"', token).group()
-                        index = int(float(raw[1:-1]))
-                        target.set(self.current_token_shown[index])
-                        self.class_tokens.remove(token)
-                        matched = True
-                        break
-                if not matched:
-                    target.set("")
-
-        fill_group(self.bonus_tok, "bonus")
-        fill_group(self.up_tok, "plus")
-        fill_group(self.down_tok, "minus")
-
     # ======================================================================
     # Save-file writing
     # ======================================================================
     def submit_loadout(self):
         """Write the current UI selections back into the save file (via the temp file)."""
-        split_class = self.spliting(self.current_class)
         selected_module_ids = [VAR_MODULES[SHOWN_MODULES.index(mod.get())] for mod in self.option_mods]
         subclass_lvl_key = f"subclasslvl{self.current_class}"
         # single-value keys to overwrite for the current class: key -> new numeric value
@@ -320,56 +270,16 @@ class Root(tk.Tk):
 
                 if line.startswith("tpoints_"):
                     for module_id, power_mod in zip(selected_module_ids, self.power_mods):
-                        if line.startswith("tpoints_" + module_id):
+                        if line.startswith(f"tpoints_{module_id}="):
                             tsave.write(re.sub(r'"-?\d+(\.\d+)?"', f'"{power_mod.get()}"', line))
                             break
                     else:
                         tsave.write(line)
                     continue
 
-                if line.startswith("wunlock0"):
-                    tsave.write(line)
-                    if self.current_token_kind == "w":
-                        self._write_token_group(tsave, split_class, "w", SHOWN_WEAPONS)
-                    continue
-
-                if self.current_token_kind == "w" and line.startswith(("wbonus", "wplus", "wminus")):
-                    if re.search(split_class, line) is None:
-                        tsave.write(line)
-                    continue
-
-                if line.startswith("iintel 0"):
-                    tsave.write(line)
-                    if self.current_token_kind == "i":
-                        self._write_token_group(tsave, split_class, "i", SHOWN_ITEMS)
-                    continue
-
-                if self.current_token_kind == "i" and line.startswith(("ibonus", "iplus", "iminus")):
-                    if re.search(split_class, line) is None:
-                        tsave.write(line)
-                    continue
-
                 tsave.write(line)
 
         self.safety_window()
-
-    def _write_token_group(self, tsave, split_class, kind, shown_list):
-        """Write out the wbonus/wplus/wminus (or ibonus/iplus/iminus) lines for the
-        tokens currently held (read from the save file by tokenset()).
-
-        NOTE: the written index (__0, __1, __2...) counts only non-empty
-        entries, in order - it is NOT each variable's fixed position in
-        bonus_tok/up_tok/down_tok. Matches LoadoutGUI.py's behavior.
-        """
-        for suffix, group in (("bonus", self.bonus_tok), ("plus", self.up_tok), ("minus", self.down_tok)):
-            written = 0
-            for token_var in group:
-                value = token_var.get()
-                if not value:
-                    continue
-                token_index = shown_list.index(value)
-                tsave.write(f'{kind}{suffix}_{split_class}__{written}="{token_index}.000000"\n')
-                written += 1
 
     def safety_window(self):
         """Either save immediately, or ask for confirmation first, depending on self.safety."""
@@ -417,18 +327,15 @@ class Root(tk.Tk):
         self.safety_window()
 
     def op_module_edit(self):
-        """Apply a curated 'overpowered' power value to each perk, in file order.
-
-        FRAGILE: assumes tpoints_obj_perk_* lines appear in the save file in
-        exactly the same order as OP_MODULE_POWER.
-        """
+        """Apply a curated 'overpowered' power value to each perk it covers (matched by perk ID)."""
         messagebox.showinfo("Ymmv", "Overpowered module power editing (your mileage may vary)")
+        pattern = re.compile(r"^tpoints_(obj_perk_\w+)=")
         with open(self.filename, "r") as save, open(self.tfilename, "w") as tsave:
-            i = 0
             for line in save:
-                if line.startswith("tpoints_obj_perk_"):
-                    tsave.write(re.sub(r'"-?\d+(\.\d+)?"', f'"{OP_MODULE_POWER[i]}"', line))
-                    i += 1
+                match = pattern.match(line)
+                if match and match.group(1) in OP_MODULE_POWER_BY_ID:
+                    power = OP_MODULE_POWER_BY_ID[match.group(1)]
+                    tsave.write(re.sub(r'"-?\d+(\.\d+)?"', f'"{power}"', line))
                 else:
                     tsave.write(line)
         self.safety_window()
@@ -706,43 +613,6 @@ class Root(tk.Tk):
                             break
                     else:
                         tsave.write(line)
-                else:
-                    tsave.write(line)
-        self.safety_window()
-
-    def auto_weapon_spawn_edit(self):
-        """Boost spawn/unlock for whichever weapons currently have a power token."""
-        split_class = self.spliting(self.current_class)
-        weapon_ids = []
-        with open(self.filename, "r") as save:
-            for line in save:
-                if line.startswith("wbonus_" + split_class):
-                    weapon_ids.append(re.search(r'"\d+\.', line).group()[1:-1])
-        self._apply_spawn_list(
-            weapon_ids, "wdropchange", "wunlock",
-            "Token Error", "Sorry, would you go add a power token to the weapon(s) you want?",
-        )
-
-    def auto_item_spawn_edit(self):
-        """Boost spawn chance for whichever item currently has a power token."""
-        split_class = self.spliting(self.current_class)
-        item_ids = []
-        with open(self.filename, "r") as save:
-            for line in save:
-                if line.startswith("ibonus_" + split_class):
-                    item_ids.append(re.search(r'"\d+\.', line).group()[1:-1])
-        if not item_ids:
-            messagebox.showinfo("Token Error", "Sorry, would you go add a power token for the item you want?")
-            return
-        with open(self.filename, "r") as save, open(self.tfilename, "w") as tsave:
-            for line in save:
-                if line.startswith("idropchange"):
-                    for item in item_ids:
-                        if line.startswith(f"idropchange {item}="):
-                            tsave.write(re.sub(r'"-?\d+\.\d+"', '"10.000000"', line))
-                            break
-                    else:
-                        tsave.write(re.sub(r'"-?\d+\.\d+"', '"-8.000000"', line))
                 else:
                     tsave.write(line)
         self.safety_window()
@@ -1055,9 +925,6 @@ if __name__ == "__main__":
 # Name mapping: LoadoutGUI.py (free functions/globals) -> LoadoutEditor.py (methods)
 # --------------------------------------------------------------------------
 #   Testfunc                -> Root.change_class
-#   tokenset                 -> Root.tokenset (method; no visible UI anymore,
-#                                 just keeps bonus/plus/minus tokens intact
-#                                 across a save)
 #   SubmitLoadout             -> Root.submit_loadout
 #   Safetywindow              -> Root.safety_window
 #   CopytoSave                -> Root.copy_to_save
@@ -1067,9 +934,8 @@ if __name__ == "__main__":
 #   NewDailyRun/MaxData/CheatCodeReturn/undoresearch/itemspawnreset
 #                              -> Root._rewrite_lines_matching + thin wrappers
 #   UnlockAll, weaponspawnreset -> Root.unlock_all, Root.weapon_spawn_reset
-#   AutoWeaponSpawnEdit/AutoItemSpawnEdit -> Root.auto_weapon_spawn_edit / auto_item_spawn_edit
-#     (no longer exposed in a menu, but the methods are still here if you
-#     want to wire a button back up to them)
+#   (AutoWeaponSpawnEdit/AutoItemSpawnEdit/tokenset removed: newer saves have no
+#     wbonus/wplus/wminus/ibonus/iplus/iminus token lines)
 #   WNewSpawn/WGetspawn/INewSpawn/IGetSpawn -> Root._build_weapons_tab /
 #     _build_items_tab (top-level Notebook tabs, no popup) + w_get_spawn/
 #     i_get_spawn (checklist-driven, pre-checked from the save file's
@@ -1081,6 +947,5 @@ if __name__ == "__main__":
 #   unchanged, only how you trigger them changed)
 #   Pistolchangecolor/Regchangecolor -> Root.pistol_change_color / reg_change_color
 #   openSave/about/notworking -> Root.open_save / about / not_working
-#   module-level globals (safety, current_class, loadout_items, tokens,
-#   class_tokens, double_modules, current_token_kind, current_token_shown,
-#   weapon_spawn_ids, item_spawn_ids) -> same names as self.* attributes.
+#   module-level globals (safety, current_class, weapon_spawn_ids, item_spawn_ids)
+#   -> same names as self.* attributes.
