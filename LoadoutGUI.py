@@ -37,6 +37,8 @@ from synthetik_data import (
     ITEM_IMAGES,
     LOADOUT_SLOTS,
     OP_MODULE_POWER_BY_ID,
+    PISTOL_WEAPON_IDS,
+    PISTOL_WEAPON_NAMES,
     PLACEHOLDER_IMAGE,
     SHOWN_ITEMS,
     SHOWN_MODULES,
@@ -398,7 +400,9 @@ class Root(tk.Tk):
                 if line.startswith("wdropchange"):
                     # wdropchange147 (Armageddon Shard) needs to stay negative,
                     # otherwise it shows up in drop pools it shouldn't.
-                    if line.startswith("wdropchange147"):
+                    # Pistols can't be picked up; keep them out of drop pools too.
+                    m = re.match(r"wdropchange(\d+)=", line)
+                    if line.startswith("wdropchange147") or (m and m.group(1) in PISTOL_WEAPON_IDS):
                         tsave.write(re.sub(r'"-?\d+\.\d+"', '"-10.000000"', line))
                     else:
                         tsave.write(re.sub(r'"-?\d+\.\d+"', '"0.000000"', line))
@@ -840,7 +844,7 @@ class Root(tk.Tk):
         save file's current wdropchange values (negative -> starts unchecked).
         """
         negative_weapon_ids = self._read_negative_dropchange_ids("wdropchange")
-        weapon_names = SHOWN_WEAPONS[1:99]
+        weapon_names = [n for n in SHOWN_WEAPONS[1:99] if n not in PISTOL_WEAPON_NAMES]
         weapon_initial = {name: str(SHOWN_WEAPONS.index(name)) not in negative_weapon_ids for name in weapon_names}
         self._build_spawn_tab(
             self.weapons_tab, weapon_names, weapon_initial,

@@ -34,6 +34,16 @@ SHOWN_ITEMS = ["Unidentified0", "Chaos Potion", "Hyperfeed", "Shock Impulse", "U
 # Comma-joined versions of the two lists above, used to seed the "Spawn List"
 # text boxes (weapon/item spawn editing windows). Kept separate from the
 # lists themselves since "Null"/index-0 placeholders are dropped here.
+# Pistols can't be picked up from chests, so they're hidden from the Weapons
+# tab and always forced to a negative drop chance. Names must match SHOWN_WEAPONS exactly.
+PISTOL_WEAPON_NAMES = frozenset({
+    "P33 Compact", "Last Breath", "PXS Covert Ops", "57 Fusion Classic",
+    "XM2 Coil Pistol", "Auto 9/45", "Desert Eagle", "Master Chief",
+    "G17 Undercover", "PPQ-H Laser Pistol", "P25 overdrive", "TEC 9.95",
+    "Kaida Laser Pistol", "Kaida Model H", "Titanium Eagle",
+})
+PISTOL_WEAPON_IDS = frozenset(str(SHOWN_WEAPONS.index(n)) for n in PISTOL_WEAPON_NAMES)
+
 WEAPON_SPAWN_NAMES = ",".join(SHOWN_WEAPONS[1:99])
 ITEM_SPAWN_NAMES = ",".join(SHOWN_ITEMS[1:])
 
