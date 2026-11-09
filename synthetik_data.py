@@ -47,6 +47,116 @@ PISTOL_WEAPON_IDS = frozenset(str(SHOWN_WEAPONS.index(n)) for n in PISTOL_WEAPON
 WEAPON_SPAWN_NAMES = ",".join(SHOWN_WEAPONS[1:99])
 ITEM_SPAWN_NAMES = ",".join(SHOWN_ITEMS[1:])
 
+# --- Spawn-list categories --------------------------------------------
+# Category -> weapon/item names, used by the Weapons/Items tabs' category
+# filters. Generated from the section headings on the SYNTHETIK wiki's
+# Weapons and Items pages, with the wiki's spellings translated to the names
+# used in SHOWN_WEAPONS / SHOWN_ITEMS above (e.g. wiki "Damnation" -> "Damnnation").
+# Dict order is the order the filter buttons appear in.
+#  - A name may appear under more than one category (Composite 4 is both a
+#    class starting item and an active item on the wiki); it is shown when
+#    ANY of its categories is selected.
+#  - Names that aren't on the wiki at all (debug/null items such as
+#    "Constructor?" or "Stun Mine (Null)") are not listed here; the GUI puts
+#    anything uncategorized under an automatic "Other" filter so it can
+#    never become unreachable.
+#  - "Pistols" is listed for completeness, but pistols are hidden from the
+#    Weapons tab, so the GUI drops that (empty) filter.
+
+WEAPON_CATEGORIES = {
+    'Pistols': [
+        'XM2 Coil Pistol', 'Master Chief', 'PXS Covert Ops', 'G17 Undercover', 'Kaida Model H',
+        'Desert Eagle', 'Kaida Laser Pistol', 'PPQ-H Laser Pistol', 'P33 Compact',
+        '57 Fusion Classic', 'Last Breath', 'Auto 9/45', 'TEC 9.95', 'Titanium Eagle',
+        'P25 overdrive',
+    ],
+    'Sub-machine Guns': [
+        'Viking Riotshield', 'FMG-9 Personal', 'UMP-9 Semi', 'AKS-74U', 'Kaida Nailgun', 'Spectre',
+        'KI Vector', 'K3 Boltcaster SMG', 'K7 Competition', 'LS Laser Sub', 'Medic FMG-9',
+        'UMP Tornado', 'Chaos Launcher', 'P9000 Supernova',
+    ],
+    'Assault Rifles': [
+        'Last Ditch M16', 'Enforcer Carbine', 'QBZ_Laser', 'Tactical Observer', 'Type-89 Tokko',
+        'AMD 65', 'A5-C Test Version', 'Object 29', 'SCR Laser Socom', 'Specialist M16-A5',
+        'AEK Special Elite', 'AN-94 Deathstalker', 'Damnnation', 'Eminince AR',
+        'Kaida Medic ACR-X', 'SS58 Plasma Charger', 'Sturmgewher 44', 'X512 Experimental',
+    ],
+    'Shotguns': [
+        'Super Shorty', 'W21 Lever Action', 'Pressurized Impaler', 'Spas 12', 'KSG 2000',
+        'Super 90', 'T-8-00 Guage', 'PSG Emerald Sword', 'Raider Scrap Cannon', 'Raptor Laser SG',
+        'Road Warrior', 'RRX Coil Shotgun', 'Vindicator Ultra', 'Battle Hymn',
+    ],
+    'Marksman/Sniper Rifles': [
+        'K98 Classic', 'F14 Mini', 'Ballistic CRX_Bow', 'Sour DMR', 'Twin Mill Mk.2',
+        'Human Model 9800K', 'M75 Heavy Support', 'Tuned M14 EBR', 'AS VAL', 'Eraser DMR',
+        'GM6 Lynx Evo', 'R5000 Sudden DMR', 'Yoko-Lagann', '420 Sniperdragon', 'Liandry Railgun',
+        'Nemesis Prototype',
+    ],
+    'Machine Guns': [
+        'LG2 Onslaught', 'Bren Anti-Air', 'Apollon 5 LMG', 'MAG47 Heavy LMG', 'RPK Tundra',
+        'Armageddon', 'Gladiator',
+    ],
+    'Launchers': [
+        'Ares GL-16', 'M79 Terminator', 'M32 Multipurpose', 'Flak Heavy Cannon', 'Human RPG',
+        'ML7000 Plus', 'HIG-S Particle Cannon', 'Annilhilator',
+    ],
+    'Special': [
+        'Makeshift Firecannon', 'FS5 Flametounge', 'HMN Laser Cannon', 'ION Obliterator',
+        'Mjolnir Chain LTN', 'Ripjack',
+    ],
+}
+
+ITEM_CATEGORIES = {
+    'Class Core': [
+        'Battlecry Module', 'Breaching Charge', 'Targeting Laser', "Scoundrel's Dagger",
+        'Umbra Adaptive Cloak', 'Reverbing Blade', 'Onslaught System', 'LMG sentry Turret',
+        'Auto-Overclocker', 'Seismic Resonator',
+    ],
+    'Class starting': [
+        'Auto Taser', 'Methadone', 'RV Rebuke System', 'Stun Grenade', 'ShieldBurst', 'Tomahawk',
+        'Cell Replacer', 'Decoy', 'Flare Gun', "'Helsing' Power Bolt", 'Laser Mine',
+        'Smoke Grenade', 'Flash Grenade', 'Hard Light Cover', 'Overdose', 'Plasma Grenade',
+        'Road Flare', 'Special Ammo Supply', 'Stim Pack', 'Acid Grenade', "Dragon's Masterkey",
+        'Field Supply', 'Missile Drone', 'Spider Mines', 'Unidentified Potion', 'Composite 4',
+        'Guardian', 'Neutrino Bomb', "'Seth-Up' Suitcase Sentry",
+    ],
+    'Limited use': [
+        'Brawndo', 'Chaos Potion', 'Health Vial', 'Upgrade Kit', 'Core Upgrade Kit',
+        'Custom Upgrade Kit', 'Heart Core', 'Module Core',
+    ],
+    'Active': [
+        'HE Grenade', 'Heat Sink', 'Heavy Steel Trap', 'Ripjack Hyper Blade',
+        'M26 MA Shotgun System', 'Black Market Teleporter', 'Composite 4', 'DMR Sentry Turret',
+        'Eclipse', 'Kunai Throwing Knives', 'Phaser', 'Target Cogitator', 'Bandana', 'Hyperfeed',
+        'Intensity Chamber', 'Lifeblood', 'Maddness Button', 'Magic Mag', 'Magnum', 'Psy Field',
+        'Refractor Crystal', 'Refresher', 'Shielded Decoy', 'Stinger Jet Glider',
+        "ZR99 'Living Bomb'", 'Air Com', 'Blood Rite', 'High Command', 'Infinity Drill Piece',
+        'Maddness Glasses', 'Order 322', 'Redline', 'Z1 Sundering Shuriken',
+    ],
+    'Recycle-only': [
+        'Bloodthirsty Ring', 'Ring of Experience', 'Ring of Glass',
+    ],
+    'Passive': [
+        'Biting Throwing Stars', 'G87 Beamer', 'Heat Spreader', 'Lightning Boots', 'M205 Launcher',
+        'Orb of Iron', 'Orb of Wind', 'Power Array', 'PowerShot', 'Unstable Current',
+        'Twin Link 2', 'Fast Sling', 'GPS', 'Healing Crystal', 'Heart Seeker', 'Metal Detector',
+        'R-Plating', 'Rosarius', 'Sidewinder', 'Blood Bolt', 'Direct Current', 'Fan of Knives',
+        'Gold Nugget', 'Gun Drone Spawner', 'Icarus', 'Last Stand', 'Maverick MKV', 'Orb of Fire',
+        'Shock Impulse', 'Tsunami Talisman', "ZK77 'Sticky Bomb'", 'Air Horn', 'Akira',
+        'Black Berserk Charm', 'Crux of the Laser Caster', "Devil's Dice", 'Divine Reconstructor',
+        'Facemelter', 'Fangs of Mordigan', 'Fire Prism', 'Incubus', 'Orb of Lightning',
+        'Reality Ripper', 'Uranium 235', 'Armageddon Shard',
+    ],
+    'Synergy': [
+        'Elemental Resonance', 'Energy Link', 'Fire Water', 'Missile Control', 'Nitroglycerine',
+        'Orb of Fusion', 'Orbital Relay', 'Shaker', 'ShieldLink', "Trapper's Teleporter",
+        'Underbarrel Mod Chip',
+    ],
+    'Unobtainable': [
+        'Turret?', 'Unsoldered Chip?', 'Combat Amphetamine?', 'Trophy System Drone?',
+    ],
+}
+
 # Per-class subclass codes, keyed by the button label shown in the class picker.
 # Each Synthetik class has a base version (e.g. Riot Guard) and a subclass
 # variant (e.g. Breacher); the save file tells them apart with these codes.

@@ -8,7 +8,9 @@ tabbed window (a ttk.Notebook across the whole main window):
     power fields and class-color coding, weapon/item spawn lists, submit.
   - "Weapons" / "Items" tabs: spawn-list checklists (Select All/Deselect
     All + one checkbox per weapon/item, pre-checked from the save file's
-    current wdropchange/idropchange values).
+    current wdropchange/idropchange values), with category filters (SMGs,
+    Shotguns, Active items, ...) that show only the chosen categories.
+    Select All/Deselect All only affect the tiles currently shown.
   - "Cheats" tab: everything that used to live in the Power/Misc menus
     (OP auto, quick 1.6x, daily-run reset, max data, undo research, cheat
     code reset, ask-for-confirmation toggle, unlock all), as plain buttons.
@@ -34,6 +36,7 @@ from PIL import Image, ImageTk
 
 from synthetik_data import (
     CLASS_CODES,
+    ITEM_CATEGORIES,
     ITEM_IMAGES,
     LOADOUT_SLOTS,
     OP_MODULE_POWER_BY_ID,
@@ -46,6 +49,7 @@ from synthetik_data import (
     SHOWN_WEAPONS,
     VAR_MODULES,
     VAR_PISTOLS,
+    WEAPON_CATEGORIES,
     WEAPON_IMAGES,
 )
 
@@ -523,10 +527,11 @@ class Root(tk.Tk):
         starting state (names not present default to True/checked). Pass
         nothing to start everything checked.
 
-        Returns (container_frame, {name: BooleanVar}). Pack/grid the
-        container into the window; read the BooleanVars back to see what's
-        checked - same interface as the old checkbox version, so
-        w_get_spawn/i_get_spawn/_set_all_checks don't need to change.
+        Returns (container_frame, {name: BooleanVar}, set_visible).
+        Pack/grid the container into the window; read the BooleanVars back to
+        see what's checked. `set_visible(names)` shows only the tiles whose
+        name is in `names` and hides the rest (hiding a tile never changes
+        its checked state) - used by the category filters.
         """
         container = tk.Frame(parent)
         canvas = tk.Canvas(container, highlightthickness=0)
@@ -548,6 +553,7 @@ class Root(tk.Tk):
 
         checklist_vars = {}
         tiles = []  # [(name, tile_frame), ...] in display order, re-gridded on resize
+        visible = set(names)  # names currently shown; the rest are grid_remove()d
 
         for name in names:
             default_checked = True if initial_checked is None else initial_checked.get(name, True)
@@ -588,21 +594,36 @@ class Root(tk.Tk):
         def reflow(event=None):
             width = canvas.winfo_width()
             columns = max(1, width // TILE_TOTAL_WIDTH)
-            for idx, (_name, tile) in enumerate(tiles):
+            idx = 0
+            for name, tile in tiles:
+                if name not in visible:
+                    tile.grid_remove()
+                    continue
                 row, col = divmod(idx, columns)
                 tile.grid(row=row, column=col, padx=TILE_PADDING, pady=TILE_PADDING)
+                idx += 1
+
+        def set_visible(names_to_show):
+            visible.clear()
+            visible.update(names_to_show)
+            reflow()
+            canvas.yview_moveto(0)  # the list just got shorter/longer; start from the top
 
         canvas.bind("<Configure>", reflow)
         # Lay out once as soon as the canvas has a real size (right after
         # the tab becomes visible / the window is drawn the first time).
         container.after(50, reflow)
 
-        return container, checklist_vars
+        return container, checklist_vars, set_visible
 
     @staticmethod
-    def _set_all_checks(checklist_vars, value):
-        for var in checklist_vars.values():
-            var.set(value)
+    def _set_all_checks(checklist_vars, value, only=None):
+        """Set every checkbox to `value`, or - if `only` (a collection of
+        names) is given - just the ones named in it, leaving the rest alone.
+        """
+        for name, var in checklist_vars.items():
+            if only is None or name in only:
+                var.set(value)
 
     def _apply_spawn_list(self, id_list, dropchange_prefix, unlock_prefix, missing_error_title, missing_error_msg):
         """Boost drop chance and unlock everything named in id_list, and
@@ -852,6 +873,7 @@ class Root(tk.Tk):
             on_confirm=self.w_get_spawn,
             image_map=WEAPON_IMAGES,
             images_subdir="weapons",
+            categories=WEAPON_CATEGORIES,
         )
 
     def _build_items_tab(self):
@@ -867,31 +889,157 @@ class Root(tk.Tk):
             on_confirm=self.i_get_spawn,
             image_map=ITEM_IMAGES,
             images_subdir="items",
+            categories=ITEM_CATEGORIES,
         )
 
-    def _build_spawn_tab(self, tab, names, initial_state, confirm_text, on_confirm, image_map=None, images_subdir=None):
-        """Fill one Notebook tab with an image-tile checklist + Select All/
-        Deselect All + an apply button. Click a tile to select/deselect it;
-        a colored border marks the current selection. The grid reflows its
-        column count to fill however wide the tab currently is."""
+    @staticmethod
+    def _group_by_category(names, categories):
+        """Work out which category filters apply to `names`.
+
+        `categories` is an ordered {category: [names]} table (see
+        WEAPON_CATEGORIES / ITEM_CATEGORIES). Returns (name_categories,
+        category_order): {name: set of its categories} and the categories
+        that actually contain at least one of `names`, in table order
+        (so e.g. "Pistols" vanishes from the Weapons tab, where pistols are
+        hidden). Any name not in the table at all goes under an automatic
+        "Other" category, so it can't become impossible to show/select.
+        """
+        name_categories = {name: set() for name in names}
+        for category, members in categories.items():
+            for member in members:
+                if member in name_categories:
+                    name_categories[member].add(category)
+        category_order = [c for c in categories if any(c in cats for cats in name_categories.values())]
+        uncategorized = [name for name, cats in name_categories.items() if not cats]
+        if uncategorized:
+            for name in uncategorized:
+                name_categories[name].add("Other")
+            category_order.append("Other")
+        return name_categories, category_order
+
+    @staticmethod
+    def _flow_layout(container, widgets, pad=2):
+        """Lay `widgets` (children of `container`) out left to right,
+        wrapping onto a new row whenever the container is too narrow, and
+        size the container's height to fit - so a row of buttons reflows
+        with the window instead of running off the edge.
+        """
+        def reflow(_event=None):
+            width = container.winfo_width()
+            if width <= 1:  # not laid out yet; the <Configure> event will call us again
+                return
+            x = y = row_height = 0
+            for widget in widgets:
+                w, h = widget.winfo_reqwidth(), widget.winfo_reqheight()
+                if x and x + w > width:
+                    x, y, row_height = 0, y + row_height + pad, 0
+                widget.place(x=x, y=y)
+                x += w + pad
+                row_height = max(row_height, h)
+            container.configure(height=max(1, y + row_height))
+
+        container.configure(height=1)
+        container.bind("<Configure>", reflow)
+
+    def _build_spawn_tab(self, tab, names, initial_state, confirm_text, on_confirm,
+                         image_map=None, images_subdir=None, categories=None):
+        """Fill one Notebook tab with an image-tile checklist + category
+        filters + Select All/Deselect All + an apply button. Click a tile to
+        select/deselect it; a colored border marks the current selection.
+        The grid reflows its column count to fill however wide the tab
+        currently is.
+
+        Category filters (when `categories` is given) only change what is
+        SHOWN: a tile is visible if it belongs to at least one selected
+        category. Select All / Deselect All act on the visible tiles only.
+        Tiles hidden by the filter keep their checked state, and the apply
+        button still uses every checked tile, hidden or not (the status line
+        says how many selected tiles are currently hidden).
+        """
         tk.Label(tab, text="Click an image to select/deselect it. Green = selected.").pack(pady=(6, 0))
 
+        # ---- category filter row (all categories selected = show everything)
+        name_categories, category_order = ({}, [])
+        category_vars = {}
+        if categories:
+            name_categories, category_order = self._group_by_category(names, categories)
+            category_vars = {category: tk.BooleanVar(value=True) for category in category_order}
+
+        def visible_names():
+            if not categories:
+                return set(names)
+            selected = {category for category, var in category_vars.items() if var.get()}
+            return {name for name, cats in name_categories.items() if cats & selected}
+
+        def refresh_filter():
+            set_visible(visible_names())
+            update_status()
+
+        def set_all_categories(value):
+            for var in category_vars.values():
+                var.set(value)
+            refresh_filter()
+
+        if category_order:
+            filter_box = tk.LabelFrame(tab, text="Filter by category")
+            filter_box.pack(fill=tk.X, padx=8, pady=(4, 0))
+            flow = tk.Frame(filter_box)
+            flow.pack(fill=tk.X, padx=4, pady=(0, 4))
+            small_font = ("TkDefaultFont", 8)
+            widgets = [
+                tk.Button(flow, text="All", font=small_font, padx=4, pady=0, command=lambda: set_all_categories(True)),
+                tk.Button(flow, text="None", font=small_font, padx=4, pady=0, command=lambda: set_all_categories(False)),
+            ]
+            widgets += [
+                tk.Checkbutton(
+                    flow, text=category, variable=category_vars[category], font=small_font,
+                    indicatoron=False, selectcolor=BORDER_SELECTED, padx=4, pady=0,
+                    command=refresh_filter,
+                )
+                for category in category_order
+            ]
+            self._flow_layout(flow, widgets)
+
+        # ---- Select All / Deselect All (visible tiles only) + status line
         button_row = tk.Frame(tab)
         button_row.pack(fill=tk.X, padx=8, pady=4)
         checklist_vars = {}
-        tk.Button(button_row, text="Select All", command=lambda: self._set_all_checks(checklist_vars, True)).pack(side=tk.LEFT)
-        tk.Button(button_row, text="Deselect All", command=lambda: self._set_all_checks(checklist_vars, False)).pack(side=tk.LEFT, padx=(4, 0))
+        tk.Button(
+            button_row, text="Select All",
+            command=lambda: self._set_all_checks(checklist_vars, True, only=visible_names()),
+        ).pack(side=tk.LEFT)
+        tk.Button(
+            button_row, text="Deselect All",
+            command=lambda: self._set_all_checks(checklist_vars, False, only=visible_names()),
+        ).pack(side=tk.LEFT, padx=(4, 0))
+        status_label = tk.Label(button_row, anchor="e")
+        status_label.pack(side=tk.RIGHT)
 
-        checklist_frame, checklist_vars = self._make_scrollable_checklist(
-            tab, names, initial_checked=initial_state, image_map=image_map, images_subdir=images_subdir,
-        )
-        checklist_frame.pack(fill=tk.BOTH, expand=True, padx=8, pady=4)
+        def update_status(*_args):
+            shown = visible_names()
+            selected = [name for name, var in checklist_vars.items() if var.get()]
+            hidden_selected = sum(1 for name in selected if name not in shown)
+            text = f"Showing {len(shown)}/{len(names)}  \u00b7  {len(selected)} selected"
+            if hidden_selected:
+                text += f" ({hidden_selected} hidden)"
+            status_label.configure(text=text)
 
+        # The footer is packed to the bottom BEFORE the expanding checklist, so
+        # when the window is short it's the tile grid that shrinks - the apply
+        # button never gets pushed off-screen.
+        tk.Button(tab, text=confirm_text, command=lambda: on_confirm(checklist_vars)).pack(side=tk.BOTTOM, pady=(0, 8))
         tk.Label(
             tab,
             text="You'll need to redo this periodically; the game eventually restores the original spawn list.",
-        ).pack(pady=(0, 4))
-        tk.Button(tab, text=confirm_text, command=lambda: on_confirm(checklist_vars)).pack(pady=(0, 8))
+        ).pack(side=tk.BOTTOM, pady=(0, 4))
+
+        checklist_frame, checklist_vars, set_visible = self._make_scrollable_checklist(
+            tab, names, initial_checked=initial_state, image_map=image_map, images_subdir=images_subdir,
+        )
+        checklist_frame.pack(fill=tk.BOTH, expand=True, padx=8, pady=4)
+        for var in checklist_vars.values():
+            var.trace_add("write", update_status)
+        update_status()
 
         return checklist_vars
 
