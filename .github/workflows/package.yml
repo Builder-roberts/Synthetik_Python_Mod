@@ -45,7 +45,7 @@ jobs:
         run: Compress-Archive -Path dist -DestinationPath SynthetikSaveEditor.zip
         shell: powershell
         env: 
-          RELEASE_NAME: ${{ github.event.repository.name }}.${{ steps.date.outputs.today }}
+          RELEASE_NAME: ${{ github.event.repository.name }}
       
       - name: Publish
         uses: "marvinpinto/action-automatic-releases@v1.2.1"
@@ -55,3 +55,4 @@ jobs:
           prerelease: ${{ github.event_name != 'push' }}
           files: |
             *.zip
+            dist/LoadoutEditor.exe
