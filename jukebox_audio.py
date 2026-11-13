@@ -28,6 +28,11 @@ def libs_dir():
 
 
 def _add_libs_to_path():
+    """Make the private libs folder importable.  Never done in a frozen (PyInstaller) build: the exe
+    bundles its own pygame, and a leftover libs folder (e.g. pygame-ce downloaded earlier by a source
+    run, possibly for a different Python version) would shadow it and break `import pygame.base`."""
+    if getattr(sys, "frozen", False):
+        return
     path = libs_dir()
     if os.path.isdir(path) and path not in sys.path:
         sys.path.insert(0, path)
@@ -55,13 +60,18 @@ class Player:
             return True
         self.error, self.can_install = "", False
         os.environ.setdefault("PYGAME_HIDE_SUPPORT_PROMPT", "1")
-        _add_libs_to_path()
         try:
-            import pygame
-        except Exception as exc:
-            self.error = f"pygame couldn't be loaded ({exc})"
-            self.can_install = not getattr(sys, "frozen", False)
-            return False
+            import pygame                      # the bundled / normally installed pygame always wins
+        except Exception:
+            _add_libs_to_path()                # source runs only: fall back to the downloaded copy
+            for name in [m for m in sys.modules if m == "pygame" or m.startswith("pygame.")]:
+                sys.modules.pop(name, None)    # drop any half-imported pygame before retrying
+            try:
+                import pygame
+            except Exception as exc:
+                self.error = f"pygame couldn't be loaded ({exc})"
+                self.can_install = not getattr(sys, "frozen", False)
+                return False
         last = ""
         drivers = [None] + (["directsound", "winmm", "wasapi"] if sys.platform == "win32" else [])
         for driver in drivers:
