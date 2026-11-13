@@ -43,6 +43,7 @@ import ui_icons as I
 import ui_style as S
 
 from editor_view import DESIGN_H, DESIGN_W, MIN_SCALE, EditorView
+from jukebox_view import JukeboxView
 from synthetik_data import (
     ITEM_CATEGORIES,
     ITEM_IMAGES,
@@ -148,6 +149,7 @@ class Root(tk.Tk):
         self._build_weapons_tab()
         self._build_items_tab()
         self._build_cheats_tab()
+        self._build_jukebox_tab()
         self._build_menu()
 
         # ---- initial load -------------------------------------------------
@@ -949,10 +951,12 @@ class Root(tk.Tk):
         self.weapons_tab = ttk.Frame(self.notebook)
         self.items_tab = ttk.Frame(self.notebook)
         self.cheats_tab = ttk.Frame(self.notebook)
+        self.jukebox_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.editor_tab, text="Synthetik Editor")
         self.notebook.add(self.weapons_tab, text="Weapons")
         self.notebook.add(self.items_tab, text="Items")
         self.notebook.add(self.cheats_tab, text="Cheats")
+        self.notebook.add(self.jukebox_tab, text="Jukebox")
 
     def _build_editor_tab(self):
         """The in-game-style loadout screen (see editor_view.py).  It reads and
@@ -960,6 +964,12 @@ class Root(tk.Tk):
         below are unchanged."""
         self.editor = EditorView(self.editor_tab, self)
         self.editor.pack(fill=tk.BOTH, expand=True)
+
+    def _build_jukebox_tab(self):
+        """Music swapper (see jukebox_view.py).  Builds its UI now but only scans the game folder the first
+        time the tab is opened."""
+        self.jukebox = JukeboxView(self.jukebox_tab, self)
+        self.jukebox.pack(fill=tk.BOTH, expand=True)
 
     def _on_insanity_master_toggle(self):
         """Checking/unchecking the master 'Insanity Challenge' box sets all

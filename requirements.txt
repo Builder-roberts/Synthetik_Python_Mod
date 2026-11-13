@@ -1,0 +1,4 @@
+pillow
+pygame-ce
+imageio-ffmpeg
+mutagen
