@@ -11,6 +11,10 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+# The release step creates/updates a GitHub Release, which needs write access to repo contents.
+permissions:
+  contents: write
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -21,32 +25,70 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-        
-      - name: Install PyInstaller
-        run: pip install pyinstaller
+          cache: pip
+          cache-dependency-path: requirements.txt
 
+      # requirements.txt holds the app's runtime deps (pillow, pygame-ce, imageio-ffmpeg, mutagen).
+      # They MUST be installed before PyInstaller runs: it can only bundle what it can see, and the
+      # frozen exe cannot download anything itself (the Jukebox's pygame auto-install is disabled
+      # in frozen builds).
       - name: Install dependencies
-        run: pip install pyinstaller pillow
-        
+        run: pip install -r requirements.txt "pyinstaller>=6,<7"
+
+      # Fail fast (before the slow build) if a dependency is missing or imageio-ffmpeg has no binary.
+      - name: Verify dependencies
+        env:
+          PYGAME_HIDE_SUPPORT_PROMPT: "1"
+        run: >
+          python -c "import os, PIL, pygame, mutagen, imageio_ffmpeg;
+          exe = imageio_ffmpeg.get_ffmpeg_exe();
+          assert os.path.isfile(exe), 'ffmpeg binary missing: ' + exe;
+          print('pygame', pygame.version.ver, '| mutagen', mutagen.version_string, '| ffmpeg', exe)"
+
       - name: List workspace files
         run: Get-ChildItem -Recurse -Depth 2
         shell: powershell
-        
+
+      # --collect-all imageio_ffmpeg : make sure the ffmpeg.exe that ships inside the package is bundled
+      #                                (used for mp3/wav/flac/m4a -> .ogg conversion in the Jukebox).
+      # --collect-submodules mutagen : mutagen loads its format handlers (mp3/mp4/flac/ogg/...) lazily.
+      # pygame-ce's SDL DLLs are picked up automatically by PyInstaller's built-in hook.
       - name: Convert to exe
         id: convert
         run: |
-          pyinstaller --noconfirm --onefile --windowed --add-data "assets;assets" --name LoadoutEditor LoadoutGUI.py
+          pyinstaller --noconfirm --onefile --windowed `
+            --add-data "assets;assets" `
+            --collect-all imageio_ffmpeg `
+            --collect-submodules mutagen `
+            --name LoadoutEditor LoadoutGUI.py
+
+      # Look inside the finished exe and fail the build if the Jukebox's pieces didn't make it in.
+      - name: Verify exe contents
+        run: |
+          $listing = (pyi-archive_viewer -l -r -b dist\LoadoutEditor.exe) -join "`n"
+          $required = [ordered]@{
+            'ffmpeg binary (audio conversion)' = 'imageio_ffmpeg.binaries.ffmpeg'
+            'pygame mixer (audio preview)'     = 'pygame.mixer'
+            'mutagen (tags / cover art)'       = 'mutagen'
+            'assets (icons, cover.jpg)'        = 'assets.ui.jukebox.cover\.jpg'
+          }
+          $missing = @($required.Keys | Where-Object { $listing -notmatch $required[$_] })
+          if ($missing.Count -gt 0) {
+            Write-Host "::error::LoadoutEditor.exe is missing: $($missing -join ', ')"
+            exit 1
+          }
+          Write-Host "Bundle OK: all expected components are inside LoadoutEditor.exe"
+          Get-Item dist\LoadoutEditor.exe | Select-Object Name, @{n='SizeMB';e={[math]::Round($_.Length/1MB,1)}}
 
       - name: Zip folder
         run: Compress-Archive -Path dist -DestinationPath SynthetikSaveEditor.zip
         shell: powershell
-        env: 
-          RELEASE_NAME: ${{ github.event.repository.name }}
-      
+
       - name: Publish
         uses: "marvinpinto/action-automatic-releases@v1.2.1"
         with:
